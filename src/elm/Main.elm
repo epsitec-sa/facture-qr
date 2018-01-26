@@ -2,9 +2,10 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
+import Html.Events exposing (onClick)
+{-import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
 import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, readAsTextFile)
-import Task
+import Task-}
 
 -- APP
 main : Program Never Model Msg
@@ -19,43 +20,42 @@ main =
 
 -- MODEL
 type alias Model =
-    { message : String
-    , dropZone :
-        DropZone.Model
-
-    -- store the DropZone model in your apps Model
-    , files : List NativeFile
+    {
+      message : String
     }
+        {-, dropZone :
+            DropZone.Model
+
+        -- store the DropZone model in your apps Model
+        , files : List NativeFile-}
 
 init : Model
 init =
-    { message = "Waiting..."
-    , dropZone =
+    {
+      message = "Waiting..."
+    }
+    {-, dropZone =
         DropZone.init
 
     -- call DropZone.init to initialize
-    , files = []
-    }
-
-type alias TextFile = {
-  fileName: String,
-  content: String
-}
-
+    , files = []-}
 
 -- UPDATE
 
 type Msg
-    = DnD (DropZone.DropZoneMessage (List NativeFile))
+    = Clicked
+      {-DnD (DropZone.DropZoneMessage (List NativeFile))
       -- add an Message that takes care of hovering, dropping etc
     | FileReadSucceeded TextFile
-    | FileReadFailed FileReader.Error
+    | FileReadFailed FileReader.Error-}
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        DnD (Drop files) ->
+        Clicked ->
+          ( {model | message = "clicked!!"}, Cmd.none )
+        {-DnD (Drop files) ->
             -- this happens when the user dropped something into the dropzone
             if List.length files == 1 then
               ( { model
@@ -92,10 +92,10 @@ update message model =
             -- this happens when an effect has finished and there was an error loading hte file
             ( { model | message = FileReader.prettyPrint err }
             , Cmd.none
-            )
+            )-}
 
 
-
+{-
 readTextFile : NativeFile -> Cmd Msg
 readTextFile file =
     readAsTextFile file.blob
@@ -111,7 +111,7 @@ readTextFile file =
                     Err error ->
                         FileReadFailed error
             )
-
+-}
 
 
 -- VIEW
@@ -124,6 +124,13 @@ view model =
     , p [] [ text model.message ]
   ]
 
+
+renderQrCode : Model -> Html Msg
+renderQrCode model =
+  div [baseDropStyle, onClick Clicked] [
+    text ( "Please drop your QR Code here" )
+  ]
+{-
 renderQrCode : Model -> Html Msg
 renderQrCode model =
   Html.map DnD
@@ -155,7 +162,7 @@ dropZoneDefault =
 dropZoneHover : Html.Attribute a
 dropZoneHover =
     style [( "border", "3px dashed red" )]
-
+-}
 baseDropStyle : Html.Attribute a
 baseDropStyle =
     style
