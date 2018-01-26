@@ -1,8 +1,10 @@
 module Main exposing (..)
-import Html exposing (..)
 
--- component import example
-import Components.QrCode
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
+import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, readAsTextFile)
+import Task
 
 -- APP
 main : Program Never Model Msg
@@ -16,30 +18,99 @@ main =
 
 
 -- MODEL
-type alias Model = {
-  qrCode: Components.QrCode.Model
-}
+type alias Model =
+    { message : String
+    , dropZone :
+        DropZone.Model
+
+    -- store the DropZone model in your apps Model
+    , files : List NativeFile
+    }
 
 init : Model
 init =
-    {
-      qrCode = Components.QrCode.init
+    { message = "Waiting..."
+    , dropZone =
+        DropZone.init
+
+    -- call DropZone.init to initialize
+    , files = []
     }
+
+type alias TextFile = {
+  fileName: String,
+  content: String
+}
 
 
 -- UPDATE
-type Msg = QrCodeMessage Components.QrCode.Message
+
+type Msg
+    = DnD (DropZone.DropZoneMessage (List NativeFile))
+      -- add an Message that takes care of hovering, dropping etc
+    | FileReadSucceeded TextFile
+    | FileReadFailed FileReader.Error
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-  case msg of
-    QrCodeMessage qrCodeMsg ->
-      let
-        ( updatedQrCodeModel, qrCodeCmd ) =
-          Components.QrCode.update qrCodeMsg model.qrCode
-      in
-        ( { model | qrCode = updatedQrCodeModel }, Cmd.map QrCodeMessage qrCodeCmd )
+update message model =
+    case message of
+        DnD (Drop files) ->
+            -- this happens when the user dropped something into the dropzone
+            if List.length files == 1 then
+              ( { model
+                  | dropZone =
+                      DropZone.update (Drop files) model.dropZone
 
+                  -- update the DropZone model
+                  , files =
+                      files
+
+                  -- and store the dropped files
+                }
+              , Cmd.batch <|
+                  -- also create a bunch of effects to read the files as text, one effect for each file
+                  List.map (readTextFile) files
+              )
+            else
+              ( {model
+              | message = "Please do not drop more than one file"}
+              , Cmd.none )
+
+        DnD a ->
+            -- these are opaque DropZone messages, just hand them to DropZone to deal with them
+            ( { model | dropZone = DropZone.update a model.dropZone }
+            , Cmd.none
+            )
+
+        FileReadSucceeded file ->
+          ( { model | message = file.fileName }
+          , Cmd.none
+          )
+
+        FileReadFailed err ->
+            -- this happens when an effect has finished and there was an error loading hte file
+            ( { model | message = FileReader.prettyPrint err }
+            , Cmd.none
+            )
+
+
+
+readTextFile : NativeFile -> Cmd Msg
+readTextFile file =
+    readAsTextFile file.blob
+        |> Task.attempt
+            (\res ->
+                case res of
+                    Ok val ->
+                        FileReadSucceeded {
+                          fileName = file.name,
+                          content = val
+                        }
+
+                    Err error ->
+                        FileReadFailed error
+            )
 
 
 
@@ -49,12 +120,52 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [][    -- inline CSS (literal)
-    Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
-    , p [] [ text model.qrCode.message ]
+    renderQrCode model
+    , p [] [ text model.message ]
   ]
 
+renderQrCode : Model -> Html Msg
+renderQrCode model =
+  Html.map DnD
+      (div (renderZoneAttributes model.dropZone) [
+        text ( "Please drop your QR Code here" )
+      ])
 
-  
+
+renderZoneAttributes :
+    DropZone.Model
+    -> List (Html.Attribute (DropZoneMessage (List NativeFile)))
+renderZoneAttributes dropZoneModel =
+    baseDropStyle ::
+    (if DropZone.isHovering dropZoneModel then
+        dropZoneHover
+        -- style the dropzone differently depending on whether the user is hovering
+     else
+        dropZoneDefault
+    )
+        :: -- add the necessary DropZone event wiring
+           dropZoneEventHandlers FileReader.parseDroppedFiles
+
+
+dropZoneDefault : Html.Attribute a
+dropZoneDefault =
+    style [( "border", "3px dashed steelblue" )]
+
+
+dropZoneHover : Html.Attribute a
+dropZoneHover =
+    style [( "border", "3px dashed red" )]
+
+baseDropStyle : Html.Attribute a
+baseDropStyle =
+    style
+        [("width", "200px")
+        , ("height", "200px")
+        , ("background-color", "gray")
+        , ("display", "flex")
+        , ( "align-items", "center" )
+        , ("justify-content", "center")]
+
 {-
 subscriptions : Model -> Sub Msg
 subscriptions model =
