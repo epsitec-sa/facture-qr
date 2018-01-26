@@ -1,4 +1,4 @@
-port module Components.Ports exposing (..)
+{-port module Components.Ports exposing (..)
 import FileReader exposing (..)
 
 type alias BinaryFile = {
@@ -14,3 +14,4 @@ type alias EncodedFile =
 port binaryFileRead : BinaryFile -> Cmd msg
 
 port fileEncoded : (EncodedFile -> msg) -> Sub msg
+-}

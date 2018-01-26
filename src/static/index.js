@@ -4,7 +4,7 @@
 // inject bundled Elm app into div#main
 var Elm = require ('../elm/Main');
 var app = Elm.Main.embed (document.getElementById ('main'));
-
+/*
 app.ports.binaryFileRead.subscribe (function (binaryFile) {
   var encodedContent = new Buffer (binaryFile.content).toString ('base64');
 
@@ -13,3 +13,4 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
     fileName: binaryFile.fileName,
   });
 });
+*/

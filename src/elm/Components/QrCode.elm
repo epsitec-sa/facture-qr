@@ -1,5 +1,4 @@
 module Components.QrCode exposing (..)
-import Components.Ports exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -18,6 +17,10 @@ type alias Model =
     , files : List NativeFile
     }
 
+type alias TextFile = {
+  fileName: String,
+  content: String
+}
 
 init : Model
 init =
@@ -35,9 +38,8 @@ init =
 type Message
     = DnD (DropZone.DropZoneMessage (List NativeFile))
       -- add an Message that takes care of hovering, dropping etc
-    | FileReadSucceeded BinaryFile
+    | FileReadSucceeded TextFile
     | FileReadFailed FileReader.Error
-    | FileEncoded EncodedFile
     | FileValidated (Result Http.Error String)
 
 
@@ -59,7 +61,7 @@ update message model =
                 }
               , Cmd.batch <|
                   -- also create a bunch of effects to read the files as text, one effect for each file
-                  List.map (readBinaryFile) files
+                  List.map (readTextFile) files
               )
             else
               ( {model
@@ -74,18 +76,13 @@ update message model =
 
         FileReadSucceeded file ->
           ( model
-          , binaryFileRead file
+          , Http.send FileValidated (put file)
           )
 
         FileReadFailed err ->
             -- this happens when an effect has finished and there was an error loading hte file
             ( { model | message = FileReader.prettyPrint err }
             , Cmd.none
-            )
-        FileEncoded file ->
-            -- this happens when an effect has finished and the file has successfully been loaded
-            ( model ,
-              Http.send FileValidated (put file)
             )
 
         FileValidated (Ok str) ->
@@ -96,9 +93,9 @@ update message model =
 
 
 
-readBinaryFile : NativeFile -> Cmd Message
-readBinaryFile file =
-    readAsArrayBuffer file.blob
+readTextFile : NativeFile -> Cmd Message
+readTextFile file =
+    readAsTextFile file.blob
         |> Task.attempt
             (\res ->
                 case res of
@@ -112,7 +109,7 @@ readBinaryFile file =
                         FileReadFailed error
             )
 
-put : EncodedFile -> Http.Request String
+put : TextFile -> Http.Request String
 put body =
   Http.request
     { method = "PUT"
@@ -194,8 +191,3 @@ baseDropStyle =
         , ("display", "flex")
         , ( "align-items", "center" )
         , ("justify-content", "center")]
-
-
-subscriptions : Model -> Sub Message
-subscriptions model =
-  fileEncoded FileEncoded

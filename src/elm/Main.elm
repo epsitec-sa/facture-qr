@@ -1,4 +1,3 @@
-
 module Main exposing (..)
 import Html exposing (..)
 
@@ -12,7 +11,7 @@ main =
         { init = ( init, Cmd.none )
         , update = update
         , view = view
-        , subscriptions = subscriptions
+        , subscriptions = \_ -> Sub.none
         }
 
 
@@ -54,7 +53,11 @@ view model =
     , p [] [ text model.qrCode.message ]
   ]
 
+
+  
+{-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Sub.map QrCodeMessage (Components.QrCode.subscriptions model.qrCode) ]
+-}
