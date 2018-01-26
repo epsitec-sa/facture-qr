@@ -5,8 +5,6 @@ import Html.Attributes exposing (..)
 import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
 import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, readAsTextFile)
 import Task
-import Http
-import Json.Encode
 
 type alias Model =
     { message : String
@@ -40,7 +38,6 @@ type Message
       -- add an Message that takes care of hovering, dropping etc
     | FileReadSucceeded TextFile
     | FileReadFailed FileReader.Error
-    | FileValidated (Result Http.Error String)
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -75,8 +72,8 @@ update message model =
             )
 
         FileReadSucceeded file ->
-          ( model
-          , Http.send FileValidated (put file)
+          ( { model | message = file.fileName }
+          , Cmd.none
           )
 
         FileReadFailed err ->
@@ -84,12 +81,6 @@ update message model =
             ( { model | message = FileReader.prettyPrint err }
             , Cmd.none
             )
-
-        FileValidated (Ok str) ->
-          ({ model | message = str }, Cmd.none)
-
-        FileValidated (Err err) ->
-          ({ model | message = httpErrorString err }, Cmd.none)
 
 
 
@@ -109,6 +100,7 @@ readTextFile file =
                         FileReadFailed error
             )
 
+{-
 put : TextFile -> Http.Request String
 put body =
   Http.request
@@ -142,7 +134,7 @@ httpErrorString error =
                 ++ toString response.status.code
                 ++ ")"
 
-
+-}
 
 
 
