@@ -12,7 +12,7 @@ main =
         { init = ( init, Cmd.none )
         , update = update
         , view = view
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -53,3 +53,8 @@ view model =
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
     , p [] [ text model.qrCode.message ]
   ]
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Sub.map QrCodeMessage (Components.QrCode.subscriptions model.qrCode) ]

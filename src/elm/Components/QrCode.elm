@@ -1,9 +1,10 @@
 module Components.QrCode exposing (..)
+import Components.Ports exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
-import FileReader exposing (Error(..), FileRef, NativeFile, readAsTextFile)
+import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, readAsTextFile)
 import Task
 import Http
 import Json.Encode
@@ -28,17 +29,15 @@ init =
     , files = []
     }
 
-type alias FileInfo = {
-  fileName: String,
-  content: String
-}
+
 
 
 type Message
     = DnD (DropZone.DropZoneMessage (List NativeFile))
       -- add an Message that takes care of hovering, dropping etc
-    | FileReadSucceeded FileInfo
+    | FileReadSucceeded BinaryFile
     | FileReadFailed FileReader.Error
+    | FileEncoded EncodedFile
     | FileValidated (Result Http.Error String)
 
 
@@ -60,7 +59,7 @@ update message model =
                 }
               , Cmd.batch <|
                   -- also create a bunch of effects to read the files as text, one effect for each file
-                  List.map (readTextFile) files
+                  List.map (readBinaryFile) files
               )
             else
               ( {model
@@ -73,16 +72,20 @@ update message model =
             , Cmd.none
             )
 
-        FileReadSucceeded fileInfo ->
-            -- this happens when an effect has finished and the file has successfully been loaded
-            ( model ,
-              Http.send FileValidated (put fileInfo)
-            )
+        FileReadSucceeded file ->
+          ( model
+          , binaryFileRead file
+          )
 
         FileReadFailed err ->
             -- this happens when an effect has finished and there was an error loading hte file
             ( { model | message = FileReader.prettyPrint err }
             , Cmd.none
+            )
+        FileEncoded file ->
+            -- this happens when an effect has finished and the file has successfully been loaded
+            ( model ,
+              Http.send FileValidated (put file)
             )
 
         FileValidated (Ok str) ->
@@ -93,9 +96,9 @@ update message model =
 
 
 
-readTextFile : NativeFile -> Cmd Message
-readTextFile file =
-    readAsTextFile file.blob
+readBinaryFile : NativeFile -> Cmd Message
+readBinaryFile file =
+    readAsArrayBuffer file.blob
         |> Task.attempt
             (\res ->
                 case res of
@@ -109,15 +112,11 @@ readTextFile file =
                         FileReadFailed error
             )
 
-put : FileInfo -> Http.Request String
+put : EncodedFile -> Http.Request String
 put body =
   Http.request
     { method = "PUT"
-    , headers = [
-        Http.header "Origin" "http://127.0.0.1:8080",
-        Http.header "Access-Control-Request-Method" "PUT",
-        Http.header "Access-Control-Request-Headers" "X-Custom-Header"
-      ]
+    , headers = []
     , url = "http://127.0.0.1:6482/decode-and-validate"
     , body = Http.jsonBody <| Json.Encode.object [
         ("fileName", Json.Encode.string body.fileName),
@@ -195,3 +194,8 @@ baseDropStyle =
         , ("display", "flex")
         , ( "align-items", "center" )
         , ("justify-content", "center")]
+
+
+subscriptions : Model -> Sub Message
+subscriptions model =
+  fileEncoded FileEncoded
