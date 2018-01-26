@@ -6,9 +6,7 @@ var Elm = require ('../elm/Main');
 var app = Elm.Main.embed (document.getElementById ('main'));
 
 app.ports.binaryFileRead.subscribe (function (binaryFile) {
-  var encodedContent = btoa (
-    String.fromCharCode.apply (null, new Uint8Array (binaryFile.content))
-  );
+  var encodedContent = new Buffer (binaryFile.content).toString ('base64');
 
   app.ports.fileEncoded.send ({
     content: encodedContent,
