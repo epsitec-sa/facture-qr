@@ -198,4 +198,4 @@ baseDropStyle =
 
 subscriptions : Model -> Sub Message
 subscriptions model =
-  fileEncoded FileEncoded
+  fileBase64Encoded FileBase64Encoded

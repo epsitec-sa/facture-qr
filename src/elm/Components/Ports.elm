@@ -13,4 +13,4 @@ type alias EncodedFile =
 
 port binaryFileRead : BinaryFile -> Cmd msg
 
-port fileEncoded : (EncodedFile -> msg) -> Sub msg
+port fileBase64Encoded : (EncodedFile -> msg) -> Sub msg

@@ -10,7 +10,7 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
     'base64'
   );
 
-  app.ports.fileEncoded.send ({
+  app.ports.fileBase64Encoded.send ({
     content: encodedContent,
     fileName: binaryFile.fileName,
   });
