@@ -7,7 +7,7 @@ import Debug
 
 type alias Error = {
   errorCode: Components.Errors.ErrorCode,
-  additionalInfo: String,
+  additionalInformation: String,
   message: String,
   stackTrace: String
 }
@@ -16,7 +16,7 @@ errorDecoder : Json.Decode.Decoder Error
 errorDecoder =
   decode Error
     |> required "ErrorCode" Components.Errors.errorCodeDecoder
-    |> optional "AdditionalInfo" string ""
+    |> optional "AdditionalInformation" string ""
     |> required "Message" string
     |> optional "StackTrace" string ""
 
@@ -32,12 +32,12 @@ debug err =
 
 prettify : Error -> String
 prettify err =
-  Components.Errors.errorCodeString (err.errorCode) ++ err.additionalInfo
+  Components.Errors.errorCodeString (err.errorCode) ++ " " ++ err.additionalInformation
 
 noError : Error
 noError = {
     errorCode = Components.Errors.None,
-    additionalInfo = "",
+    additionalInformation = "",
     message = "",
     stackTrace = ""
   }
@@ -45,7 +45,7 @@ noError = {
 newError : Components.Errors.ErrorCode -> Error
 newError errorCode = {
     errorCode = errorCode,
-    additionalInfo = "",
+    additionalInformation = "",
     message = "",
     stackTrace = ""
   }

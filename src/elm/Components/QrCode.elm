@@ -110,8 +110,8 @@ update message model =
             Err msg -> -- It is not a webservice error, so it must be the expected result
               ( model,
                 Cmd.batch <| [
-                  Http.send InvoiceValidated (put "validate" (Http.stringBody "application/json" str)),
-                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/json" str))
+                  Http.send InvoiceValidated (put "validate" (Http.stringBody "application/text" str)),
+                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/text" str))
                 ]
               )
 
