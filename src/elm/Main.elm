@@ -52,10 +52,16 @@ view : Model -> Html Msg
 view model =
   div [][    -- inline CSS (literal)
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
-    , p [] [ text (Components.WebService.prettify model.qrCode.error) ]
-    , p [] [ text model.qrCode.validation ]
-    , p [] [ text model.qrCode.image ]
+    , p [] [ text model.qrCode.raw ]
+    , p [] [ text (Components.WebService.prettifyError model.qrCode.error) ]
+    , renderValidationErrors model.qrCode.validations
   ]
+
+renderValidationErrors: List Components.WebService.ValidationError -> Html msg
+renderValidationErrors validations =
+  div [] (List.map (\validation -> p [] [text (Components.WebService.prettifyValidationError validation)]) validations)
+
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

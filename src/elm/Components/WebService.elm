@@ -60,9 +60,17 @@ debug err =
   Debug.log (err.message)
   Cmd.none
 
-prettify : Error -> String
-prettify err =
+prettifyError : Error -> String
+prettifyError err =
   Components.Errors.errorCodeString (err.errorCode) ++ " " ++ err.additionalInformation
+
+
+prettifyValidationError : ValidationError -> String
+prettifyValidationError err =
+  err.xmlField ++ ":  " ++
+  Components.Errors.validationErrorCodeString (err.code) ++ " " ++
+  err.additionalInfo
+
 
 noError : Error
 noError = {
