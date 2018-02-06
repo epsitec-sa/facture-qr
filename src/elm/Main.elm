@@ -52,10 +52,15 @@ view : Model -> Html Msg
 view model =
   div [][    -- inline CSS (literal)
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
-    , p [] [ text model.qrCode.raw ]
     , p [] [ text (Components.WebService.prettifyError model.qrCode.error) ]
+    , renderRawInvoice model.qrCode.raw
     , renderValidationErrors model.qrCode.validations
   ]
+
+renderRawInvoice: String -> Html msg
+renderRawInvoice raw =
+  div [] (List.map (\line -> div [] [text line, br [] []]) (String.split "\n" raw))
+
 
 renderValidationErrors: List Components.WebService.ValidationError -> Html msg
 renderValidationErrors validations =
