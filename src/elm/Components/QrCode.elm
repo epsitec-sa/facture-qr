@@ -112,20 +112,18 @@ readBinaryFile file =
                         FileReadFailed error
             )
 
-put : EncodedFile -> Http.Request String
-put body =
+put : String -> Http.Body -> Http.Request String
+put route body =
   Http.request
     { method = "PUT"
     , headers = []
-    , url = "http://127.0.0.1:6482/decode-and-validate"
-    , body = Http.jsonBody <| Json.Encode.object [
-        ("fileName", Json.Encode.string body.fileName),
-        ("content", Json.Encode.string body.content)
-      ]
+    , url = "http://127.0.0.1:6482/" ++ route
+    , body = body
     , expect = Http.expectString
     , timeout = Nothing
     , withCredentials = False
     }
+
 
 httpErrorString : Http.Error -> String
 httpErrorString error =
