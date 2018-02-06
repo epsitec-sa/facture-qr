@@ -65,7 +65,9 @@ update message model =
                   -- update the DropZone model
                   , files =
                       files
-
+                  , error = init.error
+                  , validation = init.validation
+                  , image = init.image
                   -- and store the dropped files
                 }
               , Cmd.batch <|
