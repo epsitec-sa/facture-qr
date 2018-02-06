@@ -181,8 +181,12 @@ view : Model -> Html Message
 view model =
   Html.map DnD
       (div (renderZoneAttributes model.dropZone) [
-        text ( "Please drop your QR Code here" )
-      ])
+        p [style [("text-align", "center"), ("padding-top", "3em")]]
+          [text "Drop your code or your QR code here without fear.",
+           br [] [],
+           text "We will validate it very carefully ;-)"
+          ]
+       ])
 
 
 renderZoneAttributes :
@@ -202,7 +206,7 @@ renderZoneAttributes dropZoneModel =
 
 dropZoneDefault : Html.Attribute a
 dropZoneDefault =
-    style [( "border", "3px dashed steelblue" )]
+    style [( "border", "3px dashed #333" )]
 
 
 dropZoneHover : Html.Attribute a
@@ -212,13 +216,11 @@ dropZoneHover =
 baseDropStyle : Html.Attribute a
 baseDropStyle =
     style
-        [("width", "200px")
-        , ("height", "200px")
-        , ("background-color", "gray")
-        , ("display", "flex")
-        , ( "align-items", "center" )
-        , ("justify-content", "center")]
-
+        [("min-height", "calc(60vh)")
+        , ("background", "url('./img/parachute.svg') no-repeat center center #333")
+        , ("background-size", "25%")
+        , ("color", "#fff")
+        , ( "border-radius", "10px" )]
 
 subscriptions : Model -> Sub Message
 subscriptions model =
