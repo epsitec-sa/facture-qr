@@ -15,7 +15,8 @@ import Debug
 type alias Model =
     {
       error: Components.WebService.Error,
-      validation: String,
+      raw: String,
+      validations: List Components.WebService.ValidationError,
       image: String
     , dropZone :
         DropZone.Model
@@ -28,7 +29,8 @@ type alias Model =
 init : Model
 init =
     { error = Components.WebService.noError
-    , validation = ""
+    , raw = ""
+    , validations = []
     , image = ""
     , dropZone =
         DropZone.init
@@ -66,7 +68,8 @@ update message model =
                   , files =
                       files
                   , error = init.error
-                  , validation = init.validation
+                  , raw = init.raw
+                  , validations = init.validations
                   , image = init.image
                   -- and store the dropped files
                 }
@@ -108,7 +111,7 @@ update message model =
             Ok wsErr ->
               ( { model | error = wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              ( model,
+              ( { model | raw = str },
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "application/text" str)),
                   Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/text" str))
