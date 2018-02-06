@@ -217,7 +217,7 @@ baseDropStyle : Html.Attribute a
 baseDropStyle =
     style
         [("min-height", "calc(60vh)")
-        , ("background", "url('./img/parachute.svg') no-repeat center center #333")
+        , ("background", "url('./static/img/parachute.svg') no-repeat center center #333")
         , ("background-size", "25%")
         , ("color", "#fff")
         , ( "border-radius", "10px" )]
