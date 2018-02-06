@@ -1,6 +1,6 @@
 module Components.WebService exposing (..)
 
-import Json.Decode exposing (int, string, float, Decoder, decodeString)
+import Json.Decode exposing (int, string, float, list, Decoder, decodeString)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 import Components.Errors exposing (..)
 import Debug
@@ -48,9 +48,9 @@ validationErrorDecoder =
     |> optional "AdditionalInfo" string ""
 
 
-decodeValidationError: String -> Result String ValidationError
-decodeValidationError str =
-  decodeString validationErrorDecoder str
+decodeValidationErrors: String -> Result String (List ValidationError)
+decodeValidationErrors str =
+  decodeString (list validationErrorDecoder) str
 
 
 

@@ -121,7 +121,12 @@ update message model =
 
 
         InvoiceValidated (Ok str) ->
-          ( { model | validation = str }, Cmd.none)
+          case Components.WebService.decodeValidationErrors str of
+            Ok validation ->
+              ( { model | validations = validation }, Cmd.none)
+            Err err ->
+              Debug.log (err)
+              ({ model | error = Components.WebService.newError Components.Errors.NetworkError }, Cmd.none)
 
         InvoiceValidated (Err err) ->
           Debug.log (httpErrorString err)
