@@ -12,6 +12,17 @@ type alias Error = {
   stackTrace: String
 }
 
+type alias ValidationError = {
+  xmlField : String,
+  code : Components.Errors.ValidationErrorCode,
+  line : Int,
+  column : Int,
+  message : String,
+  additionalInfo : String
+}
+
+
+
 errorDecoder : Json.Decode.Decoder Error
 errorDecoder =
   decode Error
@@ -23,6 +34,25 @@ errorDecoder =
 decodeError: String -> Result String Error
 decodeError str =
   decodeString errorDecoder str
+
+
+
+validationErrorDecoder : Json.Decode.Decoder ValidationError
+validationErrorDecoder =
+  decode ValidationError
+    |> required "XmlField" string
+    |> required "Code" Components.Errors.validationErrorCodeDecoder
+    |> required "Line" int
+    |> required "Column" int
+    |> optional "Message" string ""
+    |> optional "AdditionalInfo" string ""
+
+
+decodeValidationError: String -> Result String ValidationError
+decodeValidationError str =
+  decodeString validationErrorDecoder str
+
+
 
 
 debug : Error -> Cmd msg
