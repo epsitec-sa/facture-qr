@@ -36,7 +36,7 @@ errorCodeString : ErrorCode -> String
 errorCodeString error =
   case error of
       None ->
-           "No error"
+           ""
       MultipleFilesDropped ->
            "more than one file has been dropped"
       NetworkError ->
@@ -44,7 +44,7 @@ errorCodeString error =
       UnknownError ->
            "unknown error"
       InvalidEncoding ->
-           "file should be encoded with latin-1 but the following encoding was found"
+           "file should be encoded with latin-1 but the following encoding was found :"
       InvalidInvoiceImage ->
            "could not decode invoice image"
       GenerationError ->
