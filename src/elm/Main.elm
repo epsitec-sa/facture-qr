@@ -52,6 +52,8 @@ view model =
   div [][    -- inline CSS (literal)
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
     , p [] [ text model.qrCode.message ]
+    , p [] [ text model.qrCode.validation ]
+    , p [] [ text model.qrCode.image ]
   ]
 
 subscriptions : Model -> Sub Msg

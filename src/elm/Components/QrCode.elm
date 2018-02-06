@@ -10,7 +10,9 @@ import Http
 import Json.Encode
 
 type alias Model =
-    { message : String
+    { message : String,
+      validation: String,
+      image: String
     , dropZone :
         DropZone.Model
 
@@ -22,6 +24,8 @@ type alias Model =
 init : Model
 init =
     { message = "Waiting..."
+    , validation = ""
+    , image = ""
     , dropZone =
         DropZone.init
 
@@ -37,8 +41,11 @@ type Message
       -- add an Message that takes care of hovering, dropping etc
     | FileReadSucceeded BinaryFile
     | FileReadFailed FileReader.Error
-    | FileEncoded EncodedFile
-    | FileValidated (Result Http.Error String)
+    | FileBase64Encoded EncodedFile
+
+    | FileDecoded (Result Http.Error String)
+    | InvoiceValidated (Result Http.Error String)
+    | InvoiceGenerated (Result Http.Error String)
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -82,16 +89,39 @@ update message model =
             ( { model | message = FileReader.prettyPrint err }
             , Cmd.none
             )
-        FileEncoded file ->
+        FileBase64Encoded file ->
             -- this happens when an effect has finished and the file has successfully been loaded
             ( model ,
-              Http.send FileValidated (put file)
+              Http.send FileDecoded (put "decode" (Http.jsonBody <| (Json.Encode.object [
+                  ("fileName", Json.Encode.string file.fileName),
+                  ("content", Json.Encode.string file.content)
+                ])))
             )
 
-        FileValidated (Ok str) ->
-          ({ model | message = str }, Cmd.none)
+        FileDecoded (Ok str) ->
 
-        FileValidated (Err err) ->
+          ( model,
+            Cmd.batch <| [
+              Http.send InvoiceValidated (put "validate" (Http.stringBody "application/json" str)),
+              Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/json" str))
+            ]
+          )
+
+        FileDecoded (Err err) ->
+          ({ model | message = httpErrorString err }, Cmd.none)
+
+
+        InvoiceValidated (Ok str) ->
+          ( { model | validation = str }, Cmd.none)
+
+        InvoiceValidated (Err err) ->
+          ({ model | message = httpErrorString err }, Cmd.none)
+
+
+        InvoiceGenerated (Ok str) ->
+          ( { model | image = str }, Cmd.none)
+
+        InvoiceGenerated (Err err) ->
           ({ model | message = httpErrorString err }, Cmd.none)
 
 
