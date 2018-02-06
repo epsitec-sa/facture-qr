@@ -155,29 +155,6 @@ put route body =
     }
 
 
-httpErrorString : Http.Error -> String
-httpErrorString error =
-    case error of
-        Http.BadUrl text ->
-            "Bad Url: " ++ text
-        Http.Timeout ->
-            "Http Timeout"
-        Http.NetworkError ->
-            "Network Error"
-        Http.BadStatus response ->
-            "Bad Http Status: " ++ toString response.status.code
-        Http.BadPayload message response ->
-            "Bad Http Payload: "
-                ++ toString message
-                ++ " ("
-                ++ toString response.status.code
-                ++ ")"
-
-
-
-
-
-
 
 
 -- qrCode component
