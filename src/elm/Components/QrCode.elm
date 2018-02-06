@@ -1,5 +1,7 @@
 module Components.QrCode exposing (..)
 import Components.Ports exposing (..)
+import Components.WebService exposing (..)
+import Components.Errors exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,9 +10,11 @@ import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, r
 import Task
 import Http
 import Json.Encode
+import Debug
 
 type alias Model =
-    { message : String,
+    {
+      error: Components.WebService.Error,
       validation: String,
       image: String
     , dropZone :
@@ -23,7 +27,7 @@ type alias Model =
 
 init : Model
 init =
-    { message = "Waiting..."
+    { error = Components.WebService.noError
     , validation = ""
     , image = ""
     , dropZone =
@@ -69,8 +73,7 @@ update message model =
                   List.map (readBinaryFile) files
               )
             else
-              ( {model
-              | message = "Please do not drop more than one file"}
+              ( { model | error = Components.WebService.newError Components.Errors.MultipleFilesDropped }
               , Cmd.none )
 
         DnD a ->
@@ -85,10 +88,10 @@ update message model =
           )
 
         FileReadFailed err ->
+            Debug.log (FileReader.prettyPrint err)
             -- this happens when an effect has finished and there was an error loading hte file
-            ( { model | message = FileReader.prettyPrint err }
-            , Cmd.none
-            )
+            ( model, Cmd.none)
+
         FileBase64Encoded file ->
             -- this happens when an effect has finished and the file has successfully been loaded
             ( model ,
@@ -99,30 +102,36 @@ update message model =
             )
 
         FileDecoded (Ok str) ->
-
-          ( model,
-            Cmd.batch <| [
-              Http.send InvoiceValidated (put "validate" (Http.stringBody "application/json" str)),
-              Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/json" str))
-            ]
-          )
+          case  Components.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | error = wsErr }, Components.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              ( model,
+                Cmd.batch <| [
+                  Http.send InvoiceValidated (put "validate" (Http.stringBody "application/json" str)),
+                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/json" str))
+                ]
+              )
 
         FileDecoded (Err err) ->
-          ({ model | message = httpErrorString err }, Cmd.none)
+          Debug.log (httpErrorString err)
+          ({ model | error = Components.WebService.newError Components.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceValidated (Ok str) ->
           ( { model | validation = str }, Cmd.none)
 
         InvoiceValidated (Err err) ->
-          ({ model | message = httpErrorString err }, Cmd.none)
+          Debug.log (httpErrorString err)
+          ({ model | error = Components.WebService.newError Components.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceGenerated (Ok str) ->
           ( { model | image = str }, Cmd.none)
 
         InvoiceGenerated (Err err) ->
-          ({ model | message = httpErrorString err }, Cmd.none)
+          Debug.log (httpErrorString err)
+          ({ model | error = Components.WebService.newError Components.Errors.NetworkError }, Cmd.none)
 
 
 

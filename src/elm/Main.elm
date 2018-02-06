@@ -4,6 +4,7 @@ import Html exposing (..)
 
 -- component import example
 import Components.QrCode
+import Components.WebService
 
 -- APP
 main : Program Never Model Msg
@@ -51,7 +52,7 @@ view : Model -> Html Msg
 view model =
   div [][    -- inline CSS (literal)
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
-    , p [] [ text model.qrCode.message ]
+    , p [] [ text (Components.WebService.prettify model.qrCode.error) ]
     , p [] [ text model.qrCode.validation ]
     , p [] [ text model.qrCode.image ]
   ]
