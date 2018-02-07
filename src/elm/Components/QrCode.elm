@@ -1,11 +1,14 @@
 module Components.QrCode exposing (..)
 import Components.QrHelpers exposing (..)
+import Components.QrImage exposing (..)
+import Components.QrValidation exposing (..)
 import Backend.Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import DropZone exposing (DropZoneMessage(Drop), dropZoneEventHandlers, isHovering)
 import FileReader exposing (Error(..), FileRef, NativeFile, readAsArrayBuffer, readAsTextFile)
 import Task
@@ -13,13 +16,14 @@ import Http
 import Json.Encode
 import Debug
 
+type Tabs = Validation | Image
+
+
 type alias Model =
     {
       webService : Backend.WebService.Model
-    , dropZone :
-        DropZone.Model
-
-    -- store the DropZone model in your apps Model
+    , dropZone : DropZone.Model
+    , tabs : Tabs
     , files : List NativeFile
     }
 
@@ -28,10 +32,8 @@ init : Model
 init =
     {
     webService = Backend.WebService.init
-    , dropZone =
-        DropZone.init
-
-    -- call DropZone.init to initialize
+    , dropZone = DropZone.init
+    , tabs = Validation
     , files = []
     }
 
@@ -48,11 +50,14 @@ type Message
     | FileDecoded (Result Http.Error String)
     | InvoiceValidated (Result Http.Error String)
     | InvoiceGenerated (Result Http.Error String)
+    | TabsChanged Tabs
 
 
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
+        TabsChanged tabs -> ( { model | tabs = tabs }, Cmd.none)
+
         DnD (Drop files) ->
             -- this happens when the user dropped something into the dropzone
             if List.length files == 1 then
@@ -75,14 +80,10 @@ update message model =
 
         DnD a ->
             -- these are opaque DropZone messages, just hand them to DropZone to deal with them
-            ( { model | dropZone = DropZone.update a model.dropZone }
-            , Cmd.none
-            )
+            ( { model | dropZone = DropZone.update a model.dropZone }, Cmd.none)
 
         FileReadSucceeded file ->
-          ( model
-          , binaryFileRead file
-          )
+          ( model, binaryFileRead file)
 
         FileReadFailed err ->
             Debug.log (FileReader.prettyPrint err)
@@ -181,22 +182,61 @@ put route body =
 -- qrCode component
 view : Model -> Html Message
 view model =
-  Html.map DnD
-      (div (renderZoneAttributes model.dropZone) [
-        {-if List.length model.files > 0 then
-          case model.webService.error of
-            Nothing ->
-              case model.webService.generation.image of
-                Nothing -> renderSpinner
-                Just img -> renderImageZone img
-            Just err ->
-                renderError err
-        else
-          renderEmptyDropZone-}
-      ])
+    (div (renderZoneAttributes model.dropZone) [
+      if List.length model.files > 0 then
+        case model.webService.error of
+          Nothing ->
+              renderTabs model
+          Just err ->
+              renderError err
+      else
+        renderEmptyDropZone
+    ])
+
+renderTabs : Model -> Html Message
+renderTabs model =
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("flex-direction", "column"),
+    ("align-items", "stretch"),
+    ("justify-content", "flex-start")
+  ]]
+  [
+    div [style [ -- tabs
+      ("display", "flex"),
+      ("height", "50px"),
+      ("align-items", "flex-start"),
+      ("justify-content", "flex-start")
+    ]]
+    [
+      renderTab model Validation "Validation",
+      renderTab model Image "Qr Invoice"
+    ],
+    case model.tabs of
+      Validation ->
+        Components.QrValidation.render model.webService.decoding model.webService.validation
+      Image ->
+        Components.QrImage.render model.webService.generation
+  ]
+
+renderTab : Model -> Tabs -> String -> Html Message
+renderTab model tab str =
+  div [style [
+    ("background", "#0d4c80"),
+    ("padding", "0.5em"),
+    ("color", "#fff"),
+    ("border-radius", "2px"),
+    ("margin", "2px")
+    ],
+    onClick (TabsChanged tab)
+    ]
+    [
+      text str
+    ]
 
 
-renderEmptyDropZone : Html (DropZoneMessage (List NativeFile))
+renderEmptyDropZone : Html a
 renderEmptyDropZone =
   div [style [
     ("display", "flex"),
@@ -212,7 +252,7 @@ renderEmptyDropZone =
     ]
 
 
-renderError : Backend.WebService.Error -> Html (DropZoneMessage (List NativeFile))
+renderError : Backend.WebService.Error -> Html a
 renderError err =
   div [style [
     ("display", "flex"),
@@ -224,9 +264,7 @@ renderError err =
   ]
 
 
-renderZoneAttributes :
-    DropZone.Model
-    -> List (Html.Attribute (DropZoneMessage (List NativeFile)))
+renderZoneAttributes : DropZone.Model -> List (Html.Attribute (Message))
 renderZoneAttributes dropZoneModel =
     baseDropStyle ::
     (if DropZone.isHovering dropZoneModel then
@@ -236,7 +274,7 @@ renderZoneAttributes dropZoneModel =
         dropZoneDefault
     )
         :: -- add the necessary DropZone event wiring
-           dropZoneEventHandlers FileReader.parseDroppedFiles
+            (List.map (\msg -> Html.Attributes.map DnD msg) <| dropZoneEventHandlers FileReader.parseDroppedFiles)
 
 
 dropZoneDefault : Html.Attribute a
