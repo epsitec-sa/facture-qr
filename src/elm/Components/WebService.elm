@@ -71,15 +71,6 @@ prettifyValidationError err =
   Components.Errors.validationErrorCodeString (err.code) ++ " " ++
   err.additionalInfo
 
-
-noError : Error
-noError = {
-    errorCode = Components.Errors.None,
-    additionalInformation = "",
-    message = "",
-    stackTrace = ""
-  }
-
 newError : Components.Errors.ErrorCode -> Error
 newError errorCode = {
     errorCode = errorCode,

@@ -4,7 +4,6 @@ import Json.Decode exposing (..)
 import Http
 
 type ErrorCode =
-  None |
   MultipleFilesDropped | NetworkError | UnknownError |
   InvalidEncoding | InvalidInvoiceImage | GenerationError | ValidationError
 
@@ -14,8 +13,6 @@ errorCodeDecoder =
     Json.Decode.string
         |> Json.Decode.andThen (\str ->
            case str of
-               "None" ->
-                    Json.Decode.succeed None
                "MultipleFilesDropped" ->
                     Json.Decode.succeed MultipleFilesDropped
                "UnknownError" ->
@@ -35,8 +32,6 @@ errorCodeDecoder =
 errorCodeString : ErrorCode -> String
 errorCodeString error =
   case error of
-      None ->
-           ""
       MultipleFilesDropped ->
            "more than one file has been dropped"
       NetworkError ->
