@@ -83,13 +83,31 @@ renderHeader =
 renderContent: Model -> Html Msg
 renderContent model =
   div [style [("margin-top", "20px")]] [
-    Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
+    Html.map QrCodeMessage (Components.QrCode.view model.qrCode),
+    div [style [("display", "flex")]] [
+      renderRawInvoice model,
+      renderErrors model
+    ]
   ]
 {-
     , p [] [ text (Components.WebService.prettifyError model.qrCode.error) ]
     , renderRawInvoice model.qrCode.raw
     , renderValidationErrors model.qrCode.validations
 -}
+
+renderRawInvoice: Model -> Html Msg
+renderRawInvoice model =
+  div [style [("flex-grow", "1"), ("background-color", "#ccc")]] [
+    case model.qrCode.raw of
+      Nothing -> div [] []
+      Just raw ->
+        div [] (List.map (\line -> div [] [text line, br [] []]) (String.split "\n" raw))
+  ]
+
+renderErrors: Model -> Html Msg
+renderErrors model =
+  div [style [("flex-grow", "1")]] []
+
 
 renderFooter: Html a
 renderFooter =
@@ -105,16 +123,12 @@ renderFooter =
       ],
       div [class "colonne w50 txt-right"] [
         a [href "#", buttonStyle] [text "FR"],
-        div [style [("width", "3px")]] [],
         a [href "#", buttonStyle] [text "DE"]
       ],
       div [class "clearfix"] []
     ]
   ]
 
-renderRawInvoice: String -> Html a
-renderRawInvoice raw =
-  div [] (List.map (\line -> div [] [text line, br [] []]) (String.split "\n" raw))
 
 
 renderValidationErrors: List Components.WebService.ValidationError -> Html a
@@ -130,7 +144,8 @@ buttonStyle =
     ("background", "#0d4c80"),
     ("padding", "0.5em"),
     ("color", "#fff"),
-    ("border-radius", "2px")
+    ("border-radius", "2px"),
+    ("margin", "2px")
   ]
 
 
