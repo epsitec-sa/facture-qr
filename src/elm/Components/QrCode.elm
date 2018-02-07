@@ -14,10 +14,7 @@ import Debug
 
 type alias Model =
     {
-      error: Maybe Components.WebService.Error,
-      raw: Maybe String,
-      validations: Maybe (List Components.WebService.ValidationError),
-      image: Maybe String
+      webService : Components.WebService.Model
     , dropZone :
         DropZone.Model
 
@@ -28,10 +25,8 @@ type alias Model =
 
 init : Model
 init =
-    { error = Nothing
-    , raw = Nothing
-    , validations = Nothing
-    , image = Nothing
+    {
+    webService = Components.WebService.init
     , dropZone =
         DropZone.init
 
@@ -65,12 +60,8 @@ update message model =
                       DropZone.update (Drop files) model.dropZone
 
                   -- update the DropZone model
-                  , files =
-                      files
-                  , error = init.error
-                  , raw = init.raw
-                  , validations = init.validations
-                  , image = init.image
+                  , files = files
+                  , webService = Components.WebService.init
                   -- and store the dropped files
                 }
               , Cmd.batch <|
@@ -78,7 +69,7 @@ update message model =
                   List.map (readBinaryFile) files
               )
             else
-              ( { model | error = Just (Components.WebService.newError Components.Errors.MultipleFilesDropped) }
+              ( { model | webService = Components.WebService.setNewError model.webService Components.Errors.MultipleFilesDropped }
               , Cmd.none )
 
         DnD a ->
@@ -109,9 +100,9 @@ update message model =
         FileDecoded (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | error = Just wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              ( { model | raw = Just str },
+              ( { model | webService = Components.WebService.setRaw model.webService str },
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "application/text" str)),
                   Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/text" str))
@@ -120,38 +111,38 @@ update message model =
 
         FileDecoded (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceValidated (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | error = Just wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
               case Components.WebService.decodeValidationErrors str of
-                Ok validation ->
-                  ( { model | validations = Just validation }, Cmd.none)
+                Ok validations ->
+                  ( { model | webService = Components.WebService.setValidations model.webService validations }, Cmd.none)
                 Err err ->
                   Debug.log (err)
-                  ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+                  ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceValidated (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceGenerated (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | error = Just wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              ( { model | image = Just str }, Cmd.none)
+              ( { model | webService = Components.WebService.setImage model.webService str }, Cmd.none)
 
 
         InvoiceGenerated (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
 
 
 
@@ -192,9 +183,9 @@ view model =
   Html.map DnD
       (div (renderZoneAttributes model.dropZone) [
         if List.length model.files > 0 then
-          case model.error of
+          case model.webService.error of
             Nothing ->
-              case model.image of
+              case model.webService.image of
                 Nothing -> renderSpinner
                 Just img -> renderImageZone img
             Just err ->

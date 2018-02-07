@@ -94,7 +94,7 @@ renderContent model =
 renderRawInvoice: Model -> Html Msg
 renderRawInvoice model =
   div [style [("flex-grow", "1"), ("background-color", "#ccc")]] [
-    case model.qrCode.raw of
+    case model.qrCode.webService.raw of
       Nothing -> div [] []
       Just raw ->
         div [] (List.map (\line -> div [] [text line, br [] []]) (String.split "\n" raw))
