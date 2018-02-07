@@ -8,7 +8,15 @@ import Html.Attributes exposing (..)
 
 renderImage : String -> Html a
 renderImage image =
-  img [src ("data:image/png;base64," ++ image), style [("width", "70%")]] []
+  div [style [
+    ("display", "flex"),
+    ("justify-content", "flex-end"),
+    ("margin-right", "3em"),
+    ("align-items", "center")
+    ]]
+  [
+    img [src ("data:image/png;base64," ++ image), style [("width", "60%")]] []
+  ]
 
 
 render : Backend.WebService.Generation -> Html a
@@ -17,7 +25,7 @@ render generation =
     ("display", "flex"),
     ("flex-grow", "1"),
     ("justify-content", "center"),
-    ("align-items", "center")]
+    ("align-items", "stretch")]
   ] [
     case generation.error of
       Nothing ->

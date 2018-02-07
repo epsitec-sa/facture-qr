@@ -12,20 +12,19 @@ renderSpinner =
     ("flex-grow", "1"),
     ("flex-direction", "column"),
     ("align-items", "center"),
-    ("justify-content", "flex-start"),
-    ("padding-top", "3em")
+    ("justify-content", "center")
     ]]
   [
-    div []
+    div [style [("margin-bottom", "4em")]]
     [
-      text "Waiting for generation..."],
-      div [style [
-       ("display", "flex"),
-       ("flex-grow", "1"),
-       ("flex-direction", "column"),
-       ("align-items", "center"),
-       ("justify-content", "center")
-       ]]
+      text "Waiting..."
+    ],
+    div [style [
+     ("display", "flex"),
+     ("flex-direction", "column"),
+     ("align-items", "center"),
+     ("justify-content", "center")
+     ]]
     [
       i [class "fas fa-spinner fa-spin", style [("font-size", "40px")]] []
     ]
