@@ -1,4 +1,4 @@
-module Components.Errors exposing (..)
+module Backend.Errors exposing (..)
 
 import Json.Decode exposing (..)
 import Http

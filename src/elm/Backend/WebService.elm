@@ -1,13 +1,13 @@
-module Components.WebService exposing (..)
+module Backend.WebService exposing (..)
 
 import Json.Decode exposing (int, string, float, list, Decoder, decodeString)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
-import Components.Errors exposing (..)
+import Backend.Errors exposing (..)
 import Debug
 
 
 type alias Error = {
-  errorCode: Components.Errors.ErrorCode,
+  errorCode: Backend.Errors.ErrorCode,
   additionalInformation: String,
   message: String,
   stackTrace: String
@@ -15,7 +15,7 @@ type alias Error = {
 
 type alias ValidationError = {
   xmlField : String,
-  code : Components.Errors.ValidationErrorCode,
+  code : Backend.Errors.ValidationErrorCode,
   line : Int,
   column : Int,
   message : String,
@@ -66,7 +66,7 @@ setError : Model -> Error -> Model
 setError model err =
   { model | error = Just (err) }
 
-setNewError : Model -> Components.Errors.ErrorCode -> Model
+setNewError : Model -> Backend.Errors.ErrorCode -> Model
 setNewError model errCode =
   setError model (newError errCode)
 
@@ -130,7 +130,7 @@ setGenerationError model err =
 errorDecoder : Json.Decode.Decoder Error
 errorDecoder =
   decode Error
-    |> required "ErrorCode" Components.Errors.errorCodeDecoder
+    |> required "ErrorCode" Backend.Errors.errorCodeDecoder
     |> optional "AdditionalInformation" string ""
     |> required "Message" string
     |> optional "StackTrace" string ""
@@ -145,7 +145,7 @@ validationErrorDecoder : Json.Decode.Decoder ValidationError
 validationErrorDecoder =
   decode ValidationError
     |> required "XmlField" string
-    |> required "Code" Components.Errors.validationErrorCodeDecoder
+    |> required "Code" Backend.Errors.validationErrorCodeDecoder
     |> required "Line" int
     |> required "Column" int
     |> optional "Message" string ""
@@ -166,16 +166,16 @@ debug err =
 
 prettifyError : Error -> String
 prettifyError err =
-  Components.Errors.errorCodeString (err.errorCode) ++ " " ++ err.additionalInformation
+  Backend.Errors.errorCodeString (err.errorCode) ++ " " ++ err.additionalInformation
 
 
 prettifyValidationError : ValidationError -> String
 prettifyValidationError err =
   err.xmlField ++ ":  " ++
-  Components.Errors.validationErrorCodeString (err.code) ++ " " ++
+  Backend.Errors.validationErrorCodeString (err.code) ++ " " ++
   err.additionalInfo
 
-newError : Components.Errors.ErrorCode -> Error
+newError : Backend.Errors.ErrorCode -> Error
 newError errorCode = {
     errorCode = errorCode,
     additionalInformation = "",

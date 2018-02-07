@@ -1,4 +1,4 @@
-port module Components.Ports exposing (..)
+port module Backend.Ports exposing (..)
 import FileReader exposing (..)
 
 type alias BinaryFile = {

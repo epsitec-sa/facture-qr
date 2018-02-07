@@ -1,7 +1,7 @@
 module Components.QrCode exposing (..)
-import Components.Ports exposing (..)
-import Components.WebService exposing (..)
-import Components.Errors exposing (..)
+import Backend.Ports exposing (..)
+import Backend.WebService exposing (..)
+import Backend.Errors exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -14,7 +14,7 @@ import Debug
 
 type alias Model =
     {
-      webService : Components.WebService.Model
+      webService : Backend.WebService.Model
     , dropZone :
         DropZone.Model
 
@@ -26,7 +26,7 @@ type alias Model =
 init : Model
 init =
     {
-    webService = Components.WebService.init
+    webService = Backend.WebService.init
     , dropZone =
         DropZone.init
 
@@ -61,7 +61,7 @@ update message model =
 
                   -- update the DropZone model
                   , files = files
-                  , webService = Components.WebService.init
+                  , webService = Backend.WebService.init
                   -- and store the dropped files
                 }
               , Cmd.batch <|
@@ -69,7 +69,7 @@ update message model =
                   List.map (readBinaryFile) files
               )
             else
-              ( { model | webService = Components.WebService.setNewError model.webService Components.Errors.MultipleFilesDropped }
+              ( { model | webService = Backend.WebService.setNewError model.webService Backend.Errors.MultipleFilesDropped }
               , Cmd.none )
 
         DnD a ->
@@ -98,11 +98,11 @@ update message model =
             )
 
         FileDecoded (Ok str) ->
-          case  Components.WebService.decodeError str of
+          case  Backend.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setDecodingError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Backend.WebService.setDecodingError model.webService wsErr }, Backend.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              ( { model | webService = Components.WebService.setRaw model.webService str },
+              ( { model | webService = Backend.WebService.setRaw model.webService str },
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "application/text" str)),
                   Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/text" str))
@@ -111,38 +111,38 @@ update message model =
 
         FileDecoded (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceValidated (Ok str) ->
-          case  Components.WebService.decodeError str of
+          case  Backend.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setValidationsError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Backend.WebService.setValidationsError model.webService wsErr }, Backend.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              case Components.WebService.decodeValidationErrors str of
+              case Backend.WebService.decodeValidationErrors str of
                 Ok validations ->
-                  ( { model | webService = Components.WebService.setValidations model.webService validations }, Cmd.none)
+                  ( { model | webService = Backend.WebService.setValidations model.webService validations }, Cmd.none)
                 Err err ->
                   Debug.log (err)
-                  ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
+                  ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceValidated (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
 
         InvoiceGenerated (Ok str) ->
-          case  Components.WebService.decodeError str of
+          case  Backend.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setGenerationError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Backend.WebService.setGenerationError model.webService wsErr }, Backend.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
-              ( { model | webService = Components.WebService.setImage model.webService str }, Cmd.none)
+              ( { model | webService = Backend.WebService.setImage model.webService str }, Cmd.none)
 
 
         InvoiceGenerated (Err err) ->
           Debug.log (httpErrorString err)
-          ({ model | webService = Components.WebService.setNewError model.webService Components.Errors.NetworkError }, Cmd.none)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
 
 
@@ -247,7 +247,7 @@ renderImageZone image =
     img [src ("data:image/png;base64," ++ image), style [("width", "70%")]] []
   ]
 
-renderError : Components.WebService.Error -> Html (DropZoneMessage (List NativeFile))
+renderError : Backend.WebService.Error -> Html (DropZoneMessage (List NativeFile))
 renderError err =
   div [style [
     ("display", "flex"),
@@ -256,7 +256,7 @@ renderError err =
     ("align-items", "center")]
   ] [
     div [style [("color", "red")]] [
-      text (Components.WebService.prettifyError err)
+      text (Backend.WebService.prettifyError err)
     ]
   ]
 
