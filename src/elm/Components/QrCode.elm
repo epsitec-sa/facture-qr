@@ -192,9 +192,13 @@ view model =
   Html.map DnD
       (div (renderZoneAttributes model.dropZone) [
         if List.length model.files > 0 then
-          case model.image of
-            Nothing -> renderSpinner
-            Just img -> renderImageZone img
+          case model.error of
+            Nothing ->
+              case model.image of
+                Nothing -> renderSpinner
+                Just img -> renderImageZone img
+            Just err ->
+                renderError err
         else
           renderEmptyDropZone
       ])
@@ -252,6 +256,19 @@ renderImageZone image =
     img [src ("data:image/png;base64," ++ image), style [("width", "70%")]] []
   ]
 
+renderError : Components.WebService.Error -> Html (DropZoneMessage (List NativeFile))
+renderError err =
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("justify-content", "center"),
+    ("align-items", "center")]
+  ] [
+    div [style [("color", "red")]] [
+      text (Components.WebService.prettifyError err)
+    ]
+  ]
+
 
 renderZoneAttributes :
     DropZone.Model
@@ -270,12 +287,12 @@ renderZoneAttributes dropZoneModel =
 
 dropZoneDefault : Html.Attribute a
 dropZoneDefault =
-    style [( "border", "3px dashed #333" )]
+    style [( "border", "2px dashed #333" )]
 
 
 dropZoneHover : Html.Attribute a
 dropZoneHover =
-    style [( "border", "3px dashed red" )]
+    style [( "border", "2px dashed red" )]
 
 baseDropStyle : Html.Attribute a
 baseDropStyle =

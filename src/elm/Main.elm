@@ -85,15 +85,11 @@ renderContent model =
   div [style [("margin-top", "20px")]] [
     Html.map QrCodeMessage (Components.QrCode.view model.qrCode),
     div [style [("display", "flex")]] [
-      renderRawInvoice model,
-      renderErrors model
+      renderRawInvoice model
+      --renderErrors model-}
     ]
   ]
-{-
-    , p [] [ text (Components.WebService.prettifyError model.qrCode.error) ]
-    , renderRawInvoice model.qrCode.raw
-    , renderValidationErrors model.qrCode.validations
--}
+
 
 renderRawInvoice: Model -> Html Msg
 renderRawInvoice model =
