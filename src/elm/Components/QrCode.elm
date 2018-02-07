@@ -124,12 +124,17 @@ update message model =
 
 
         InvoiceValidated (Ok str) ->
-          case Components.WebService.decodeValidationErrors str of
-            Ok validation ->
-              ( { model | validations = Just validation }, Cmd.none)
-            Err err ->
-              Debug.log (err)
-              ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+          case  Components.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | error = Just wsErr }, Components.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              case Components.WebService.decodeValidationErrors str of
+                Ok validation ->
+                  ( { model | validations = Just validation }, Cmd.none)
+                Err err ->
+                  Debug.log (err)
+                  ({ model | error = Just (Components.WebService.newError Components.Errors.NetworkError) }, Cmd.none)
+
 
         InvoiceValidated (Err err) ->
           Debug.log (httpErrorString err)
@@ -137,7 +142,12 @@ update message model =
 
 
         InvoiceGenerated (Ok str) ->
-          ( { model | image = Just str }, Cmd.none)
+          case  Components.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | error = Just wsErr }, Components.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              ( { model | image = Just str }, Cmd.none)
+
 
         InvoiceGenerated (Err err) ->
           Debug.log (httpErrorString err)
@@ -181,12 +191,66 @@ view : Model -> Html Message
 view model =
   Html.map DnD
       (div (renderZoneAttributes model.dropZone) [
-        p [style [("text-align", "center"), ("padding-top", "3em")]]
-          [text "Drop your code or your QR code here without fear.",
-           br [] [],
-           text "We will validate it very carefully ;-)"
-          ]
-       ])
+        if List.length model.files > 0 then
+          case model.image of
+            Nothing -> renderSpinner
+            Just img -> renderImageZone img
+        else
+          renderEmptyDropZone
+      ])
+
+
+renderEmptyDropZone : Html (DropZoneMessage (List NativeFile))
+renderEmptyDropZone =
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("flex-direction", "column"),
+    ("align-items", "center"),
+    ("justify-content", "flex-start"),
+    ("padding-top", "3em")
+    ]]
+    [div [] [text "Drop your code or your QR code here without fear."],
+     div [] [text "We will validate it very carefully ;-)"],
+     img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
+    ]
+
+renderSpinner : Html (DropZoneMessage (List NativeFile))
+renderSpinner =
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("flex-direction", "column"),
+    ("align-items", "center"),
+    ("justify-content", "flex-start"),
+    ("padding-top", "3em")
+    ]]
+  [
+    div []
+    [
+      text "Waiting for generation..."],
+      div [style [
+       ("display", "flex"),
+       ("flex-grow", "1"),
+       ("flex-direction", "column"),
+       ("align-items", "center"),
+       ("justify-content", "center")
+       ]]
+    [
+      i [class "fas fa-spinner fa-spin", style [("font-size", "40px")]] []
+    ]
+  ]
+
+renderImageZone : String -> Html (DropZoneMessage (List NativeFile))
+renderImageZone image =
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("justify-content", "center"),
+    ("align-items", "center")]
+  ] [
+    img [src ("data:image/png;base64," ++ image), style [("width", "70%")]] []
+  ]
 
 
 renderZoneAttributes :
@@ -216,9 +280,11 @@ dropZoneHover =
 baseDropStyle : Html.Attribute a
 baseDropStyle =
     style
-        [("min-height", "calc(60vh)")
-        , ("background", "url('./static/img/parachute.svg') no-repeat center center #333")
+        [ ("display", "flex")
+        , ("flex-grow", "1")
+        , ("height", "calc(60vh)")
         , ("background-size", "25%")
+        , ("background", "#333")
         , ("color", "#fff")
         , ( "border-radius", "10px" )]
 
