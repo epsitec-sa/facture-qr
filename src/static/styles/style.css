@@ -32,6 +32,13 @@ a:hover {
   opacity: .5;
 }
 
+.qrTab {
+  background-color: #666;
+}
+
+.qrTab:hover {
+  background-color: #888;
+}
 
 .row .w50 {
   width: 100%

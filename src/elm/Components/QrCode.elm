@@ -207,7 +207,8 @@ renderTabs model =
       ("display", "flex"),
       ("height", "50px"),
       ("align-items", "flex-start"),
-      ("justify-content", "flex-start")
+      ("justify-content", "flex-start"),
+      ("margin-left", "2em")
     ]]
     [
       renderTab model Validation "Validation",
@@ -222,13 +223,14 @@ renderTabs model =
 
 renderTab : Model -> Tabs -> String -> Html Message
 renderTab model tab str =
-  div [style [
-    ("background", "#0d4c80"),
-    ("padding", "0.5em"),
-    ("color", "#fff"),
-    ("border-radius", "2px"),
-    ("margin", "2px")
-    ],
+  div [
+    class "qrTab",
+    style (
+      if (model.tabs == tab) then
+        ("background-color", "#ccc") :: baseTabStyle
+      else
+        baseTabStyle
+    ),
     onClick (TabsChanged tab)
     ]
     [
@@ -296,6 +298,19 @@ baseDropStyle =
         , ("background", "#333")
         , ("color", "#fff")
         , ( "border-radius", "10px" )]
+
+baseTabStyle : List (String, String)
+baseTabStyle = [
+    ("cursor", "pointer"),
+    ("padding", "0.5em 1em 0.5em 1em"),
+    ("color", "#fff"),
+    ("border-bottom-left-radius", "10px"),
+    ("border-bottom-right-radius", "10px"),
+    ("margin-right", "4px"),
+    ("margin-left", "4px"),
+    ("margin-top", "-2px")
+  ]
+
 
 subscriptions : Model -> Sub Message
 subscriptions model =
