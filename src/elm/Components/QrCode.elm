@@ -100,7 +100,7 @@ update message model =
         FileDecoded (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setDecodingError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
               ( { model | webService = Components.WebService.setRaw model.webService str },
                 Cmd.batch <| [
@@ -117,7 +117,7 @@ update message model =
         InvoiceValidated (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setValidationsError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
               case Components.WebService.decodeValidationErrors str of
                 Ok validations ->
@@ -135,7 +135,7 @@ update message model =
         InvoiceGenerated (Ok str) ->
           case  Components.WebService.decodeError str of
             Ok wsErr ->
-              ( { model | webService = Components.WebService.setError model.webService wsErr }, Components.WebService.debug (wsErr))
+              ( { model | webService = Components.WebService.setGenerationError model.webService wsErr }, Components.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
               ( { model | webService = Components.WebService.setImage model.webService str }, Cmd.none)
 
@@ -185,7 +185,7 @@ view model =
         if List.length model.files > 0 then
           case model.webService.error of
             Nothing ->
-              case model.webService.image of
+              case model.webService.generation.image of
                 Nothing -> renderSpinner
                 Just img -> renderImageZone img
             Just err ->

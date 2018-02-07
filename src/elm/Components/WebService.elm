@@ -22,19 +22,43 @@ type alias ValidationError = {
   additionalInfo : String
 }
 
+type alias Decoding = {
+  error: Maybe Error,
+  raw: Maybe String
+}
+
+type alias Validation = {
+  error: Maybe Error,
+  validations: Maybe (List ValidationError)
+}
+
+type alias Generation = {
+  error: Maybe Error,
+  image: Maybe String
+}
+
 type alias Model = {
   error: Maybe Error,
-  raw: Maybe String,
-  validations: Maybe (List ValidationError),
-  image: Maybe String
+  decoding: Decoding,
+  validation: Validation,
+  generation: Generation
 }
 
 init : Model
 init = {
-    error = Nothing
-    , raw = Nothing
-    , validations = Nothing
-    , image = Nothing
+    error = Nothing,
+    decoding = {
+      error = Nothing,
+      raw = Nothing
+    },
+    validation = {
+      error = Nothing,
+      validations = Nothing
+    },
+    generation = {
+      error = Nothing,
+      image = Nothing
+    }
   }
 
 
@@ -46,19 +70,60 @@ setNewError : Model -> Components.Errors.ErrorCode -> Model
 setNewError model errCode =
   setError model (newError errCode)
 
+
+
+setDecodingErr : Decoding -> Error -> Decoding
+setDecodingErr decoding err =
+  { decoding | error = Just (err) }
+
+setRawValue : Decoding -> String -> Decoding
+setRawValue decoding raw =
+  { decoding | raw = Just (raw) }
+
 setRaw : Model -> String -> Model
 setRaw model raw =
-  { model | raw = Just (raw) }
+  { model | decoding = setRawValue model.decoding raw }
+
+setDecodingError : Model -> Error -> Model
+setDecodingError model err =
+  { model | decoding = setDecodingErr model.decoding err }
+
+
+
+
+setValidationsErr : Validation -> Error -> Validation
+setValidationsErr validation err =
+  { validation | error = Just (err) }
+
+setValidationsValue : Validation -> List ValidationError -> Validation
+setValidationsValue validation validations =
+  { validation | validations = Just (validations) }
 
 setValidations : Model -> List ValidationError -> Model
 setValidations model validations =
-  { model | validations = Just (validations) }
+  { model | validation = setValidationsValue model.validation validations }
+
+setValidationsError : Model -> Error -> Model
+setValidationsError model err =
+  { model | validation = setValidationsErr model.validation err }
+
+
+
+setGenerationErr : Generation -> Error -> Generation
+setGenerationErr generation err =
+  { generation | error = Just (err) }
+
+setImageValue : Generation -> String -> Generation
+setImageValue validation image =
+  { validation | image = Just (image) }
 
 setImage : Model -> String -> Model
 setImage model image =
-  { model | image = Just (image) }
+  { model | generation = setImageValue model.generation image }
 
-
+setGenerationError : Model -> Error -> Model
+setGenerationError model err =
+  { model | generation = setGenerationErr model.generation err }
 
 
 
