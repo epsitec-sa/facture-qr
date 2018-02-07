@@ -1,4 +1,5 @@
 module Components.QrCode exposing (..)
+import Components.QrHelpers exposing (..)
 import Backend.Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
@@ -182,7 +183,7 @@ view : Model -> Html Message
 view model =
   Html.map DnD
       (div (renderZoneAttributes model.dropZone) [
-        if List.length model.files > 0 then
+        {-if List.length model.files > 0 then
           case model.webService.error of
             Nothing ->
               case model.webService.generation.image of
@@ -191,7 +192,7 @@ view model =
             Just err ->
                 renderError err
         else
-          renderEmptyDropZone
+          renderEmptyDropZone-}
       ])
 
 
@@ -210,42 +211,6 @@ renderEmptyDropZone =
      img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
     ]
 
-renderSpinner : Html (DropZoneMessage (List NativeFile))
-renderSpinner =
-  div [style [
-    ("display", "flex"),
-    ("flex-grow", "1"),
-    ("flex-direction", "column"),
-    ("align-items", "center"),
-    ("justify-content", "flex-start"),
-    ("padding-top", "3em")
-    ]]
-  [
-    div []
-    [
-      text "Waiting for generation..."],
-      div [style [
-       ("display", "flex"),
-       ("flex-grow", "1"),
-       ("flex-direction", "column"),
-       ("align-items", "center"),
-       ("justify-content", "center")
-       ]]
-    [
-      i [class "fas fa-spinner fa-spin", style [("font-size", "40px")]] []
-    ]
-  ]
-
-renderImageZone : String -> Html (DropZoneMessage (List NativeFile))
-renderImageZone image =
-  div [style [
-    ("display", "flex"),
-    ("flex-grow", "1"),
-    ("justify-content", "center"),
-    ("align-items", "center")]
-  ] [
-    img [src ("data:image/png;base64," ++ image), style [("width", "70%")]] []
-  ]
 
 renderError : Backend.WebService.Error -> Html (DropZoneMessage (List NativeFile))
 renderError err =
@@ -255,9 +220,7 @@ renderError err =
     ("justify-content", "center"),
     ("align-items", "center")]
   ] [
-    div [style [("color", "red")]] [
-      text (Backend.WebService.prettifyError err)
-    ]
+    Components.QrHelpers.renderError err
   ]
 
 

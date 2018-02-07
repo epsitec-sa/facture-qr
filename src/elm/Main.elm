@@ -1,11 +1,9 @@
-
 module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 -- component import example
 import Components.QrCode
-import Components.WebService
 
 -- APP
 main : Program Never Model Msg
@@ -83,26 +81,9 @@ renderHeader =
 renderContent: Model -> Html Msg
 renderContent model =
   div [style [("margin-top", "20px")]] [
-    Html.map QrCodeMessage (Components.QrCode.view model.qrCode),
-    div [style [("display", "flex")]] [
-      renderRawInvoice model
-      --renderErrors model-}
-    ]
+    Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
   ]
 
-
-renderRawInvoice: Model -> Html Msg
-renderRawInvoice model =
-  div [style [("flex-grow", "1"), ("background-color", "#ccc")]] [
-    case model.qrCode.webService.decoding.raw of
-      Nothing -> div [] []
-      Just raw ->
-        div [] (List.map (\line -> div [] [text line, br [] []]) (String.split "\n" raw))
-  ]
-
-renderErrors: Model -> Html Msg
-renderErrors model =
-  div [style [("flex-grow", "1")]] []
 
 
 renderFooter: Html a
@@ -124,14 +105,6 @@ renderFooter =
       div [class "clearfix"] []
     ]
   ]
-
-
-
-renderValidationErrors: List Components.WebService.ValidationError -> Html a
-renderValidationErrors validations =
-  div [] (
-    List.map (\validation -> p [] [text (Components.WebService.prettifyValidationError validation)]) validations
-  )
 
 
 buttonStyle: Html.Attribute a
