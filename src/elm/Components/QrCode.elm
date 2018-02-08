@@ -226,7 +226,7 @@ renderTabs model =
     ],
     case model.tabs of
       Validation ->
-        Html.map QrValidationMessage (Components.QrValidation.view model.webService.decoding model.webService.validation)
+        Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation model.webService.decoding model.webService.validation)
       Image ->
         Components.QrImage.render model.webService.generation
   ]

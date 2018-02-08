@@ -85,15 +85,23 @@ parseIndexWithLeadingZero index =
 update : Message -> Model -> (Model, Cmd Message)
 update msg model =
   case msg of
-    ValidationIn xmlField -> (model, Cmd.none)
-    ValidationOut xmlField -> (model, Cmd.none)
+    ValidationIn xmlField -> (
+      {model | hoveredValidations =
+        if not (List.member xmlField model.hoveredValidations) then
+          xmlField :: model.hoveredValidations
+        else model.hoveredValidations
+      },
+      Cmd.none)
+    ValidationOut xmlField -> (
+      {model | hoveredValidations = List.filter (\field -> not (field == xmlField)) model.hoveredValidations},
+      Cmd.none)
 
 
 
 
 
-renderValidationErrors: List Line -> List Backend.WebService.ValidationError -> Html Message
-renderValidationErrors lines validations =
+renderValidationErrors: Model -> List Line -> List Backend.WebService.ValidationError -> Html Message
+renderValidationErrors model lines validations =
   div [style [
     ("display", "flex"),
     ("flex-direction", "column"),
@@ -111,7 +119,8 @@ renderValidationErrors lines validations =
           div [style [
             ("border", "1px solid white"),
             ("padding", "1em"),
-            ("margin", "1em 0em 1em 0em")
+            ("margin", "1em 0em 1em 0em"),
+            ("font-size", if (List.member block.xmlField model.hoveredValidations) then "15px" else "10px" )
           ],
           onMouseEnter (ValidationIn block.xmlField),
           onMouseLeave (ValidationOut block.xmlField)
@@ -129,15 +138,18 @@ renderValidationErrors lines validations =
 
 
 
-renderLineBlocks : String -> List LineBlock -> Html Message
-renderLineBlocks line blocks =
+renderLineBlocks : Model -> String -> List LineBlock -> Html Message
+renderLineBlocks model line blocks =
   div [style [("display", "inline")]] (
     List.map (\block ->
       div (
         case block.error of
           True -> [
             class "lineError",
-            style [("display", "inline")],
+            style [
+              ("display", "inline"),
+              ("font-size", if (List.member block.xmlField model.hoveredValidations) then "15px" else "10px" )
+            ],
             onMouseEnter (ValidationIn block.xmlField),
             onMouseLeave (ValidationOut block.xmlField)
           ]
@@ -151,8 +163,8 @@ renderLineBlocks line blocks =
     ) blocks
   )
 
-renderLine : Line -> Html Message
-renderLine line =
+renderLine : Model -> Line -> Html Message
+renderLine model line =
   div [style [("display", "flex"), ("align-items", "flex-start")]] [
     span [
       style [
@@ -164,13 +176,13 @@ renderLine line =
 
     span [style [("width", "10px"), ("height", "1px")]] [],
 
-    span [] [renderLineBlocks line.raw line.blocks],
+    span [] [renderLineBlocks model line.raw line.blocks],
     br [] []
   ]
 
 
-renderRawInvoice : List Line -> Html Message
-renderRawInvoice lines =
+renderRawInvoice : Model -> List Line -> Html Message
+renderRawInvoice model lines =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -189,13 +201,13 @@ renderRawInvoice lines =
     ]]
     [
       div [] (
-        List.map (\line -> (renderLine line) ) lines
+        List.map (\line -> (renderLine model line) ) lines
       )
     ]
   ]
 
-renderContent : String -> List Backend.WebService.ValidationError -> Html Message
-renderContent raw validations =
+renderContent : Model -> String -> List Backend.WebService.ValidationError -> Html Message
+renderContent model raw validations =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -206,13 +218,13 @@ renderContent raw validations =
     let
       lines = computeLines raw validations
     in ([
-      renderRawInvoice lines,
-      renderValidationErrors lines validations
+      renderRawInvoice model lines,
+      renderValidationErrors model lines validations
     ])
   )
 
-view : Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
-view decoding validation =
+view : Model -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
+view model decoding validation =
   case decoding.error of
     Nothing ->
       case validation.error of
@@ -222,7 +234,7 @@ view decoding validation =
             Just validations ->
               case decoding.raw of
                 Nothing -> div [] []
-                Just raw -> renderContent raw validations
+                Just raw -> renderContent model raw validations
         Just err ->
             renderError err
     Just err ->
