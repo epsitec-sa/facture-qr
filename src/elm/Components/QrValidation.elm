@@ -5,16 +5,90 @@ import Components.QrHelpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+type Message = ValidationHovered String
+
 type alias LineBlock = {
   start : Int,
   end : Int,
-  error : Bool
+  error : Bool,
+  xmlField : Maybe String
 }
 
+type alias Line = {
+  number : Int,
+  raw : String,
+  blocks : List LineBlock
+}
+
+type alias Model = {
+  hoveredValidations : List String
+}
+
+init : Model
+init = {
+    hoveredValidations = []
+  }
 
 
-renderValidationErrors: List Backend.WebService.ValidationError -> Html a
-renderValidationErrors validations =
+
+-- From each validation error, generate a chunk of correct text and another with error text
+computeLineBlocks : List Backend.WebService.ValidationError -> Int -> Int -> List LineBlock
+computeLineBlocks validations offset lineLength =
+  case validations of
+    [] -> [{
+        start = offset,
+        end = lineLength,
+        error = False,
+        xmlField = Nothing
+      }]
+    x::xs ->
+      if offset <= x.column - 1 then
+        List.append [{
+          start = offset,
+          end = x.column - 1,
+          error = False,
+          xmlField = Nothing
+        }, {
+          start = x.column - 1,
+          end = x.column - 1 + x.length,
+          error = True,
+          xmlField = Just x.xmlField
+        }] (computeLineBlocks xs (x.column - 1 + x.length) lineLength)
+      else
+        computeLineBlocks xs offset lineLength
+
+cleanValidations : Int -> List Backend.WebService.ValidationError -> List Backend.WebService.ValidationError
+cleanValidations index validations =
+  List.sortWith (\a b -> compare a.column b.column) (
+    List.filter (\validation -> validation.line == index) validations
+  )
+
+computeLines : String -> List Backend.WebService.ValidationError -> List Line
+computeLines raw validations =
+    List.indexedMap (\index line -> {
+        number = index + 1,
+        raw = line,
+        blocks = computeLineBlocks (cleanValidations (index + 1) validations) 0 (String.length line)
+      }
+    ) (String.split "\n" raw)
+
+{-
+
+update : Message -> (Cmd Message)
+update msg =
+  case msg of
+    InvoiceValidated validations ->
+
+-}
+
+
+
+
+
+
+
+renderValidationErrors: List Line -> List Backend.WebService.ValidationError -> Html a
+renderValidationErrors lines validations =
   div [style [
     ("display", "flex"),
     ("flex-direction", "column"),
@@ -30,13 +104,13 @@ renderValidationErrors validations =
   )
 
 
+
 parseIndexWithLeadingZero : Int -> String
 parseIndexWithLeadingZero index =
   if index < 10 then
     "0" ++ toString index
   else
     toString index
-
 
 renderLineBlocks : String -> List LineBlock -> Html a
 renderLineBlocks line blocks =
@@ -55,53 +129,24 @@ renderLineBlocks line blocks =
     ) blocks
   )
 
--- From each validation error, generate a chunk of correct text and another with error text
-computeLineBlocks : List Backend.WebService.ValidationError -> Int -> Int -> List LineBlock
-computeLineBlocks validations offset lineLength =
-  case validations of
-    [] -> [{
-        start = offset,
-        end = lineLength,
-        error = False
-      }]
-    x::xs ->
-      if offset <= x.column - 1 then
-        List.append [{
-          start = offset,
-          end = x.column - 1,
-          error = False
-        }, {
-          start = x.column - 1,
-          end = x.column - 1 + x.length,
-          error = True
-        }] (computeLineBlocks xs (x.column - 1 + x.length) lineLength)
-      else
-        computeLineBlocks xs offset lineLength
-
-sortValidations : List Backend.WebService.ValidationError -> List Backend.WebService.ValidationError
-sortValidations validations =
-  List.sortWith (\a b -> compare a.column b.column) validations
-
-renderLine : Int -> String -> List Backend.WebService.ValidationError -> Html a
-renderLine index line validations =
+renderLine : Line -> Html a
+renderLine line =
   div [style [("display", "flex"), ("align-items", "flex-start")]] [
-    span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (parseIndexWithLeadingZero (index + 1))],
+    span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (parseIndexWithLeadingZero line.number)],
     span [style [("width", "10px"), ("height", "1px")]] [],
 
     span [] [
-      if List.length validations == 0 then
-        text line
+      if List.length line.blocks == 0 then
+        text line.raw
       else
-        renderLineBlocks line (
-          computeLineBlocks (sortValidations validations) 0 (String.length line)
-        )
+        renderLineBlocks line.raw line.blocks
     ],
     br [] []
   ]
 
 
-renderRawInvoice : String -> List Backend.WebService.ValidationError -> Html a
-renderRawInvoice raw validations =
+renderRawInvoice : List Line -> Html a
+renderRawInvoice lines =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -120,9 +165,7 @@ renderRawInvoice raw validations =
     ]]
     [
       div [] (
-        List.indexedMap (\index line ->
-          renderLine index line (List.filter (\validation -> validation.line == (index + 1)) validations)
-        ) (String.split "\n" raw)
+        List.map (\line -> (renderLine line) ) lines
       )
     ]
   ]
@@ -135,10 +178,14 @@ renderContent raw validations =
     ("flex-basis", "0"),
     ("padding", "0.5em")]
   ]
-  [
-    renderRawInvoice raw validations,
-    renderValidationErrors validations
-  ]
+  (
+    let
+      lines = computeLines raw validations
+    in ([
+      renderRawInvoice lines,
+      renderValidationErrors lines validations
+    ])
+  )
 
 render : Backend.WebService.Decoding -> Backend.WebService.Validation -> Html a
 render decoding validation =
