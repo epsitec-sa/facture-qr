@@ -5,26 +5,66 @@ import Components.QrHelpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+type alias LineSubstr = {
+  start : Int,
+  end : Int,
+  error : Bool
+}
+
 
 renderValidationErrors: List Backend.WebService.ValidationError -> Html a
 renderValidationErrors validations =
   div [style [
     ("display", "flex"),
+    ("flex-direction", "column"),
     ("flex-grow", "1"),
     ("flex-shrink", "0"),
-    ("flex-basis", "0")
+    ("flex-basis", "0"),
+    ("overflow-y", "auto"),
+    ("font-size", "10px"),
+    ("width", "300px")
   ]]
-  [
-    --List.map (\validation -> p [] [text (Backend.WebService.prettifyValidationError validation)]) validations
-  ]
+  (
+    List.map (\validation -> p [] [text (Backend.WebService.prettifyValidationError validation)]) validations
+  )
 
-computeLineSubstr : String -> Backend.WebService.ValidationError -> (Int, Int)
-computeLineSubstr line validation =
-  (0, String.length line)
 
-renderLineWithValidation : String -> (Int, Int) -> Html a
-renderLineWithValidation line substr =
-  div [] []
+renderLineWithSubstrs : String -> List LineSubstr -> Html a
+renderLineWithSubstrs line substrs =
+  div [style [("display", "inline")]] (
+    List.map (\substr ->
+      div (
+        case substr.error of
+          True -> [class "lineError", style [("display", "inline")]]
+          False -> [style [("display", "inline")]]
+      ) [
+        text (String.slice substr.start substr.end line)
+      ]
+    ) substrs
+  )
+
+-- From each validation error, generate a chunk of correct text and another with error text
+computeLineSubstrs : List Backend.WebService.ValidationError -> Int -> Int -> List LineSubstr
+computeLineSubstrs validations offset lineLength =
+  case validations of
+    [] -> [{
+        start = offset,
+        end = lineLength,
+        error = False
+      }]
+    x::xs ->
+      if offset <= x.column - 1 then
+        List.append [{
+          start = offset,
+          end = x.column - 1,
+          error = False
+        }, {
+          start = x.column - 1,
+          end = x.column - 1 + x.length,
+          error = True
+        }] (computeLineSubstrs xs (x.column - 1 + x.length) lineLength)
+      else
+        computeLineSubstrs xs offset lineLength
 
 
 renderLine : Int -> String -> List Backend.WebService.ValidationError -> Html a
@@ -33,15 +73,14 @@ renderLine index line validations =
     span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (toString (index + 1))],
     span [style [("width", "10px"), ("height", "1px")]] [],
 
-    if List.length validations == 0 then
-      span [] [text line]
-    else
-      span [] (
-        List.map (\validation ->
-          renderLineWithValidation line (computeLineSubstr line validation)
-        ) validations
-      )
-    ,
+    span [] [
+      if List.length validations == 0 then
+        text line
+      else
+        renderLineWithSubstrs line (
+          computeLineSubstrs validations 0 (String.length line)
+        )
+    ],
     br [] []
   ]
 

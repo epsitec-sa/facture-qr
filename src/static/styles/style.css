@@ -40,6 +40,10 @@ a:hover {
   background-color: #888;
 }
 
+.lineError {
+  text-decoration: underline;
+}
+
 .row .w50 {
   width: 100%
 }
