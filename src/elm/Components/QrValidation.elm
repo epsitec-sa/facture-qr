@@ -120,7 +120,7 @@ renderValidationErrors model lines validations =
             ("border", "1px solid white"),
             ("padding", "1em"),
             ("margin", "1em 0em 1em 0em"),
-            ("font-size", if (List.member block.xmlField model.hoveredValidations) then "15px" else "10px" )
+            ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
           ],
           onMouseEnter (ValidationIn block.xmlField),
           onMouseLeave (ValidationOut block.xmlField)
@@ -148,7 +148,7 @@ renderLineBlocks model line blocks =
             class "lineError",
             style [
               ("display", "inline"),
-              ("font-size", if (List.member block.xmlField model.hoveredValidations) then "15px" else "10px" )
+              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "red" else "white" )
             ],
             onMouseEnter (ValidationIn block.xmlField),
             onMouseLeave (ValidationOut block.xmlField)
