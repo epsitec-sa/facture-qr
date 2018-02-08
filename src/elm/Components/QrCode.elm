@@ -106,8 +106,8 @@ update message model =
             Err msg -> -- It is not a webservice error, so it must be the expected result
               ( { model | webService = Backend.WebService.setRaw model.webService str },
                 Cmd.batch <| [
-                  Http.send InvoiceValidated (put "validate" (Http.stringBody "application/text" str)),
-                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "application/text" str))
+                  Http.send InvoiceValidated (put "validate" (Http.stringBody "text/plain" str)),
+                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "text/plain" str))
                 ]
               )
 
@@ -252,18 +252,6 @@ renderEmptyDropZone =
      div [] [text "We will validate it very carefully ;-)"],
      img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
     ]
-
-
-renderError : Backend.WebService.Error -> Html a
-renderError err =
-  div [style [
-    ("display", "flex"),
-    ("flex-grow", "1"),
-    ("justify-content", "center"),
-    ("align-items", "center")]
-  ] [
-    Components.QrHelpers.renderError err
-  ]
 
 
 renderZoneAttributes : DropZone.Model -> List (Html.Attribute (Message))
