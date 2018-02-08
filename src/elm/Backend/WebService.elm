@@ -173,7 +173,6 @@ prettifyError err =
 
 prettifyValidationError : ValidationError -> String
 prettifyValidationError err =
-  err.xmlField ++ ":  " ++
   Backend.Errors.validationErrorCodeString (err.code) ++ " " ++
   err.additionalInfo
 

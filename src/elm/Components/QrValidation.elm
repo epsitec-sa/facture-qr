@@ -5,13 +5,13 @@ import Components.QrHelpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-type Message = ValidationHovered String
+type Message = ValidationHovered String | ValidationUnhovered String
 
 type alias LineBlock = {
   start : Int,
   end : Int,
   error : Bool,
-  xmlField : Maybe String
+  xmlField : String
 }
 
 type alias Line = {
@@ -39,7 +39,7 @@ computeLineBlocks validations offset lineLength =
         start = offset,
         end = lineLength,
         error = False,
-        xmlField = Nothing
+        xmlField = ""
       }]
     x::xs ->
       if offset <= x.column - 1 then
@@ -47,12 +47,12 @@ computeLineBlocks validations offset lineLength =
           start = offset,
           end = x.column - 1,
           error = False,
-          xmlField = Nothing
+          xmlField = ""
         }, {
           start = x.column - 1,
           end = x.column - 1 + x.length,
           error = True,
-          xmlField = Just x.xmlField
+          xmlField = x.xmlField
         }] (computeLineBlocks xs (x.column - 1 + x.length) lineLength)
       else
         computeLineBlocks xs offset lineLength
@@ -72,14 +72,14 @@ computeLines raw validations =
       }
     ) (String.split "\n" raw)
 
-{-
 
+{-
 update : Message -> (Cmd Message)
 update msg =
   case msg of
-    InvoiceValidated validations ->
-
+    ValidationHovered xmlField ->
 -}
+
 
 
 
@@ -95,12 +95,28 @@ renderValidationErrors lines validations =
     ("flex-grow", "1"),
     ("flex-shrink", "0"),
     ("flex-basis", "0"),
+    ("padding", "0em 0.5em 0em 0.5em"),
     ("overflow-y", "auto"),
-    ("font-size", "10px"),
-    ("width", "300px")
+    ("font-size", "10px")
   ]]
   (
-    List.map (\validation -> p [] [text (Backend.WebService.prettifyValidationError validation)]) validations
+    List.concatMap (\validation ->
+      List.concatMap (\line ->
+        List.map (\block ->
+          div [style [
+            ("border", "1px solid white"),
+            ("padding", "1em"),
+            ("margin", "1em 0em 1em 0em")
+          ]] [
+            text ("Line " ++ parseIndexWithLeadingZero (line.number)),
+            br [] [],
+            text (block.xmlField ++ ": " ++ (String.slice block.start block.end line.raw)),
+            br [] [],
+            text (Backend.WebService.prettifyValidationError validation)
+          ]
+        ) (List.filter (\block -> block.xmlField == validation.xmlField) line.blocks)
+      ) (List.filter (\line -> line.number == validation.line) lines)
+    ) validations
   )
 
 
@@ -132,15 +148,17 @@ renderLineBlocks line blocks =
 renderLine : Line -> Html a
 renderLine line =
   div [style [("display", "flex"), ("align-items", "flex-start")]] [
-    span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (parseIndexWithLeadingZero line.number)],
+    span [
+      style [
+        ("font-size", "8px"),
+        ("padding-top", "2px"),
+        ("font-weight", if List.length (line.blocks) > 1 then "bold" else "regular")
+      ]]
+      [text (parseIndexWithLeadingZero line.number)],
+
     span [style [("width", "10px"), ("height", "1px")]] [],
 
-    span [] [
-      if List.length line.blocks == 0 then
-        text line.raw
-      else
-        renderLineBlocks line.raw line.blocks
-    ],
+    span [] [renderLineBlocks line.raw line.blocks],
     br [] []
   ]
 
