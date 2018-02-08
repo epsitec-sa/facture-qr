@@ -77,6 +77,9 @@ computeLineSubstrs validations offset lineLength =
       else
         computeLineSubstrs xs offset lineLength
 
+sortValidations : List Backend.WebService.ValidationError -> List Backend.WebService.ValidationError
+sortValidations validations =
+  List.sortWith (\a b -> compare a.column b.column) validations
 
 renderLine : Int -> String -> List Backend.WebService.ValidationError -> Html a
 renderLine index line validations =
@@ -89,7 +92,7 @@ renderLine index line validations =
         text line
       else
         renderLineWithSubstrs line (
-          computeLineSubstrs validations 0 (String.length line)
+          computeLineSubstrs (sortValidations validations) 0 (String.length line)
         )
     ],
     br [] []
