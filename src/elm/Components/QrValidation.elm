@@ -5,11 +5,12 @@ import Components.QrHelpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-type alias LineSubstr = {
+type alias LineBlock = {
   start : Int,
   end : Int,
   error : Bool
 }
+
 
 
 renderValidationErrors: List Backend.WebService.ValidationError -> Html a
@@ -37,26 +38,26 @@ parseIndexWithLeadingZero index =
     toString index
 
 
-renderLineWithSubstrs : String -> List LineSubstr -> Html a
-renderLineWithSubstrs line substrs =
+renderLineBlocks : String -> List LineBlock -> Html a
+renderLineBlocks line blocks =
   div [style [("display", "inline")]] (
-    List.map (\substr ->
+    List.map (\block ->
       div (
-        case substr.error of
+        case block.error of
           True -> [class "lineError", style [("display", "inline")]]
           False -> [style [("display", "inline")]]
       ) [
-        if substr.error == True && substr.start == substr.end then
+        if block.error == True && block.start == block.end then
           text "???"
         else
-          text (String.slice substr.start substr.end line)
+          text (String.slice block.start block.end line)
       ]
-    ) substrs
+    ) blocks
   )
 
 -- From each validation error, generate a chunk of correct text and another with error text
-computeLineSubstrs : List Backend.WebService.ValidationError -> Int -> Int -> List LineSubstr
-computeLineSubstrs validations offset lineLength =
+computeLineBlocks : List Backend.WebService.ValidationError -> Int -> Int -> List LineBlock
+computeLineBlocks validations offset lineLength =
   case validations of
     [] -> [{
         start = offset,
@@ -73,9 +74,9 @@ computeLineSubstrs validations offset lineLength =
           start = x.column - 1,
           end = x.column - 1 + x.length,
           error = True
-        }] (computeLineSubstrs xs (x.column - 1 + x.length) lineLength)
+        }] (computeLineBlocks xs (x.column - 1 + x.length) lineLength)
       else
-        computeLineSubstrs xs offset lineLength
+        computeLineBlocks xs offset lineLength
 
 sortValidations : List Backend.WebService.ValidationError -> List Backend.WebService.ValidationError
 sortValidations validations =
@@ -91,8 +92,8 @@ renderLine index line validations =
       if List.length validations == 0 then
         text line
       else
-        renderLineWithSubstrs line (
-          computeLineSubstrs (sortValidations validations) 0 (String.length line)
+        renderLineBlocks line (
+          computeLineBlocks (sortValidations validations) 0 (String.length line)
         )
     ],
     br [] []
