@@ -18,6 +18,7 @@ type alias ValidationError = {
   code : Backend.Errors.ValidationErrorCode,
   line : Int,
   column : Int,
+  length : Int,
   message : String,
   additionalInfo : String
 }
@@ -148,6 +149,7 @@ validationErrorDecoder =
     |> required "Code" Backend.Errors.validationErrorCodeDecoder
     |> required "Line" int
     |> required "Column" int
+    |> required "Length" int
     |> optional "Message" string ""
     |> optional "AdditionalInfo" string ""
 
