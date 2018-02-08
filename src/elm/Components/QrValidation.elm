@@ -4,8 +4,9 @@ import Components.QrHelpers exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
-type Message = ValidationHovered String | ValidationUnhovered String
+type Message = ValidationIn String | ValidationOut String
 
 type alias LineBlock = {
   start : Int,
@@ -73,21 +74,25 @@ computeLines raw validations =
     ) (String.split "\n" raw)
 
 
-{-
-update : Message -> (Cmd Message)
-update msg =
+parseIndexWithLeadingZero : Int -> String
+parseIndexWithLeadingZero index =
+  if index < 10 then
+    "0" ++ toString index
+  else
+    toString index
+
+
+update : Message -> Model -> (Model, Cmd Message)
+update msg model =
   case msg of
-    ValidationHovered xmlField ->
--}
+    ValidationIn xmlField -> (model, Cmd.none)
+    ValidationOut xmlField -> (model, Cmd.none)
 
 
 
 
 
-
-
-
-renderValidationErrors: List Line -> List Backend.WebService.ValidationError -> Html a
+renderValidationErrors: List Line -> List Backend.WebService.ValidationError -> Html Message
 renderValidationErrors lines validations =
   div [style [
     ("display", "flex"),
@@ -107,7 +112,10 @@ renderValidationErrors lines validations =
             ("border", "1px solid white"),
             ("padding", "1em"),
             ("margin", "1em 0em 1em 0em")
-          ]] [
+          ],
+          onMouseEnter (ValidationIn block.xmlField),
+          onMouseLeave (ValidationOut block.xmlField)
+          ] [
             text ("Line " ++ parseIndexWithLeadingZero (line.number)),
             br [] [],
             text (block.xmlField ++ ": " ++ (String.slice block.start block.end line.raw)),
@@ -121,20 +129,18 @@ renderValidationErrors lines validations =
 
 
 
-parseIndexWithLeadingZero : Int -> String
-parseIndexWithLeadingZero index =
-  if index < 10 then
-    "0" ++ toString index
-  else
-    toString index
-
-renderLineBlocks : String -> List LineBlock -> Html a
+renderLineBlocks : String -> List LineBlock -> Html Message
 renderLineBlocks line blocks =
   div [style [("display", "inline")]] (
     List.map (\block ->
       div (
         case block.error of
-          True -> [class "lineError", style [("display", "inline")]]
+          True -> [
+            class "lineError",
+            style [("display", "inline")],
+            onMouseEnter (ValidationIn block.xmlField),
+            onMouseLeave (ValidationOut block.xmlField)
+          ]
           False -> [style [("display", "inline")]]
       ) [
         if block.error == True && block.start == block.end then
@@ -145,7 +151,7 @@ renderLineBlocks line blocks =
     ) blocks
   )
 
-renderLine : Line -> Html a
+renderLine : Line -> Html Message
 renderLine line =
   div [style [("display", "flex"), ("align-items", "flex-start")]] [
     span [
@@ -163,7 +169,7 @@ renderLine line =
   ]
 
 
-renderRawInvoice : List Line -> Html a
+renderRawInvoice : List Line -> Html Message
 renderRawInvoice lines =
   div [style [
     ("display", "flex"),
@@ -188,7 +194,7 @@ renderRawInvoice lines =
     ]
   ]
 
-renderContent : String -> List Backend.WebService.ValidationError -> Html a
+renderContent : String -> List Backend.WebService.ValidationError -> Html Message
 renderContent raw validations =
   div [style [
     ("display", "flex"),
@@ -205,8 +211,8 @@ renderContent raw validations =
     ])
   )
 
-render : Backend.WebService.Decoding -> Backend.WebService.Validation -> Html a
-render decoding validation =
+view : Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
+view decoding validation =
   case decoding.error of
     Nothing ->
       case validation.error of

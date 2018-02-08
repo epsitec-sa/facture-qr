@@ -22,6 +22,7 @@ type Tabs = Validation | Image
 type alias Model =
     {
       webService : Backend.WebService.Model
+    , qrValidation : Components.QrValidation.Model
     , dropZone : DropZone.Model
     , tabs : Tabs
     , files : List NativeFile
@@ -32,6 +33,7 @@ init : Model
 init =
     {
     webService = Backend.WebService.init
+    , qrValidation =  Components.QrValidation.init
     , dropZone = DropZone.init
     , tabs = Validation
     , files = []
@@ -51,6 +53,7 @@ type Message
     | InvoiceValidated (Result Http.Error String)
     | InvoiceGenerated (Result Http.Error String)
     | TabsChanged Tabs
+    | QrValidationMessage Components.QrValidation.Message
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -146,6 +149,13 @@ update message model =
           Debug.log (httpErrorString err)
           ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
+        QrValidationMessage qrValidationMsg ->
+          let
+            ( updatedQrValidationModel, qrValidationCmd ) =
+              Components.QrValidation.update qrValidationMsg model.qrValidation
+          in
+            ( { model | qrValidation = updatedQrValidationModel }, Cmd.map QrValidationMessage qrValidationCmd )
+
 
 
 readBinaryFile : NativeFile -> Cmd Message
@@ -216,7 +226,7 @@ renderTabs model =
     ],
     case model.tabs of
       Validation ->
-        Components.QrValidation.render model.webService.decoding model.webService.validation
+        Html.map QrValidationMessage (Components.QrValidation.view model.webService.decoding model.webService.validation)
       Image ->
         Components.QrImage.render model.webService.generation
   ]
