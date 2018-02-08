@@ -29,6 +29,14 @@ renderValidationErrors validations =
   )
 
 
+parseIndexWithLeadingZero : Int -> String
+parseIndexWithLeadingZero index =
+  if index < 10 then
+    "0" ++ toString index
+  else
+    toString index
+
+
 renderLineWithSubstrs : String -> List LineSubstr -> Html a
 renderLineWithSubstrs line substrs =
   div [style [("display", "inline")]] (
@@ -73,7 +81,7 @@ computeLineSubstrs validations offset lineLength =
 renderLine : Int -> String -> List Backend.WebService.ValidationError -> Html a
 renderLine index line validations =
   div [style [("display", "flex"), ("align-items", "flex-start")]] [
-    span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (toString (index + 1))],
+    span [style [("font-size", "8px"), ("padding-top", "2px")]] [text (parseIndexWithLeadingZero (index + 1))],
     span [style [("width", "10px"), ("height", "1px")]] [],
 
     span [] [
