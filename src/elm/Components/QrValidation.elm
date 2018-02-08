@@ -38,7 +38,10 @@ renderLineWithSubstrs line substrs =
           True -> [class "lineError", style [("display", "inline")]]
           False -> [style [("display", "inline")]]
       ) [
-        text (String.slice substr.start substr.end line)
+        if substr.error == True && substr.start == substr.end then
+          text "???"
+        else
+          text (String.slice substr.start substr.end line)
       ]
     ) substrs
   )
