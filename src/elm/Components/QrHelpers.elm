@@ -34,6 +34,13 @@ renderSpinner =
 
 renderError : Backend.WebService.Error -> Html a
 renderError err =
-  div [style [("color", "red")]] [
-    text (Backend.WebService.prettifyError err)
+  div [style [
+    ("display", "flex"),
+    ("flex-grow", "1"),
+    ("justify-content", "center"),
+    ("align-items", "center")]
+  ] [
+    div [style [("color", "red")]] [
+      text (Backend.WebService.prettifyError err)
+    ]
   ]
