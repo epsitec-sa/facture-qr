@@ -90,7 +90,7 @@ renderHeader model =
       h1 [] [text (t model.language RTitle)]
     ],
     div [style [("flex-grow", "1"), ("text-align", "right")]] [
-      img [style [("width", "120px")], src ("./static/img/swiss-cow.svg")] []
+      img [style [("width", "120px"), ("height", "100%")], src ("./static/img/swiss-cow.svg")] []
     ]
   ]
 
