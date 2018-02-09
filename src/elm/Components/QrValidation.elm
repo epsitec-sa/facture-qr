@@ -213,7 +213,8 @@ renderContent model language raw validations =
     ("display", "flex"),
     ("flex-grow", "1"),
     ("flex-basis", "0"),
-    ("padding", "0.5em")]
+    ("padding", "0.5em"),
+    ("min-height", "0px")]
   ]
   (
     let
