@@ -116,12 +116,20 @@ setGenerationErr generation err =
   { generation | error = Just (err) }
 
 setImageValue : Generation -> String -> Generation
-setImageValue validation image =
-  { validation | image = Just (image) }
+setImageValue generation image =
+  { generation | image = Just (image) }
+
+setNoImageValue : Generation -> Generation
+setNoImageValue generation =
+  { generation | image = Nothing }
 
 setImage : Model -> String -> Model
 setImage model image =
   { model | generation = setImageValue model.generation image }
+
+setNoImage : Model -> Model
+setNoImage model =
+  { model | generation = setNoImageValue model.generation }
 
 setGenerationError : Model -> Error -> Model
 setGenerationError model err =

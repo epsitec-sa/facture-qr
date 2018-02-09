@@ -162,7 +162,7 @@ update message model =
             ( { model | qrValidation = updatedQrValidationModel }, Cmd.map QrValidationMessage qrValidationCmd )
 
         LanguageChanged language ->
-            ( { model | language = language },
+            ( { model | language = language, webService = Backend.WebService.setNoImage model.webService },
               sendGenerate model.webService.decoding.raw language
             )
 
