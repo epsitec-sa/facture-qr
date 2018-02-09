@@ -195,18 +195,17 @@ renderRawInvoice model lines =
   [
     div [style [
       ("display", "flex"),
+      ("flex-direction", "column"),
       ("background-color", "#fff"),
       ("overflow-y", "auto"),
       ("font-size", "10px"),
-      ("width", "400px"),
       ("padding", "0.5em"),
+      ("margin-right", "1.5em"),
       ("color", "black")
     ]]
-    [
-      div [] (
-        List.map (\line -> (renderLine model line) ) lines
-      )
-    ]
+    (
+      List.map (\line -> (renderLine model line) ) lines
+    )
   ]
 
 renderContent : Model -> Language -> String -> List Backend.WebService.ValidationError -> Html Message
