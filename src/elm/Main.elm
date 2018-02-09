@@ -1,9 +1,13 @@
 module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 -- component import example
 import Components.QrCode
+import Translations.Languages exposing (t, Language)
+import Translations.Resources exposing (..)
+
 
 -- APP
 main : Program Never Model Msg
@@ -18,18 +22,21 @@ main =
 
 -- MODEL
 type alias Model = {
-  qrCode: Components.QrCode.Model
+  qrCode: Components.QrCode.Model,
+  language: Language
 }
 
 init : Model
 init =
     {
-      qrCode = Components.QrCode.init
+      qrCode = Components.QrCode.init,
+      language = Translations.Languages.SwissFrench
     }
 
 
 -- UPDATE
 type Msg = QrCodeMessage Components.QrCode.Message
+           | LanguageChanged Language
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -40,6 +47,8 @@ update msg model =
           Components.QrCode.update qrCodeMsg model.qrCode
       in
         ( { model | qrCode = updatedQrCodeModel }, Cmd.map QrCodeMessage qrCodeCmd )
+    LanguageChanged language ->
+      ({ model | language = language }, Cmd.none)
 
 
 -- VIEW
@@ -56,19 +65,19 @@ view model =
         ("box-shadow", "0px 0px 10px rgba(0, 0, 0, 0.10)"),
         ("border-radius", "3px")]
     ][
-    renderHeader,
+    renderHeader model,
     renderContent model,
-    renderFooter
+    renderFooter model
   ]
 
 
 
 
-renderHeader: Html a
-renderHeader =
+renderHeader: Model -> Html a
+renderHeader model =
   header [style [("display", "flex"), ("border-bottom", "1px solid #eee"), ("align-items", "center")]] [
     div [style [("flex-grow", "10")]] [
-      h1 [] [text "Validateur de QR code"]
+      h1 [] [text (t model.language Title)]
     ],
     div [style [("flex-grow", "1"), ("text-align", "right")]] [
       img [style [("width", "120px")],
@@ -86,8 +95,8 @@ renderContent model =
 
 
 
-renderFooter: Html a
-renderFooter =
+renderFooter: Model -> Html Msg
+renderFooter model =
   footer [style [
       ("margin-top", "40px"),
       ("border-top", "1px solid #eee"),
@@ -99,23 +108,34 @@ renderFooter =
         p [] [text "Copyright © 2017 – Pierre Arnaud, Epsitec SA, Yverdon-les-Bains"]
       ],
       div [class "colonne w50 txt-right"] [
-        a [href "#", buttonStyle] [text "FR"],
-        a [href "#", buttonStyle] [text "DE"]
+        languageButton model Translations.Languages.SwissFrench "FR",
+        languageButton model Translations.Languages.SwissGerman "DE"
       ],
       div [class "clearfix"] []
     ]
   ]
 
 
-buttonStyle: Html.Attribute a
-buttonStyle =
-  style [
-    ("background", "#0d4c80"),
-    ("padding", "0.5em"),
-    ("color", "#fff"),
-    ("border-radius", "2px"),
-    ("margin", "2px")
-  ]
+languageButton: Model -> Translations.Languages.Language -> String -> Html Msg
+languageButton model language str =
+  a [style (
+    List.append
+      ([
+        ("background", "#0d4c80"),
+        ("padding", "0.5em"),
+        ("color", "#fff"),
+        ("border-radius", "2px"),
+        ("cursor", "pointer"),
+        ("margin", "2px")
+      ])
+      (
+        if model.language == language then
+          [("opacity", ".5")]
+        else []
+      )
+    ),
+    onClick (LanguageChanged language)]
+    [text str]
 
 
 subscriptions : Model -> Sub Msg
