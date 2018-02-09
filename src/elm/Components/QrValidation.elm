@@ -168,7 +168,12 @@ renderLineBlocks model line blocks =
 
 renderLine : Model -> Line -> Html Message
 renderLine model line =
-  div [style [("display", "flex"), ("align-items", "flex-start")]] [
+  div [style [
+    ("display", "flex"),
+    ("align-items", "flex-start"),
+    ("flex-shrink", "0")
+  ]]
+  [
     span [
       style [
         ("font-size", "8px"),
@@ -196,6 +201,10 @@ renderRawInvoice model lines =
     div [style [
       ("display", "flex"),
       ("flex-direction", "column"),
+      ("flex-grow", "1"),
+      ("flex-basis", "0"),
+      ("flex-shrink", "0"),
+      ("align-items", "stretch"),
       ("background-color", "#fff"),
       ("overflow-y", "auto"),
       ("font-size", "10px"),
