@@ -15,3 +15,7 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
     fileName: binaryFile.fileName,
   });
 });
+
+app.ports.title.subscribe (function (str) {
+  document.title = str;
+});

@@ -5,6 +5,7 @@ import Html.Events exposing (onClick)
 
 -- component import example
 import Components.QrCode
+import Ports exposing (..)
 import Translations.Languages exposing (t, Language)
 import Translations.Resources exposing (..)
 
@@ -52,7 +53,12 @@ update msg model =
         ( updatedQrCodeModel, qrCodeCmd ) =
           Components.QrCode.update (Components.QrCode.LanguageChanged language) model.qrCode
       in
-        ( { model | language = language, qrCode = updatedQrCodeModel }, Cmd.map QrCodeMessage qrCodeCmd )
+        ( { model | language = language, qrCode = updatedQrCodeModel },
+          Cmd.batch <| [
+            Cmd.map QrCodeMessage qrCodeCmd,
+            Ports.title (t language RTitle)
+          ]
+        )
 
 
 -- VIEW
