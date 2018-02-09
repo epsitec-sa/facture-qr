@@ -2,7 +2,7 @@ module Components.QrCode exposing (..)
 import Components.QrHelpers exposing (..)
 import Components.QrImage exposing (..)
 import Components.QrValidation exposing (..)
-import Backend.Ports exposing (..)
+import Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
 
