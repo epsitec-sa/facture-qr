@@ -172,9 +172,9 @@ prettifyError err language =
   (Backend.Errors.errorCodeString err.errorCode language) ++ " " ++ err.additionalInformation
 
 
-prettifyValidationError : ValidationError -> String
-prettifyValidationError err =
-  (Backend.Errors.validationErrorCodeString err.code) ++ " " ++ err.additionalInfo
+prettifyValidationError : ValidationError -> Language -> String
+prettifyValidationError err language =
+  (Backend.Errors.validationErrorCodeString err.code language) ++ " " ++ err.additionalInfo
 
 newError : Backend.Errors.ErrorCode -> Error
 newError errorCode = {

@@ -101,8 +101,8 @@ update msg model =
 
 
 
-renderValidationErrors: Model -> List Line -> List Backend.WebService.ValidationError -> Html Message
-renderValidationErrors model lines validations =
+renderValidationErrors: Model -> Language -> List Line -> List Backend.WebService.ValidationError -> Html Message
+renderValidationErrors model language lines validations =
   div [style [
     ("display", "flex"),
     ("flex-direction", "column"),
@@ -130,7 +130,7 @@ renderValidationErrors model lines validations =
             br [] [],
             text (block.xmlField ++ ": " ++ (String.slice block.start block.end line.raw)),
             br [] [],
-            text (Backend.WebService.prettifyValidationError validation)
+            text (Backend.WebService.prettifyValidationError validation language)
           ]
         ) (List.filter (\block -> block.xmlField == validation.xmlField) line.blocks)
       ) (List.filter (\line -> line.number == validation.line) lines)
@@ -207,8 +207,8 @@ renderRawInvoice model lines =
     ]
   ]
 
-renderContent : Model -> String -> List Backend.WebService.ValidationError -> Html Message
-renderContent model raw validations =
+renderContent : Model -> Language -> String -> List Backend.WebService.ValidationError -> Html Message
+renderContent model language raw validations =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -220,7 +220,7 @@ renderContent model raw validations =
       lines = computeLines raw validations
     in ([
       renderRawInvoice model lines,
-      renderValidationErrors model lines validations
+      renderValidationErrors model language lines validations
     ])
   )
 
@@ -235,7 +235,7 @@ view model language decoding validation =
             Just validations ->
               case decoding.raw of
                 Nothing -> div [] []
-                Just raw -> renderContent model raw validations
+                Just raw -> renderContent model language raw validations
         Just err ->
             renderError err language
     Just err ->

@@ -105,51 +105,30 @@ validationErrorCodeDecoder =
                     Json.Decode.fail <| "Unknown validation error code: " ++ somethingElse
         )
 
-validationErrorCodeString : ValidationErrorCode -> String
-validationErrorCodeString error =
+validationErrorCodeString : ValidationErrorCode -> Language -> String
+validationErrorCodeString error language =
   case error of
-     DoesNotExist ->
-          "le champ doit être saisi mais n'est pas présent"
-     IsEmpty ->
-          "le champ doit être saisi mais n'est pas présent"
-     MustBeEmpty ->
-          "le champ doit être vide"
-     MustBeEqualTo ->
-          "le champ ne peut prendre que les valeurs suivantes :"
-     LengthDifferent ->
-          "le champ doit avoir une longueur de"
-     LengthExceeded ->
-          "le champ ne peut pas avoir une longueur supérieure à"
-     LengthNotReached ->
-          "le champ ne peut pas avoir une longueur inferieure à"
-     MustBeDifferentThan ->
-          "le champ ne peut pas prendre les valeurs suivantes :"
-     DoesNotStartWith ->
-          "le champ doit commencer par"
-     Invalid ->
-          "le champ n'est pas valable"
-     FormatIsDifferentThan ->
-          "le format du champ doit être"
-     QrReferenceInvalid ->
-          "la référence QR (QRR) n'est pas valable"
-     CreditorReferenceInvalid ->
-          "la réference du créditeur (SCOR) n'est pas valable"
-     NoReferenceInvalid ->
-          "aucune réference ne doit être saisie pour le type NON"
-     ValueExceeded ->
-          "la valeur ne peut pas être plus grande que"
-     ValueNotReached ->
-          "la valeur ne peut pas être plus petite que"
-     InvalidTags ->
-          "erreur de formattage"
-     UnknownTag ->
-          "la balise Swico n'est pas reconnue :"
-     TagNotOrdered ->
-          "la balise Swico doit être plus grande que la précedente (les balises doivent être ordrées de façon croissante) :"
-     TagAlreadyExists ->
-          "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
-     SwiftFormat ->
-          "le champ ne respecte pas l'encodage Swift"
+     DoesNotExist -> t language RValErrDoesNotExist
+     IsEmpty -> t language RValErrIsEmpty
+     MustBeEmpty -> t language RValErrMustBeEmpty
+     MustBeEqualTo -> t language RValErrMustBeEqualTo
+     LengthDifferent -> t language RValErrLengthDifferent
+     LengthExceeded -> t language RValErrLengthExceeded
+     LengthNotReached -> t language RValErrLengthNotReached
+     MustBeDifferentThan -> t language RValErrMustBeDifferentThan
+     DoesNotStartWith -> t language RValErrDoesNotStartWith
+     Invalid -> t language RValErrInvalid
+     FormatIsDifferentThan -> t language RValErrFormatIsDifferentThan
+     QrReferenceInvalid -> t language RValErrQrReferenceInvalid
+     CreditorReferenceInvalid -> t language RValErrCreditorReferenceInvalid
+     NoReferenceInvalid -> t language RValErrNoReferenceInvalid
+     ValueExceeded -> t language RValErrValueExceeded
+     ValueNotReached -> t language RValErrValueNotReached
+     InvalidTags -> t language RValErrInvalidTags
+     UnknownTag -> t language RValErrUnknownTag
+     TagNotOrdered -> t language RValErrTagNotOrdered
+     TagAlreadyExists -> t language RValErrTagAlreadyExists
+     SwiftFormat -> t language RValErrSwiftFormat
 
 
 
