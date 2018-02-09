@@ -121,6 +121,8 @@ renderValidationErrors model language lines validations =
             ("border", "1px solid white"),
             ("padding", "1em"),
             ("margin", "1em 0em 1em 0em"),
+            ("display", "flex"),
+            ("flex-shrink", "0"),
             ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
           ],
           onMouseEnter (ValidationIn block.xmlField),
