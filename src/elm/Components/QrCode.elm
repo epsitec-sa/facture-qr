@@ -24,6 +24,7 @@ type Tabs = Validation | Image
 type alias Model =
     {
       webService : Backend.WebService.Model
+    , language : Language
     , qrValidation : Components.QrValidation.Model
     , dropZone : DropZone.Model
     , tabs : Tabs
@@ -35,6 +36,7 @@ init : Model
 init =
     {
     webService = Backend.WebService.init
+    , language = Translations.Languages.SwissFrench
     , qrValidation =  Components.QrValidation.init
     , dropZone = DropZone.init
     , tabs = Validation
@@ -56,6 +58,7 @@ type Message
     | InvoiceGenerated (Result Http.Error String)
     | TabsChanged Tabs
     | QrValidationMessage Components.QrValidation.Message
+    | LanguageChanged Language
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -105,14 +108,14 @@ update message model =
             )
 
         FileDecoded (Ok str) ->
-          case  Backend.WebService.decodeError str of
+          case Backend.WebService.decodeError str of
             Ok wsErr ->
               ( { model | webService = Backend.WebService.setDecodingError model.webService wsErr }, Backend.WebService.debug (wsErr))
             Err msg -> -- It is not a webservice error, so it must be the expected result
               ( { model | webService = Backend.WebService.setRaw model.webService str },
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "text/plain" str)),
-                  Http.send InvoiceGenerated (put "generate/fr-ch" (Http.stringBody "text/plain" str))
+                  sendGenerate (Just str) model.language
                 ]
               )
 
@@ -158,6 +161,11 @@ update message model =
           in
             ( { model | qrValidation = updatedQrValidationModel }, Cmd.map QrValidationMessage qrValidationCmd )
 
+        LanguageChanged language ->
+            ( { model | language = language },
+              sendGenerate model.webService.decoding.raw language
+            )
+
 
 
 readBinaryFile : NativeFile -> Cmd Message
@@ -175,6 +183,21 @@ readBinaryFile file =
                     Err error ->
                         FileReadFailed error
             )
+
+sendGenerate : Maybe String -> Language -> Cmd Message
+sendGenerate raw language =
+  case raw of
+    Nothing -> Cmd.none
+    Just str ->
+      Http.send InvoiceGenerated (
+        put ("generate/" ++
+          case language of
+            Translations.Languages.SwissFrench -> "fr-ch"
+            Translations.Languages.SwissGerman -> "de-ch"
+        )
+        (Http.stringBody "text/plain" str)
+      )
+
 
 put : String -> Http.Body -> Http.Request String
 put route body =

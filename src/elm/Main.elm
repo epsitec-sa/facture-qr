@@ -48,7 +48,11 @@ update msg model =
       in
         ( { model | qrCode = updatedQrCodeModel }, Cmd.map QrCodeMessage qrCodeCmd )
     LanguageChanged language ->
-      ({ model | language = language }, Cmd.none)
+      let
+        ( updatedQrCodeModel, qrCodeCmd ) =
+          Components.QrCode.update (Components.QrCode.LanguageChanged language) model.qrCode
+      in
+        ( { model | language = language, qrCode = updatedQrCodeModel }, Cmd.map QrCodeMessage qrCodeCmd )
 
 
 -- VIEW
