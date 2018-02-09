@@ -223,8 +223,8 @@ renderTabs model language =
       ("margin-left", "2em")
     ]]
     [
-      renderTab model Validation "Validation",
-      renderTab model Image "Qr Invoice"
+      renderTab model Validation (t language RTabValidation),
+      renderTab model Image (t language RTabImage)
     ],
     case model.tabs of
       Validation ->

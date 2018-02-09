@@ -8,6 +8,8 @@ t resource =
     RTitle -> "QR-Code Validator"
     RDropYourCode -> "Drop your code or your QR code here without fear."
     RWeWillValidateIt -> "We will validate it very carefully ;-)"
+    RTabValidation -> "**Validation"
+    RTabImage -> "**Image générée"
 
     RErrMultipleFilesDropped -> "more than one file has been dropped"
     RErrNetworkError -> "the request failed"
@@ -38,4 +40,3 @@ t resource =
     RValErrTagNotOrdered -> "**la balise Swico doit être plus grande que la précedente (les balises doivent être ordrées de façon croissante) :"
     RValErrTagAlreadyExists -> "**la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
     RValErrSwiftFormat -> "**le champ ne respecte pas l'encodage Swift"
-    

@@ -8,6 +8,8 @@ t resource =
     RTitle -> "Validateur de QR-code"
     RDropYourCode -> "Veuillez draguer votre QR-code sans peur."
     RWeWillValidateIt -> "On va s'en charger ;-)"
+    RTabValidation -> "Validation"
+    RTabImage -> "Image générée"
 
     RErrMultipleFilesDropped -> "un seul fichier peut être droppé à la fois"
     RErrNetworkError -> "la requête a échoué"
