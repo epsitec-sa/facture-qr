@@ -1,4 +1,5 @@
 module Backend.WebService exposing (..)
+import Translations.Languages exposing (Language)
 
 import Json.Decode exposing (int, string, float, list, Decoder, decodeString)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
@@ -166,15 +167,14 @@ debug err =
   Debug.log (err.message)
   Cmd.none
 
-prettifyError : Error -> String
-prettifyError err =
-  Backend.Errors.errorCodeString (err.errorCode) ++ " " ++ err.additionalInformation
+prettifyError : Error -> Language -> String
+prettifyError err language =
+  (Backend.Errors.errorCodeString err.errorCode language) ++ " " ++ err.additionalInformation
 
 
 prettifyValidationError : ValidationError -> String
 prettifyValidationError err =
-  Backend.Errors.validationErrorCodeString (err.code) ++ " " ++
-  err.additionalInfo
+  (Backend.Errors.validationErrorCodeString err.code) ++ " " ++ err.additionalInfo
 
 newError : Backend.Errors.ErrorCode -> Error
 newError errorCode = {

@@ -1,4 +1,6 @@
 module Backend.Errors exposing (..)
+import Translations.Languages exposing (t, Language)
+import Translations.Resources exposing (..)
 
 import Json.Decode exposing (..)
 import Http
@@ -29,23 +31,16 @@ errorCodeDecoder =
                     Json.Decode.fail <| "Unknown error code: " ++ somethingElse
         )
 
-errorCodeString : ErrorCode -> String
-errorCodeString error =
+errorCodeString : ErrorCode -> Language -> String
+errorCodeString error language =
   case error of
-      MultipleFilesDropped ->
-           "more than one file has been dropped"
-      NetworkError ->
-            "the request failed"
-      UnknownError ->
-           "unknown error"
-      InvalidEncoding ->
-           "file should be encoded with latin-1 but the following encoding was found :"
-      InvalidInvoiceImage ->
-           "could not decode invoice image"
-      GenerationError ->
-           "could not generate invoice image"
-      ValidationError ->
-           "could not validate invoice"
+      MultipleFilesDropped -> t language RErrMultipleFilesDropped
+      NetworkError -> t language RErrNetworkError
+      UnknownError -> t language RErrUnknownError
+      InvalidEncoding -> t language RErrInvalidEncoding
+      InvalidInvoiceImage -> t language RErrInvalidInvoiceImage
+      GenerationError -> t language RErrGenerationError
+      ValidationError -> t language RErrValidationError
 
 
 type ValidationErrorCode =
