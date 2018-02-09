@@ -5,6 +5,8 @@ import Components.QrValidation exposing (..)
 import Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
+import Translations.Languages exposing (t, Language)
+import Translations.Resources exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -190,21 +192,21 @@ put route body =
 
 
 -- qrCode component
-view : Model -> Html Message
-view model =
+view : Model -> Language -> Html Message
+view model language =
     (div (renderZoneAttributes model.dropZone) [
       if List.length model.files > 0 then
         case model.webService.error of
           Nothing ->
-              renderTabs model
+              renderTabs model language
           Just err ->
-              renderError err
+              renderError err language
       else
-        renderEmptyDropZone
+        renderEmptyDropZone language
     ])
 
-renderTabs : Model -> Html Message
-renderTabs model =
+renderTabs : Model -> Language -> Html Message
+renderTabs model language =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -226,9 +228,9 @@ renderTabs model =
     ],
     case model.tabs of
       Validation ->
-        Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation model.webService.decoding model.webService.validation)
+        Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language model.webService.decoding model.webService.validation)
       Image ->
-        Components.QrImage.render model.webService.generation
+        Components.QrImage.view language model.webService.generation
   ]
 
 renderTab : Model -> Tabs -> String -> Html Message
@@ -248,8 +250,8 @@ renderTab model tab str =
     ]
 
 
-renderEmptyDropZone : Html a
-renderEmptyDropZone =
+renderEmptyDropZone : Language -> Html a
+renderEmptyDropZone language =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -258,8 +260,8 @@ renderEmptyDropZone =
     ("justify-content", "flex-start"),
     ("padding-top", "3em")
     ]]
-    [div [] [text "Drop your code or your QR code here without fear."],
-     div [] [text "We will validate it very carefully ;-)"],
+    [div [] [text (t language RDropYourCode)],
+     div [] [text (t language RWeWillValidateIt)],
      img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
     ]
 

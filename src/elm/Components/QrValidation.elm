@@ -1,6 +1,7 @@
 module Components.QrValidation exposing (..)
 import Backend.WebService exposing (..)
 import Components.QrHelpers exposing (..)
+import Translations.Languages exposing (Language)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -223,8 +224,8 @@ renderContent model raw validations =
     ])
   )
 
-view : Model -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
-view model decoding validation =
+view : Model -> Language -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
+view model language decoding validation =
   case decoding.error of
     Nothing ->
       case validation.error of
@@ -236,6 +237,6 @@ view model decoding validation =
                 Nothing -> div [] []
                 Just raw -> renderContent model raw validations
         Just err ->
-            renderError err
+            renderError err language
     Just err ->
-        renderError err
+        renderError err language

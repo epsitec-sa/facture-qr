@@ -77,20 +77,17 @@ renderHeader: Model -> Html a
 renderHeader model =
   header [style [("display", "flex"), ("border-bottom", "1px solid #eee"), ("align-items", "center")]] [
     div [style [("flex-grow", "10")]] [
-      h1 [] [text (t model.language Title)]
+      h1 [] [text (t model.language RTitle)]
     ],
     div [style [("flex-grow", "1"), ("text-align", "right")]] [
-      img [style [("width", "120px")],
-           src ("./static/img/swiss-cow.svg"),
-           alt ("Kuh-Air-Bill"),
-           title ("Schweizer Kuh mit QR-Code")] []
+      img [style [("width", "120px")], src ("./static/img/swiss-cow.svg")] []
     ]
   ]
 
 renderContent: Model -> Html Msg
 renderContent model =
   div [style [("margin-top", "20px")]] [
-    Html.map QrCodeMessage (Components.QrCode.view model.qrCode)
+    Html.map QrCodeMessage (Components.QrCode.view model.qrCode model.language)
   ]
 
 

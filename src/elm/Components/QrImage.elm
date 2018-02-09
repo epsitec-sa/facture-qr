@@ -1,6 +1,7 @@
 module Components.QrImage exposing (..)
 import Backend.WebService exposing (..)
 import Components.QrHelpers exposing (..)
+import Translations.Languages exposing (Language)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,8 +20,8 @@ renderImage image =
   ]
 
 
-render : Backend.WebService.Generation -> Html a
-render generation =
+view : Language -> Backend.WebService.Generation -> Html a
+view language generation =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -33,5 +34,5 @@ render generation =
           Nothing -> renderSpinner
           Just img -> renderImage img
       Just err ->
-          renderError err
+          renderError err language
   ]

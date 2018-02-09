@@ -1,5 +1,6 @@
 module Components.QrHelpers exposing (..)
 import Backend.WebService exposing (..)
+import Translations.Languages exposing (Language)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -32,8 +33,8 @@ renderSpinner =
 
 
 
-renderError : Backend.WebService.Error -> Html a
-renderError err =
+renderError : Backend.WebService.Error -> Language -> Html a
+renderError err language =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -41,6 +42,6 @@ renderError err =
     ("align-items", "center")]
   ] [
     div [style [("color", "red")]] [
-      text (Backend.WebService.prettifyError err)
+      text (Backend.WebService.prettifyError err language)
     ]
   ]
