@@ -31,7 +31,7 @@ view language generation =
     case generation.error of
       Nothing ->
         case generation.image of
-          Nothing -> renderSpinner
+          Nothing -> renderSpinner language
           Just img -> renderImage img
       Just err ->
           renderError err language

@@ -231,7 +231,7 @@ view model language decoding validation =
       case validation.error of
         Nothing ->
           case validation.validations of
-            Nothing -> renderSpinner
+            Nothing -> renderSpinner language
             Just validations ->
               case decoding.raw of
                 Nothing -> div [] []

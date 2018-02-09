@@ -1,13 +1,14 @@
 module Components.QrHelpers exposing (..)
 import Backend.WebService exposing (..)
-import Translations.Languages exposing (Language)
+import Translations.Languages exposing (t, Language)
+import Translations.Resources exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-renderSpinner : Html a
-renderSpinner =
+renderSpinner : Language -> Html a
+renderSpinner language =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -18,7 +19,7 @@ renderSpinner =
   [
     div [style [("margin-bottom", "4em")]]
     [
-      text "Waiting..."
+      text (t language RWaiting)
     ],
     div [style [
      ("display", "flex"),

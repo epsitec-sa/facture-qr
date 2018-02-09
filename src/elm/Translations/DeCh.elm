@@ -10,6 +10,7 @@ t resource =
     RWeWillValidateIt -> "We will validate it very carefully ;-)"
     RTabValidation -> "**Validation"
     RTabImage -> "**Image générée"
+    RWaiting -> "**En attente..."
 
     RErrMultipleFilesDropped -> "more than one file has been dropped"
     RErrNetworkError -> "the request failed"
