@@ -137,7 +137,7 @@ languageButton model language str =
       ])
       (
         if model.language == language then
-          [("opacity", ".5")]
+          [("background", "#ccc")]
         else []
       )
     ),
