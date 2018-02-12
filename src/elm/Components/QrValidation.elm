@@ -107,8 +107,8 @@ renderValidationErrors model language lines validations =
     ("display", "flex"),
     ("flex-direction", "column"),
     ("flex-grow", "1"),
-    ("flex-shrink", "0"),
     ("flex-basis", "0"),
+    ("flex-shrink", "0"),
     ("padding", "0em 0.5em 0em 0.5em"),
     ("overflow-y", "auto"),
     ("font-size", "10px")
@@ -120,7 +120,6 @@ renderValidationErrors model language lines validations =
           div [style [
             ("display", "flex"),
             ("flex-grow", "1"),
-            ("flex-basis", "0"),
             ("flex-shrink", "0"),
             ("border", "1px solid white"),
             ("padding", "1em"),
@@ -152,13 +151,15 @@ renderValidationErrors model language lines validations =
               div [style [
                 ("display", "flex"),
                 ("flex-shrink", "0"),
+                ("align-items", "center"),
                 ("font-size", "16px")
               ]] [
                 text (String.slice block.start block.end line.raw)
               ],
                 div [style [
                   ("display", "flex"),
-                  ("flex-shrink", "0")
+                  ("flex-shrink", "0"),
+                  ("align-items", "center")
                 ]] [
                   text (Backend.WebService.prettifyValidationError validation language)
                 ]
@@ -258,6 +259,7 @@ renderContent model language raw validations =
     ("display", "flex"),
     ("flex-grow", "1"),
     ("flex-basis", "0"),
+    ("flex-shrink", "0"),
     ("padding", "0.5em"),
     ("min-height", "0px")]
   ]
