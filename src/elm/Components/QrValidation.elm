@@ -118,21 +118,51 @@ renderValidationErrors model language lines validations =
       List.concatMap (\line ->
         List.map (\block ->
           div [style [
+            ("display", "flex"),
+            ("flex-grow", "1"),
+            ("flex-basis", "0"),
+            ("flex-shrink", "0"),
             ("border", "1px solid white"),
             ("padding", "1em"),
             ("margin", "1em 0em 1em 0em"),
-            ("display", "flex"),
-            ("flex-shrink", "0"),
             ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
           ],
           onMouseEnter (ValidationIn block.xmlField),
           onMouseLeave (ValidationOut block.xmlField)
           ] [
-            text ("Line " ++ parseIndexWithLeadingZero (line.number)),
-            br [] [],
-            text (block.xmlField ++ ": " ++ (String.slice block.start block.end line.raw)),
-            br [] [],
-            text (Backend.WebService.prettifyValidationError validation language)
+            div [style [
+              ("display", "flex"),
+              ("flex-grow", "1"),
+              ("flex-basis", "0"),
+              ("flex-shrink", "0"),
+              ("align-items", "center"),
+              ("font-size", "32px")
+            ]] [
+              text (parseIndexWithLeadingZero (line.number))
+            ],
+            div [style [
+              ("display", "flex"),
+              ("flex-direction", "column"),
+              ("flex-grow", "6"),
+              ("flex-basis", "0"),
+              ("flex-shrink", "0"),
+              ("align-items", "stretch"),
+              ("justify-content", "center")
+            ]] [
+              div [style [
+                ("display", "flex"),
+                ("flex-shrink", "0"),
+                ("font-size", "16px")
+              ]] [
+                text (String.slice block.start block.end line.raw)
+              ],
+                div [style [
+                  ("display", "flex"),
+                  ("flex-shrink", "0")
+                ]] [
+                  text (Backend.WebService.prettifyValidationError validation language)
+                ]
+            ]
           ]
         ) (List.filter (\block -> block.xmlField == validation.xmlField) line.blocks)
       ) (List.filter (\line -> line.number == validation.line) lines)
@@ -185,7 +215,8 @@ renderLine model line =
     span [
       style [
         ("width", "10px"),
-        ("height", "1px")
+        ("height", "1px"),
+        ("flex-shrink", "0")
       ]] [],
 
     span [] [renderLineBlocks model line.raw line.blocks],
