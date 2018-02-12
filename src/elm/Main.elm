@@ -112,7 +112,7 @@ renderFooter model =
     ] [
     div [class "row"] [
       div [class "colonne w50"] [
-        p [] [text "Copyright © 2017 – Pierre Arnaud, Epsitec SA, Yverdon-les-Bains"]
+        p [] [text "Copyright © 2018 – Epsitec SA, Yverdon-les-Bains"]
       ],
       div [class "colonne w50 txt-right"] [
         languageButton model Translations.Languages.SwissFrench "FR",
