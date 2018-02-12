@@ -2,6 +2,9 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import LocalStorage exposing (..)
+import Task
+import Debug
 
 -- component import example
 import Components.QrCode
@@ -14,7 +17,7 @@ import Translations.Resources exposing (..)
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( init, Cmd.none )
+        { init = init
         , update = update
         , view = view
         , subscriptions = subscriptions
@@ -27,17 +30,21 @@ type alias Model = {
   language: Language
 }
 
-init : Model
-init =
+init : (Model, Cmd Msg)
+init = (
     {
       qrCode = Components.QrCode.init,
       language = Translations.Languages.SwissFrench
     }
+    , Task.attempt (OnLocalStorageLanguage "epsitec-qr-validator-language") (LocalStorage.get "epsitec-qr-validator-language")
+  )
 
 
 -- UPDATE
 type Msg = QrCodeMessage Components.QrCode.Message
            | LanguageChanged Language
+           | OnLocalStorageLanguage LocalStorage.Key (Result LocalStorage.Error (Maybe LocalStorage.Value))
+           | OnVoidOp (Result LocalStorage.Error ())
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -56,9 +63,47 @@ update msg model =
         ( { model | language = language, qrCode = updatedQrCodeModel },
           Cmd.batch <| [
             Cmd.map QrCodeMessage qrCodeCmd,
-            Ports.title (t language RTitle)
+            Ports.title (t language RTitle),
+            Task.attempt OnVoidOp (LocalStorage.set "epsitec-qr-validator-language" (
+              case language of
+                Translations.Languages.SwissFrench -> "SwissFrench"
+                Translations.Languages.SwissGerman -> "SwissGerman"
+            ))
           ]
         )
+    OnLocalStorageLanguage key result ->
+      case result of
+        Ok maybeValue ->
+          case maybeValue of
+            Nothing -> (model, Task.attempt OnVoidOp (LocalStorage.set "epsitec-qr-validator-language" "SwissFrench")) -- Create key with SwissFrench as default
+            Just language ->
+              case language of
+                "SwissFrench" -> (model, send (LanguageChanged Translations.Languages.SwissFrench))
+                "SwissGerman" -> (model, send (LanguageChanged Translations.Languages.SwissGerman))
+                a -> (model, Cmd.none)
+        Err err ->
+          Debug.log (localStorageErrorString err)
+          (model, Cmd.none)
+    OnVoidOp result ->
+        case result of
+            Ok _ -> (model, Cmd.none)
+            Err err ->
+              Debug.log (localStorageErrorString err)
+              (model, Cmd.none)
+
+
+localStorageErrorString: LocalStorage.Error -> String
+localStorageErrorString err =
+  case err of
+    NoStorage -> "local storage is not available"
+    UnexpectedPayload payload -> "unexpected payload from local storage: " ++ payload
+    Overflow -> "local storage overflow error"
+
+
+send : msg -> Cmd msg
+send msg =
+  Task.succeed msg
+  |> Task.perform identity
 
 
 -- VIEW
