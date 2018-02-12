@@ -149,10 +149,14 @@ renderValidationErrors model language lines validations =
               ("justify-content", "center")
             ]] [
               div [style [
-                ("display", "flex"),
-                ("flex-shrink", "0"),
+                ("display", "block"),
                 ("align-items", "center"),
-                ("font-size", "16px")
+                ("font-size", "16px"),
+
+                ("width", "300px"),
+                ("whiteSpace", "nowrap"),
+                ("overflow", "hidden"),
+                ("textOverflow", "ellipsis")
               ]] [
                 text (String.slice block.start block.end line.raw)
               ],
