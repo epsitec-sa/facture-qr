@@ -119,7 +119,6 @@ renderValidationErrors model language lines validations =
         List.map (\block ->
           div [style [
             ("display", "flex"),
-            ("flex-grow", "1"),
             ("flex-shrink", "0"),
             ("border", "1px solid white"),
             ("padding", "1em"),
@@ -160,13 +159,21 @@ renderValidationErrors model language lines validations =
               ]] [
                 text (String.slice block.start block.end line.raw)
               ],
-                div [style [
-                  ("display", "flex"),
-                  ("flex-shrink", "0"),
-                  ("align-items", "center")
-                ]] [
-                  text (Backend.WebService.prettifyValidationError validation language)
-                ]
+              div [style [
+                ("display", "flex"),
+                ("flex-shrink", "0"),
+                ("align-items", "center")
+              ]] [
+                text (Backend.WebService.prettifyValidationError validation language)
+              ],
+              div [style [
+                ("display", "flex"),
+                ("flex-shrink", "0"),
+                ("align-items", "center"),
+                ("font-weight", "bold")
+              ]] [
+                text block.xmlField
+              ]
             ]
           ]
         ) (List.filter (\block -> block.xmlField == validation.xmlField) line.blocks)
