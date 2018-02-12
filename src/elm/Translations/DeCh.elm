@@ -7,7 +7,6 @@ t resource =
   case resource of
     RTitle -> "QR-Code Validator"
     RDropYourCode -> "Drop your code or your QR code here without fear."
-    RWeWillValidateIt -> "We will validate it very carefully ;-)"
     RTabValidation -> "**Validation"
     RTabImage -> "**Image générée"
     RWaiting -> "**En attente..."

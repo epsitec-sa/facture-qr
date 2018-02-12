@@ -284,7 +284,6 @@ renderEmptyDropZone language =
     ("padding-top", "3em")
     ]]
     [div [] [text (t language RDropYourCode)],
-     div [] [text (t language RWeWillValidateIt)],
      img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
     ]
 
