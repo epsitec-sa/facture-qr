@@ -50,7 +50,7 @@ type ValidationErrorCode =
     Invalid | FormatIsDifferentThan |
     QrReferenceInvalid | CreditorReferenceInvalid | NoReferenceInvalid |
     ValueExceeded | ValueNotReached |
-    InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists |
+    InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     SwiftFormat
 
 
@@ -99,6 +99,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed TagNotOrdered
                "TagAlreadyExists" ->
                     Json.Decode.succeed TagAlreadyExists
+               "TagIsEmpty" ->
+                    Json.Decode.succeed TagIsEmpty
                "SwiftFormat" ->
                     Json.Decode.succeed SwiftFormat
                somethingElse ->
@@ -128,6 +130,7 @@ validationErrorCodeString error language =
      UnknownTag -> t language RValErrUnknownTag
      TagNotOrdered -> t language RValErrTagNotOrdered
      TagAlreadyExists -> t language RValErrTagAlreadyExists
+     TagIsEmpty -> t language RValErrTagIsEmpty
      SwiftFormat -> t language RValErrSwiftFormat
 
 

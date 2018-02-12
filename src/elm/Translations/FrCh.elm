@@ -20,8 +20,8 @@ t resource =
     RErrGenerationError -> "impossible de générer l'image de facture qr"
     RErrValidationError -> "impossible de valider la facture qr"
 
-    RValErrDoesNotExist -> "le champ doit être saisi mais n'est pas présent"
-    RValErrIsEmpty -> "le champ doit être saisi mais n'est pas présent"
+    RValErrDoesNotExist -> "le champ ne peut pas être vide"
+    RValErrIsEmpty -> "le champ ne peut pas être vide"
     RValErrMustBeEmpty -> "le champ doit être vide"
     RValErrMustBeEqualTo -> "le champ ne peut prendre que les valeurs suivantes :"
     RValErrLengthDifferent -> "le champ doit avoir une longueur de"
@@ -40,4 +40,5 @@ t resource =
     RValErrUnknownTag -> "la balise Swico n'est pas reconnue :"
     RValErrTagNotOrdered -> "la balise Swico doit être plus grande que la précedente (les balises doivent être ordrées de façon croissante) :"
     RValErrTagAlreadyExists -> "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
+    RValErrTagIsEmpty -> "la balise Swico ne peut pas être vide"
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"

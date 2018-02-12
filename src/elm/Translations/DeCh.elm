@@ -40,4 +40,5 @@ t resource =
     RValErrUnknownTag -> "**la balise Swico n'est pas reconnue :"
     RValErrTagNotOrdered -> "**la balise Swico doit être plus grande que la précedente (les balises doivent être ordrées de façon croissante) :"
     RValErrTagAlreadyExists -> "**la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
+    RValErrTagIsEmpty -> "**la balise Swico ne peut pas être vide"
     RValErrSwiftFormat -> "**le champ ne respecte pas l'encodage Swift"
