@@ -151,7 +151,7 @@ renderLineBlocks model line blocks =
             class "lineError",
             style [
               ("display", "inline"),
-              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "red" else "white" )
+              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "red" else "rgba(255, 0, 0, 0.2)" )
             ],
             onMouseEnter (ValidationIn block.xmlField),
             onMouseLeave (ValidationOut block.xmlField)
@@ -171,18 +171,22 @@ renderLine model line =
   div [style [
     ("display", "flex"),
     ("align-items", "flex-start"),
-    ("flex-shrink", "0")
+    ("flex-shrink", "0"),
+    ("background-color", if List.length (line.blocks) > 1 then "rgba(255, 0, 0, 0.2)" else "white")
   ]]
   [
     span [
       style [
         ("font-size", "8px"),
-        ("padding-top", "2px"),
-        ("font-weight", if List.length (line.blocks) > 1 then "bold" else "regular")
+        ("padding-top", "2px")
       ]]
       [text (parseIndexWithLeadingZero line.number)],
 
-    span [style [("width", "10px"), ("height", "1px")]] [],
+    span [
+      style [
+        ("width", "10px"),
+        ("height", "1px")
+      ]] [],
 
     span [] [renderLineBlocks model line.raw line.blocks],
     br [] []
