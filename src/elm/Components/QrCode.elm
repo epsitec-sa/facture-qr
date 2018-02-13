@@ -253,7 +253,7 @@ renderTabs model language =
       Validation ->
         Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language model.webService.decoding model.webService.validation)
       Image ->
-        Components.QrImage.view language model.webService.generation
+        Components.QrImage.view language model.webService.decoding model.webService.generation
   ]
 
 renderTab : Model -> Tabs -> String -> Html Message

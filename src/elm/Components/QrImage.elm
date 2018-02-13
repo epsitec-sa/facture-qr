@@ -48,12 +48,16 @@ renderContent language img =
     renderActions
   ]
 
-view : Language -> Backend.WebService.Generation -> Html a
-view language generation =
-  case generation.error of
+view : Language -> Backend.WebService.Decoding -> Backend.WebService.Generation -> Html a
+view language decoding generation =
+  case decoding.error of
     Nothing ->
-      case generation.image of
-        Nothing -> renderSpinner language
-        Just img -> renderContent language img
+      case generation.error of
+        Nothing ->
+          case generation.image of
+            Nothing -> renderSpinner language
+            Just img -> renderContent language img
+        Just err ->
+            renderError err language
     Just err ->
         renderError err language
