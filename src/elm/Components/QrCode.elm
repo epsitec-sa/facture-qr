@@ -283,7 +283,7 @@ renderEmptyDropZone language =
     ("justify-content", "flex-start"),
     ("padding-top", "3em")
     ]]
-    [div [] [text (t language RDropYourCode)],
+    [div [style [("font-size", "24px")]] [text (t language RDropYourCode)],
      img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
     ]
 
