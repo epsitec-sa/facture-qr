@@ -16,3 +16,5 @@ port binaryFileRead : BinaryFile -> Cmd msg
 port fileBase64Encoded : (EncodedFile -> msg) -> Sub msg
 
 port title : String -> Cmd msg
+
+port scrollTo : (String, String) -> Cmd msg

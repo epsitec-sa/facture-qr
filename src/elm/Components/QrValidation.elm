@@ -3,12 +3,13 @@ import Backend.WebService exposing (..)
 import Components.QrHelpers exposing (..)
 import Translations.Languages exposing (t, Language)
 import Translations.Resources exposing (..)
+import Ports exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-type Message = ValidationIn String | ValidationOut String
+type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String
 
 type alias LineBlock = {
   start : Int,
@@ -87,14 +88,21 @@ parseIndexWithLeadingZero index =
 update : Message -> Model -> (Model, Cmd Message)
 update msg model =
   case msg of
-    ValidationIn xmlField -> (
+    LineBlockIn (xmlField, lineNumber) -> (
       {model | hoveredValidations =
         if not (List.member xmlField model.hoveredValidations) then
           xmlField :: model.hoveredValidations
         else model.hoveredValidations
       },
-      Cmd.none)
-    ValidationOut xmlField -> (
+      scrollTo ("validations", "v_" ++ xmlField ++ "_" ++ (toString lineNumber)))
+    ValidationIn (xmlField, lineNumber) -> (
+      {model | hoveredValidations =
+        if not (List.member xmlField model.hoveredValidations) then
+          xmlField :: model.hoveredValidations
+        else model.hoveredValidations
+      },
+      scrollTo ("lines", "l_" ++ (toString lineNumber)))
+    FieldOut xmlField -> (
       {model | hoveredValidations = List.filter (\field -> not (field == xmlField)) model.hoveredValidations},
       Cmd.none)
 
@@ -104,30 +112,36 @@ update msg model =
 
 renderValidationErrors: Model -> Language -> List Line -> List Backend.WebService.ValidationError -> Html Message
 renderValidationErrors model language lines validations =
-  div [style [
-    ("display", "flex"),
-    ("flex-direction", "column"),
-    ("flex-grow", "1"),
-    ("flex-basis", "0"),
-    ("flex-shrink", "0"),
-    ("padding", "0em 0.5em 0em 0.5em"),
-    ("overflow-y", "auto"),
-    ("font-size", "10px")
-  ]]
+  div [
+    id "validations",
+    style [
+      ("position", "relative"),
+      ("display", "flex"),
+      ("flex-direction", "column"),
+      ("flex-grow", "1"),
+      ("flex-basis", "0"),
+      ("flex-shrink", "0"),
+      ("padding", "0em 0.5em 0em 0.5em"),
+      ("overflow-y", "auto"),
+      ("font-size", "10px")
+    ]
+  ]
   (
     List.concatMap (\validation ->
       List.concatMap (\line ->
         List.map (\block ->
-          div [style [
-            ("display", "flex"),
-            ("flex-shrink", "0"),
-            ("border", "1px solid white"),
-            ("padding", "1em"),
-            ("margin", "1em 0em 1em 0em"),
-            ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
-          ],
-          onMouseEnter (ValidationIn block.xmlField),
-          onMouseLeave (ValidationOut block.xmlField)
+          div [
+            id ("v_" ++ block.xmlField ++ "_" ++ (toString line.number)),
+            style [
+              ("display", "flex"),
+              ("flex-shrink", "0"),
+              ("border", "1px solid white"),
+              ("padding", "1em"),
+              ("margin", "1em 0em 1em 0em"),
+              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
+            ],
+          onMouseEnter (ValidationIn (block.xmlField, line.number)),
+          onMouseLeave (FieldOut block.xmlField)
           ] [
             div [style [
               ("display", "flex"),
@@ -188,8 +202,8 @@ renderValidationErrors model language lines validations =
   )
 
 
-renderLineBlocks : Model -> String -> List LineBlock -> Html Message
-renderLineBlocks model line blocks =
+renderLineBlocks : Model -> Line -> Html Message
+renderLineBlocks model line =
   div [style [("display", "inline")]] (
     List.map (\block ->
       div (
@@ -200,27 +214,30 @@ renderLineBlocks model line blocks =
               ("display", "inline"),
               ("background-color", if (List.member block.xmlField model.hoveredValidations) then "red" else "rgba(255, 0, 0, 0.2)" )
             ],
-            onMouseEnter (ValidationIn block.xmlField),
-            onMouseLeave (ValidationOut block.xmlField)
+            onMouseEnter (LineBlockIn (block.xmlField, line.number)),
+            onMouseLeave (FieldOut block.xmlField)
           ]
           False -> [style [("display", "inline")]]
       ) [
         if block.error == True && block.start == block.end then
           i [class "far fa-exclamation-triangle", style [("font-size", "10px")]] []
         else
-          text (String.slice block.start block.end line)
+          text (String.slice block.start block.end line.raw)
       ]
-    ) blocks
+    ) line.blocks
   )
 
 renderLine : Model -> Line -> Html Message
 renderLine model line =
-  div [style [
-    ("display", "flex"),
-    ("align-items", "flex-start"),
-    ("flex-shrink", "0"),
-    ("background-color", if List.length (line.blocks) > 1 then "rgba(255, 0, 0, 0.2)" else "white")
-  ]]
+  div [
+    id ("l_" ++ (toString line.number)),
+    style [
+      ("display", "flex"),
+      ("align-items", "flex-start"),
+      ("flex-shrink", "0"),
+      ("background-color", if List.length (line.blocks) > 1 then "rgba(255, 0, 0, 0.2)" else "white")
+    ]
+  ]
   [
     span [
       style [
@@ -236,7 +253,7 @@ renderLine model line =
         ("flex-shrink", "0")
       ]] [],
 
-    span [] [renderLineBlocks model line.raw line.blocks],
+    span [] [renderLineBlocks model line],
     br [] []
   ]
 
@@ -250,20 +267,24 @@ renderRawInvoice model lines =
     ("flex-basis", "0")
   ]]
   [
-    div [style [
-      ("display", "flex"),
-      ("flex-direction", "column"),
-      ("flex-grow", "1"),
-      ("flex-basis", "0"),
-      ("flex-shrink", "0"),
-      ("align-items", "stretch"),
-      ("background-color", "#fff"),
-      ("overflow-y", "auto"),
-      ("font-size", "10px"),
-      ("padding", "0.5em"),
-      ("margin-right", "1.5em"),
-      ("color", "black")
-    ]]
+    div [
+      id "lines",
+      style [
+        ("display", "flex"),
+        ("position", "relative"),
+        ("flex-direction", "column"),
+        ("flex-grow", "1"),
+        ("flex-basis", "0"),
+        ("flex-shrink", "0"),
+        ("align-items", "stretch"),
+        ("background-color", "#fff"),
+        ("overflow-y", "auto"),
+        ("font-size", "10px"),
+        ("padding", "0.5em"),
+        ("margin-right", "1.5em"),
+        ("color", "black")
+      ]
+    ]
     (
       List.map (\line -> (renderLine model line) ) lines
     )
