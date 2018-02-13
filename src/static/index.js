@@ -19,3 +19,17 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
 app.ports.title.subscribe (function (str) {
   document.title = str;
 });
+
+app.ports.scrollTo.subscribe (function (args) {
+  try {
+    var parentId = ('#' + args[0]).replace (/\./g, '\\.');
+    var childId = ('#' + args[1]).replace (/\./g, '\\.');
+
+    $ (parentId).scrollTop ();
+
+    console.dir ($ (childId).position ().top);
+    $ (parentId).scrollTop ($ (childId).position ().top);
+  } catch (err) {
+    // do nothing
+  }
+});
