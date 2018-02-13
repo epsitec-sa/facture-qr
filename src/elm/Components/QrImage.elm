@@ -18,7 +18,6 @@ renderImage image =
   [
     div [style [
       ("display", "flex"),
-      ("margin-left", "3em"),
       ("align-items", "center")
       ]]
     [
@@ -42,7 +41,8 @@ renderContent language img =
     ("display", "flex"),
     ("flex-grow", "1"),
     ("flex-basis", "0"),
-    ("align-items", "stretch")]
+    ("align-items", "stretch"),
+    ("padding", "1.5em")]
   ] [
     renderImage img,
     renderActions

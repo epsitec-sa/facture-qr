@@ -42,7 +42,12 @@ renderError err language =
     ("justify-content", "center"),
     ("align-items", "center")]
   ] [
-    div [style [("color", "red")]] [
+    div [style [
+    ("color", "#0d4c80"),
+    ("background-color", "rgba(255, 255, 255, 0.5)"),
+    ("padding", "1em 2em"),
+    ("border-radius", "5px")]
+    ] [
       text (Backend.WebService.prettifyError err language)
     ]
   ]

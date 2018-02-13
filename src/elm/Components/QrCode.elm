@@ -243,7 +243,7 @@ renderTabs model language =
       ("height", "50px"),
       ("align-items", "flex-start"),
       ("justify-content", "flex-start"),
-      ("margin-left", "2em")
+      ("margin-left", "1.5em")
     ]]
     [
       renderTab model Validation (t language RTabValidation),
@@ -262,7 +262,12 @@ renderTab model tab str =
     class "qrTab",
     style (
       if (model.tabs == tab) then
-        ("background-color", "#ccc") :: baseTabStyle
+        List.append baseTabStyle
+        [
+          ("background-color", "#eee"),
+          ("color", "#0d4c80"),
+          ("cursor", "inherit")
+        ]
       else
         baseTabStyle
     ),
@@ -284,7 +289,7 @@ renderEmptyDropZone language =
     ("padding-top", "3em")
     ]]
     [div [style [("font-size", "24px")]] [text (t language RDropYourCode)],
-     img [src "./static/img/parachute.svg", style [("width", "30%"), ("margin-top", "2em")]] []
+     img [src "./static/img/parachute.svg", style [("width", "18%"), ("margin-top", "2.5em")]] []
     ]
 
 
@@ -303,12 +308,12 @@ renderZoneAttributes dropZoneModel =
 
 dropZoneDefault : Html.Attribute a
 dropZoneDefault =
-    style [( "border", "2px dashed #333" )]
+    style []
 
 
 dropZoneHover : Html.Attribute a
 dropZoneHover =
-    style [( "border", "2px dashed red" )]
+    style [( "box-shadow", "0px 0px 20px #77aad4" )]
 
 baseDropStyle : Html.Attribute a
 baseDropStyle =
@@ -316,8 +321,8 @@ baseDropStyle =
         [ ("display", "flex")
         , ("flex-grow", "1")
         , ("height", "calc(60vh)")
-        , ("background-size", "25%")
-        , ("background", "#333")
+        , ("background", "url('./static/img/bg-cloudy.svg') no-repeat")
+        , ("background-size", "cover")
         , ("color", "#fff")
         , ( "border-radius", "10px" )]
 
@@ -328,9 +333,8 @@ baseTabStyle = [
     ("color", "#fff"),
     ("border-bottom-left-radius", "10px"),
     ("border-bottom-right-radius", "10px"),
-    ("margin-right", "4px"),
-    ("margin-left", "4px"),
-    ("margin-top", "-2px")
+    ("margin-right", "8px"),
+    ("margin-top", "-5px")
   ]
 
 

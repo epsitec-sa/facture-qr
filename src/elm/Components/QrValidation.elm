@@ -121,7 +121,6 @@ renderValidationErrors model language lines validations =
       ("flex-grow", "1"),
       ("flex-basis", "0"),
       ("flex-shrink", "0"),
-      ("padding", "0em 0.5em 0em 0.5em"),
       ("overflow-y", "auto"),
       ("font-size", "10px")
     ]
@@ -135,19 +134,19 @@ renderValidationErrors model language lines validations =
             style [
               ("display", "flex"),
               ("flex-shrink", "0"),
-              ("border", "1px solid white"),
-              ("padding", "1em"),
-              ("margin", "1em 0em 1em 0em"),
-              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#666" else "#333" )
+              ("border-radius", "0px 10px 10px 0px"),
+              ("padding", "1em 0em 1em 0em"),
+              ("margin-bottom", "1.5em"),
+              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "#226ca8" else "#0d4c80" )
             ],
           onMouseEnter (ValidationIn (block.xmlField, line.number)),
           onMouseLeave (FieldOut block.xmlField)
           ] [
             div [style [
               ("display", "flex"),
-              ("flex-grow", "1"),
-              ("flex-basis", "0"),
               ("flex-shrink", "0"),
+              ("padding", "0em 0.5em"),
+              ("justify-content", "center"),
               ("align-items", "center"),
               ("font-size", "32px")
             ]] [
@@ -156,7 +155,7 @@ renderValidationErrors model language lines validations =
             div [style [
               ("display", "flex"),
               ("flex-direction", "column"),
-              ("flex-grow", "6"),
+              ("flex-grow", "1"),
               ("flex-basis", "0"),
               ("flex-shrink", "0"),
               ("align-items", "stretch"),
@@ -278,10 +277,10 @@ renderRawInvoice model lines =
         ("flex-shrink", "0"),
         ("align-items", "stretch"),
         ("background-color", "#fff"),
+        ("border-radius", "10px 0px 0px 10px"),
         ("overflow-y", "auto"),
         ("font-size", "10px"),
         ("padding", "0.5em"),
-        ("margin-right", "1.5em"),
         ("color", "black")
       ]
     ]
@@ -297,7 +296,7 @@ renderContent model language raw validations =
     ("flex-grow", "1"),
     ("flex-basis", "0"),
     ("flex-shrink", "0"),
-    ("padding", "0.5em"),
+    ("padding", "1.5em"),
     ("min-height", "0px")]
   ]
   (
@@ -305,6 +304,7 @@ renderContent model language raw validations =
       lines = computeLines raw validations
     in ([
       renderRawInvoice model lines,
+      div [style[("width", "1.5em"), ("height", "100%")]][],
       renderValidationErrors model language lines validations
     ])
   )
