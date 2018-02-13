@@ -69,12 +69,12 @@ cleanValidations index validations =
 
 computeLines : String -> List Backend.WebService.ValidationError -> List Line
 computeLines raw validations =
-    List.indexedMap (\index line -> {
-        number = index + 1,
-        raw = line,
-        blocks = computeLineBlocks (cleanValidations (index + 1) validations) 0 (String.length line)
-      }
-    ) (String.split "\n" raw)
+  List.indexedMap (\index line -> {
+      number = index + 1,
+      raw = line,
+      blocks = computeLineBlocks (cleanValidations (index + 1) validations) 0 (String.length line)
+    }
+  ) (String.split "\n" raw)
 
 
 parseIndexWithLeadingZero : Int -> String
