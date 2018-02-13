@@ -10,6 +10,8 @@ t resource =
     RTabValidation -> "Validation"
     RTabImage -> "Image générée"
     RWaiting -> "En attente..."
+    RLine -> "Ligne"
+    RField -> "champ"
 
     RErrMultipleFilesDropped -> "un seul fichier peut être traité à la fois"
     RErrNetworkError -> "la requête a échoué"
@@ -19,8 +21,8 @@ t resource =
     RErrGenerationError -> "impossible de générer l'image de la facture (voir log js pour les détails)"
     RErrValidationError -> "impossible de valider la facture qr"
 
-    RValErrDoesNotExist -> "le champ ne peut pas être vide"
-    RValErrIsEmpty -> "le champ ne peut pas être vide"
+    RValErrDoesNotExist -> "le champ est obligatoire et ne peut pas être vide"
+    RValErrIsEmpty -> "le champ est obligatoire et ne peut pas être vide"
     RValErrMustBeEmpty -> "le champ doit être vide"
     RValErrMustBeEqualTo -> "le champ ne peut prendre que la(les) valeur(s) suivante(s) :"
     RValErrLengthDifferent -> "le champ doit avoir une longueur exacte de"
@@ -39,5 +41,5 @@ t resource =
     RValErrUnknownTag -> "la balise Swico n'est pas reconnue :"
     RValErrTagNotOrdered -> "la balise Swico doit être plus grande que la précedente (les balises doivent être ordrées de façon croissante) :"
     RValErrTagAlreadyExists -> "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
-    RValErrTagIsEmpty -> "la balise Swico ne peut pas être vide"
+    RValErrTagIsEmpty -> "la balise Swico est obligatoire et ne peut pas être vide"
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"

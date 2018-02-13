@@ -10,6 +10,8 @@ t resource =
     RTabValidation -> "**Validation"
     RTabImage -> "**Image générée"
     RWaiting -> "**En attente..."
+    RLine -> "**Ligne"
+    RField -> "**champ"
 
     RErrMultipleFilesDropped -> "more than one file has been dropped"
     RErrNetworkError -> "the request failed"
