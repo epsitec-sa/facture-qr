@@ -124,6 +124,10 @@ if (isProd === true) {
           to: 'static/styles/',
         },
         {
+          from: 'src/static/js/',
+          to: 'static/js/',
+        },
+        {
           from: 'src/favicon.ico',
         },
       ]),
