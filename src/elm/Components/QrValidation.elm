@@ -172,7 +172,7 @@ renderValidationErrors model language lines validations =
                 ("align-items", "center"),
                 ("font-weight", "bold")
               ]] [
-                text block.xmlField
+                text (Backend.WebService.prettifyXmlField block.xmlField)
               ]
             ]
           ]
@@ -180,7 +180,6 @@ renderValidationErrors model language lines validations =
       ) (List.filter (\line -> line.number == validation.line) lines)
     ) validations
   )
-
 
 
 renderLineBlocks : Model -> String -> List LineBlock -> Html Message

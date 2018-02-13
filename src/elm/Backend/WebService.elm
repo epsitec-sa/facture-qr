@@ -184,6 +184,13 @@ prettifyValidationError : ValidationError -> Language -> String
 prettifyValidationError err language =
   (Backend.Errors.validationErrorCodeString err.code language) ++ " " ++ err.additionalInfo
 
+prettifyXmlField : String -> String
+prettifyXmlField xmlField =
+  case String.indexes ".Tag" xmlField of
+    i::is -> String.left i xmlField
+    [] -> xmlField
+
+
 newError : Backend.Errors.ErrorCode -> Error
 newError errorCode = {
     errorCode = errorCode,
