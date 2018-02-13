@@ -200,7 +200,7 @@ renderLineBlocks model line blocks =
           False -> [style [("display", "inline")]]
       ) [
         if block.error == True && block.start == block.end then
-          text "???"
+          i [class "far fa-exclamation-triangle", style [("font-size", "10px")]] []
         else
           text (String.slice block.start block.end line)
       ]
