@@ -25,19 +25,17 @@ app.ports.scrollTo.subscribe (function (args) {
   var childId = ('#' + args[1]).replace (/\./g, '\\.');
 
   function elementScrolledIntoView () {
-    var docViewTop = $ (parentId).scrollTop ();
-    var docViewBottom = docViewTop + $ (parentId).height ();
-    var elemTop = $ (childId).offset ().top;
-    return elemTop <= docViewBottom && elemTop >= docViewTop;
+    var parentBottom = $ (parentId).height ();
+    var childTop = $ (childId).position ().top;
+
+    return childTop >= 0 && childTop < parentBottom;
   }
 
   try {
     if (!elementScrolledIntoView ()) {
       $ (parentId).scrollTop (0);
+
       var position = $ (childId).position ().top;
-
-      //console.log (position);
-
       $ (parentId).scrollTop (position);
     }
   } catch (err) {
