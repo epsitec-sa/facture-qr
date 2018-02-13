@@ -21,14 +21,25 @@ app.ports.title.subscribe (function (str) {
 });
 
 app.ports.scrollTo.subscribe (function (args) {
+  var parentId = ('#' + args[0]).replace (/\./g, '\\.');
+  var childId = ('#' + args[1]).replace (/\./g, '\\.');
+
+  function elementScrolledIntoView () {
+    var docViewTop = $ (parentId).scrollTop ();
+    var docViewBottom = docViewTop + $ (parentId).height ();
+    var elemTop = $ (childId).offset ().top;
+    return elemTop <= docViewBottom && elemTop >= docViewTop;
+  }
+
   try {
-    var parentId = ('#' + args[0]).replace (/\./g, '\\.');
-    var childId = ('#' + args[1]).replace (/\./g, '\\.');
+    if (!elementScrolledIntoView ()) {
+      $ (parentId).scrollTop (0);
+      var position = $ (childId).position ().top;
 
-    $ (parentId).scrollTop ();
+      console.log (position);
 
-    console.dir ($ (childId).position ().top);
-    $ (parentId).scrollTop ($ (childId).position ().top);
+      $ (parentId).scrollTop (position);
+    }
   } catch (err) {
     // do nothing
   }
