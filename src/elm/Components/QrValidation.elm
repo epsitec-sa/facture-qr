@@ -1,7 +1,8 @@
 module Components.QrValidation exposing (..)
 import Backend.WebService exposing (..)
 import Components.QrHelpers exposing (..)
-import Translations.Languages exposing (Language)
+import Translations.Languages exposing (t, Language)
+import Translations.Resources exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -148,6 +149,16 @@ renderValidationErrors model language lines validations =
               ("justify-content", "center")
             ]] [
               div [style [
+                ("display", "flex"),
+                ("flex-shrink", "0"),
+                ("align-items", "center")
+              ]] [
+                text ((t language RLine)),
+                b [style [("margin-left", "3px")]] [text (toString line.number)],
+                text (", " ++ (t language RField)),
+                b [style [("margin-left", "3px")]] [text (Backend.WebService.prettifyXmlField block.xmlField)]
+              ],
+              div [style [
                 ("display", "block"),
                 ("align-items", "center"),
                 ("font-size", "16px"),
@@ -157,7 +168,10 @@ renderValidationErrors model language lines validations =
                 ("overflow", "hidden"),
                 ("textOverflow", "ellipsis")
               ]] [
-                text (String.slice block.start block.end line.raw)
+                if block.start == block.end then
+                  text "*"
+                else
+                  text (String.slice block.start block.end line.raw)
               ],
               div [style [
                 ("display", "flex"),
@@ -165,14 +179,6 @@ renderValidationErrors model language lines validations =
                 ("align-items", "center")
               ]] [
                 text (Backend.WebService.prettifyValidationError validation language)
-              ],
-              div [style [
-                ("display", "flex"),
-                ("flex-shrink", "0"),
-                ("align-items", "center"),
-                ("font-weight", "bold")
-              ]] [
-                text (Backend.WebService.prettifyXmlField block.xmlField)
               ]
             ]
           ]
