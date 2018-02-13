@@ -59,6 +59,7 @@ type Message
     | TabsChanged Tabs
     | QrValidationMessage Components.QrValidation.Message
     | LanguageChanged Language
+    | Back
 
 
 update : Message -> Model -> ( Model, Cmd Message )
@@ -165,6 +166,7 @@ update message model =
             ( { model | language = language, webService = Backend.WebService.setNoImage model.webService },
               sendGenerate model.webService.decoding.raw language
             )
+        Back -> ({ model | files = init.files }, Cmd.none)
 
 
 
@@ -247,7 +249,8 @@ renderTabs model language =
     ]]
     [
       renderTab model Validation (t language RTabValidation),
-      renderTab model Image (t language RTabImage)
+      renderTab model Image (t language RTabImage),
+      renderBackButton model
     ],
     case model.tabs of
       Validation ->
@@ -276,6 +279,28 @@ renderTab model tab str =
     [
       text str
     ]
+
+renderBackButton : Model -> Html Message
+renderBackButton model =
+  div [
+    class "qrTab",
+    style [
+      ("display", "flex"),
+      ("justify-content", "center"),
+      ("align-items", "center"),
+      ("cursor", "pointer"),
+      ("padding", "0.5em 1em 0.5em 1em"),
+      ("color", "#fff"),
+      ("border-bottom-left-radius", "10px"),
+      ("border-bottom-right-radius", "10px"),
+      ("margin-right", "8px"),
+      ("margin-top", "-5px")
+    ],
+    onClick Back
+  ]
+  [
+    img [src "./static/img/icon-parachute.svg", style [("width", "14.5px")]] []
+  ]
 
 
 renderEmptyDropZone : Language -> Html a
