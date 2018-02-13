@@ -36,7 +36,7 @@ app.ports.scrollTo.subscribe (function (args) {
       $ (parentId).scrollTop (0);
       var position = $ (childId).position ().top;
 
-      console.log (position);
+      //console.log (position);
 
       $ (parentId).scrollTop (position);
     }
