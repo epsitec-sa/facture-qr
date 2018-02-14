@@ -220,14 +220,14 @@ put route body =
 view : Model -> Language -> Html Message
 view model language =
     (div (renderZoneAttributes model.dropZone) [
-      if List.length model.files > 0 then
-        case model.webService.error of
-          Nothing ->
-              renderTabs model language
-          Just err ->
-              renderError err language
-      else
-        renderEmptyDropZone language
+      case model.webService.error of
+        Nothing ->
+          if List.length model.files > 0 then
+            renderTabs model language
+          else
+            renderEmptyDropZone language
+        Just err ->
+            renderError err language
     ])
 
 renderTabs : Model -> Language -> Html Message
