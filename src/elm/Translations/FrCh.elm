@@ -5,7 +5,7 @@ import Translations.Resources exposing (..)
 t : Resource -> String
 t resource =
   case resource of
-    RTitle -> "Validateur de QR-code Swico"
+    RTitle -> "Validateur de facture QR avec format Swico"
     RDropYourCode -> "Glissez le fichier à analyser ici"
     RTabValidation -> "Validation"
     RTabImage -> "Image générée"
