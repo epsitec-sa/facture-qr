@@ -1,7 +1,7 @@
 {
   "name": "facture-qr",
   "description": "Facture-qr UI",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "author": "Peter Morawiec",
   "repository": {
