@@ -204,7 +204,7 @@ renderValidationErrors model language lines validations =
 
 renderLineBlocks : Model -> Line -> Html Message
 renderLineBlocks model line =
-  div [style [("display", "inline")]] (
+  span [] (
     List.map (\block ->
       div (
         case block.error of
@@ -253,8 +253,7 @@ renderLine model line =
         ("flex-shrink", "0")
       ]] [],
 
-    span [] [renderLineBlocks model line],
-    br [] []
+    renderLineBlocks model line
   ]
 
 
