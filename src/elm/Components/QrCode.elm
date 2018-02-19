@@ -83,9 +83,11 @@ update message model =
                   -- also create a bunch of effects to read the files as text, one effect for each file
                   List.map (readBinaryFile) files
               )
-            else
+            else if List.length files > 1 then
               ( { model | webService = Backend.WebService.setNewError model.webService Backend.Errors.MultipleFilesDropped }
               , Cmd.none )
+            else
+              ( model, Cmd.none )
 
         DnD a ->
             -- these are opaque DropZone messages, just hand them to DropZone to deal with them
