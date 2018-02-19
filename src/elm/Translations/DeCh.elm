@@ -35,6 +35,7 @@ t resource =
     RValErrQrReferenceInvalid -> "die QR Referenznummer (QRR) ist nicht korrekt"
     RValErrCreditorReferenceInvalid -> "die Creditor Referenz (SCOR) ist nicht korrekt"
     RValErrNoReferenceInvalid -> "für den Typ NON darf keine Referenz existieren"
+    RValErrNoReferenceWithQrIban -> "der Typ NON kann nicht für mit einem QR-Iban verwendet werden"
     RValErrValueExceeded -> "der Wert darf nicht grösser sein als"
     RValErrValueNotReached -> "der Wert darf nicht kleiner sein als"
     RValErrInvalidTags -> "das Format des Swico Feldes ist inkorrekt"

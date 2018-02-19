@@ -10,5 +10,5 @@ type Resource =
   RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
   RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrQrReferenceInvalid |
-  RValErrCreditorReferenceInvalid | RValErrNoReferenceInvalid | RValErrValueExceeded | RValErrValueNotReached |
+  RValErrCreditorReferenceInvalid | RValErrNoReferenceInvalid | RValErrNoReferenceWithQrIban | RValErrValueExceeded | RValErrValueNotReached |
   RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat
