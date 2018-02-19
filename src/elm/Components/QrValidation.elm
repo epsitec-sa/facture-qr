@@ -206,18 +206,19 @@ renderLineBlocks : Model -> Line -> Html Message
 renderLineBlocks model line =
   span [] (
     List.map (\block ->
-      div (
+      span (
         case block.error of
           True -> [
             class "lineError",
             style [
-              ("display", "inline"),
+              ("display", "inline-block"),
+              ("word-break", "break-all"),
               ("background-color", if (List.member block.xmlField model.hoveredValidations) then "red" else "rgba(255, 0, 0, 0.2)" )
             ],
             onMouseEnter (LineBlockIn (block.xmlField, line.number)),
             onMouseLeave (FieldOut block.xmlField)
           ]
-          False -> [style [("display", "inline")]]
+          False -> [style [("display", "inline-block"), ("word-break", "break-all")]]
       ) [
         if block.error == True && block.start == block.end then
           i [class "far fa-exclamation-triangle", style [("font-size", "10px")]] []
