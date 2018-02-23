@@ -347,7 +347,7 @@ baseDropStyle =
     style
         [ ("display", "flex")
         , ("flex-grow", "1")
-        , ("height", "500px")
+        , ("height", "600px")
         , ("background", "url('./static/img/bg-cloudy.png') no-repeat")
         , ("color", "#fff")
         , ( "border-radius", "10px" )]
