@@ -2,6 +2,7 @@ module Components.QrCode exposing (..)
 import Components.QrHelpers exposing (..)
 import Components.QrImage exposing (..)
 import Components.QrValidation exposing (..)
+import Components.QrSwicoLine exposing (..)
 import Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
@@ -18,7 +19,7 @@ import Http
 import Json.Encode
 import Debug
 
-type Tabs = Validation | Image
+type Tabs = Validation | Image | SwicoLine
 
 
 type alias Model =
@@ -55,6 +56,7 @@ type Message
 
     | FileDecoded (Result Http.Error String)
     | InvoiceValidated (Result Http.Error String)
+    | SwicoExtracted (Result Http.Error String)
     | InvoiceGenerated (Result Http.Error String)
     | TabsChanged Tabs
     | QrValidationMessage Components.QrValidation.Message
@@ -118,6 +120,7 @@ update message model =
               ( { model | webService = Backend.WebService.setRaw model.webService str },
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "text/plain" str)),
+                  Http.send SwicoExtracted (put "extractSwico" (Http.stringBody "text/plain" str)),
                   sendGenerate (Just str) model.language
                 ]
               )
@@ -144,6 +147,22 @@ update message model =
           Debug.log (httpErrorString err)
           ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
+        SwicoExtracted (Ok str) ->
+          case  Backend.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | webService = Backend.WebService.setSwicoLineError model.webService wsErr }, Backend.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              case Backend.WebService.decodeSwicoPayload str of
+                Ok payload ->
+                  ( { model | webService = Backend.WebService.setSwicoPayload model.webService payload }, Cmd.none)
+                Err err ->
+                  Debug.log (err)
+                  ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
+
+        SwicoExtracted (Err err) ->
+          Debug.log (httpErrorString err)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
 
         InvoiceGenerated (Ok str) ->
           case  Backend.WebService.decodeError str of
@@ -251,12 +270,15 @@ renderTabs model language =
     ]]
     [
       renderTab model Validation (t language RTabValidation),
+      renderTab model SwicoLine (t language RTabSwicoLine),
       renderTab model Image (t language RTabImage),
       renderBackButton model
     ],
     case model.tabs of
       Validation ->
         Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language model.webService.decoding model.webService.validation)
+      SwicoLine ->
+        Components.QrSwicoLine.view language model.webService.decoding model.webService.swicoLine
       Image ->
         Components.QrImage.view language model.webService.decoding model.webService.generation
   ]
