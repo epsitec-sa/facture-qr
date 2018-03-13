@@ -8,6 +8,7 @@ t resource =
     RTitle -> "QR-Rechnung Validator mit Swico Format"
     RDropYourCode -> "Ziehen Sie die Datei hierhin"
     RTabValidation -> "Validation"
+    RTabSwicoLine -> "**Ligne Swico"
     RTabImage -> "Erzeugtes Bild"
     RWaiting -> "Einen Augenblick..."
     RLine -> "Zeile"
