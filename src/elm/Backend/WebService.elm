@@ -24,6 +24,19 @@ type alias ValidationError = {
   additionalInfo : String
 }
 
+type alias SwicoPayload = {
+  prefix : String,
+  documentReference : String,
+  documentDate : String,
+  customerReference : String,
+  vatNumber : String,
+  vatDates : String,
+  vatDetails : String,
+  vatImportTax : String,
+  conditions : String
+}
+
+
 type alias Decoding = {
   error: Maybe Error,
   raw: Maybe String
@@ -34,15 +47,23 @@ type alias Validation = {
   validations: Maybe (List ValidationError)
 }
 
+type alias SwicoLine = {
+  error: Maybe Error,
+  payload: Maybe SwicoPayload
+}
+
 type alias Generation = {
   error: Maybe Error,
   image: Maybe String
 }
 
+
+
 type alias Model = {
   error: Maybe Error,
   decoding: Decoding,
   validation: Validation,
+  swicoLine: SwicoLine,
   generation: Generation
 }
 
@@ -56,6 +77,10 @@ init = {
     validation = {
       error = Nothing,
       validations = Nothing
+    },
+    swicoLine = {
+      error = Nothing,
+      payload = Nothing
     },
     generation = {
       error = Nothing,
@@ -108,6 +133,24 @@ setValidations model validations =
 setValidationsError : Model -> Error -> Model
 setValidationsError model err =
   { model | validation = setValidationsErr model.validation err }
+
+
+
+setSwicoLineErr : SwicoLine -> Error -> SwicoLine
+setSwicoLineErr swicoLine err =
+  { swicoLine | error = Just (err) }
+
+setSwicoPayloadValue : SwicoLine -> SwicoPayload -> SwicoLine
+setSwicoPayloadValue swicoLine payload =
+  { swicoLine | payload = Just (payload) }
+
+setSwicoPayload : Model -> SwicoPayload -> Model
+setSwicoPayload model payload =
+  { model | swicoLine = setSwicoPayloadValue model.swicoLine payload }
+
+setSwicoLineError : Model -> Error -> Model
+setSwicoLineError model err =
+  { model | swicoLine = setSwicoLineErr model.swicoLine err }
 
 
 
@@ -167,6 +210,25 @@ decodeValidationErrors: String -> Result String (List ValidationError)
 decodeValidationErrors str =
   decodeString (list validationErrorDecoder) str
 
+
+
+swicoPayloadDecoder : Json.Decode.Decoder SwicoPayload
+swicoPayloadDecoder =
+  decode SwicoPayload
+    |> optional "Prefix" string ""
+    |> optional "DocumentReference" string ""
+    |> optional "DocumentDate" string ""
+    |> optional "CustomerReference" string ""
+    |> optional "VatNumber" string ""
+    |> optional "VatDates" string ""
+    |> optional "VatDetails" string ""
+    |> optional "VatImportTax" string ""
+    |> optional "Conditions" string ""
+
+
+decodeSwicoPayload: String -> Result String (SwicoPayload)
+decodeSwicoPayload str =
+  decodeString (swicoPayloadDecoder) str
 
 
 
