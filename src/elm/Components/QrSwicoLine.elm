@@ -31,6 +31,10 @@ prettifyDate date =
   text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
 
 
+prettifyUid : String -> Html a
+prettifyUid date =
+  text ("UID CHE-"++(String.slice 0 3 date)++"."++(String.slice 3 6 date)++"."++(String.slice 6 9 date))
+
 prettifyDefault : String -> Html a
 prettifyDefault value =
   text value
@@ -129,7 +133,7 @@ renderTable language payload =
     renderTableLine language "/10/" RDocumentReference payload.documentReference True prettifyDefault,
     renderTableLine language "/11/" RDocumentDate payload.documentDate False prettifyDate,
     renderTableLine language "/20/" RCustomerReference payload.customerReference True prettifyDefault,
-    renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyDefault,
+    renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyUid,
     renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDate,
     renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
     renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyDefault,
