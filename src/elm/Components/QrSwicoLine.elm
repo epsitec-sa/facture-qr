@@ -39,6 +39,20 @@ prettifyDefault : String -> Html a
 prettifyDefault value =
   text value
 
+prettifyDates : String -> Html a
+prettifyDates value =
+  if String.length value == 6 then
+    prettifyDate value
+  else if String.length value == 12 then
+    div[][
+      text "du ",
+      prettifyDate (String.slice 0 6 value),
+      text " au ",
+      prettifyDate (String.slice 6 12 value)
+    ]
+  else
+    text ""
+
 prettifyDetails : String -> Html a
 prettifyDetails value =
   div[style [("display", "flex"), ("flex-direction", "column")]]
@@ -134,7 +148,7 @@ renderTable language payload =
     renderTableLine language "/11/" RDocumentDate payload.documentDate False prettifyDate,
     renderTableLine language "/20/" RCustomerReference payload.customerReference True prettifyDefault,
     renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyUid,
-    renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDate,
+    renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDates,
     renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
     renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyDefault,
     renderTableLine language "/40/" RConditions payload.conditions False prettifyConditions
