@@ -7,6 +7,9 @@ type Resource =
   RErrMultipleFilesDropped | RErrNetworkError | RErrUnknownError |
   RErrInvalidEncoding | RErrInvalidInvoiceImage | RErrGenerationError | RErrValidationError |
 
+  RPrefix | RDocumentReference | RDocumentDate | RCustomerReference | RVatNumber | RVatDates |
+  RVatDetails | RVatImportTax | RConditions |
+
   RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
   RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrQrReferenceInvalid |

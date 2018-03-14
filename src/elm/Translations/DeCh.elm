@@ -14,6 +14,16 @@ t resource =
     RLine -> "Zeile"
     RField -> "Feld"
 
+    RPrefix -> "**Préfixe"
+    RDocumentReference -> "**Numéro de facture"
+    RDocumentDate -> "**Date de la facture"
+    RCustomerReference -> "**Référence du donneur d'ordre"
+    RVatNumber -> "**Numéro UID"
+    RVatDates -> "**Date(s) de la préstation"
+    RVatDetails -> "**Taux de la facture"
+    RVatImportTax -> "**TVA pure lors de l'importation"
+    RConditions -> "**Condition(s)"
+
     RErrMultipleFilesDropped -> "Es kann nur eine Datei auf einmal verarbeitet werden"
     RErrNetworkError -> "Die Anfrage ist fehlgeschlagen (siehe js logs für mehr Details)"
     RErrUnknownError -> "Ein unbekannter Fehler ist aufgetreten (siehe js logs für mehr Details)"

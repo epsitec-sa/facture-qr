@@ -14,6 +14,16 @@ t resource =
     RLine -> "Ligne"
     RField -> "champ"
 
+    RPrefix -> "Préfixe"
+    RDocumentReference -> "Numéro de facture"
+    RDocumentDate -> "Date de la facture"
+    RCustomerReference -> "Référence du donneur d'ordre"
+    RVatNumber -> "Numéro UID"
+    RVatDates -> "Date(s) de la préstation"
+    RVatDetails -> "Taux de la facture"
+    RVatImportTax -> "TVA pure lors de l'importation"
+    RConditions -> "Condition(s)"
+
     RErrMultipleFilesDropped -> "Un seul fichier peut être traité à la fois"
     RErrNetworkError -> "La requête a échoué (voir log js pour plus de détails)"
     RErrUnknownError -> "Erreur inconnue (voir log js pour plus de détails)"
