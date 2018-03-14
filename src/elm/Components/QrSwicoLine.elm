@@ -28,7 +28,10 @@ cellStyle flexGrow fontWeight =
 --    Err err -> text ""
 prettifyDate : String -> Html a
 prettifyDate date =
-  text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
+  if String.length date == 6 then
+    text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
+  else
+    text ""
 
 
 prettifyUid : String -> Html a
