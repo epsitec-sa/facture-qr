@@ -36,13 +36,32 @@ prettifyDetails value =
   div[style [("display", "flex"), ("flex-direction", "column")]]
   (
     List.map (\detail ->
-      div[]
-      (List.map (\val ->
-        text (val++" ")
-      ) (String.split ":" detail))
+      let (details) = String.split ":" detail
+      in (
+        case details of
+          x::xs -> case xs of
+            y::ys -> div[] [text (x++"% sur "++y++" CHF")]
+            [] -> text ""
+          [] -> text ""
+      )
     ) (String.split ";" value)
   )
 
+prettifyConditions : String -> Html a
+prettifyConditions value =
+  div[style [("display", "flex"), ("flex-direction", "column")]]
+  (
+    List.map (\detail ->
+      let (details) = String.split ":" detail
+      in (
+        case details of
+          x::xs -> case xs of
+            y::ys -> div[] [text (x++"% d'escompte à "++y++" jours")]
+            [] -> text ""
+          [] -> text ""
+      )
+    ) (String.split ";" value)
+  )
 
 
 renderTableLine : Language -> String -> Resource -> String -> Bool -> (String -> Html a) -> Html a
@@ -110,7 +129,7 @@ renderTable language payload =
     renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDate,
     renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
     renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyDefault,
-    renderTableLine language "/40/" RConditions payload.conditions False prettifyDefault
+    renderTableLine language "/40/" RConditions payload.conditions False prettifyConditions
   ]
 
 
