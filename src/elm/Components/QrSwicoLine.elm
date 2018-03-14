@@ -36,7 +36,11 @@ prettifyDate date =
 
 prettifyUid : String -> Html a
 prettifyUid date =
-  text ("UID CHE-"++(String.slice 0 3 date)++"."++(String.slice 3 6 date)++"."++(String.slice 6 9 date))
+  if String.length date == 9 then
+    text ("UID CHE-"++(String.slice 0 3 date)++"."++(String.slice 3 6 date)++"."++(String.slice 6 9 date))
+  else
+    text ""
+
 
 prettifyDefault : String -> Html a
 prettifyDefault value =
@@ -97,7 +101,7 @@ renderTableLine language tag title value dark prettifyFunc =
     ("padding", "0.2em")
     ]
     (if dark == True then
-      [("background-color", "#CCC")]
+      [("background-color", "#EEE")]
     else
       []
     )
