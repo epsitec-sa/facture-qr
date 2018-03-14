@@ -21,11 +21,15 @@ cellStyle flexGrow fontWeight =
     ("padding", "0 0.1em")
   ]
 
+--prettifyDate : String -> Html a
+--prettifyDate date =
+--  case Date.fromString date of
+--    Ok value -> text (Date.Format.format "%d.%m.%Y" value)
+--    Err err -> text ""
 prettifyDate : String -> Html a
 prettifyDate date =
-  case Date.fromString date of
-    Ok value -> text (Date.Format.format "%d.%m.%Y" value)
-    Err err -> text ""
+  text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
+
 
 prettifyDefault : String -> Html a
 prettifyDefault value =
