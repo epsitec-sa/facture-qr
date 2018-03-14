@@ -62,19 +62,22 @@ prettifyDates value =
 
 prettifyDetails : String -> Html a
 prettifyDetails value =
-  div[style [("display", "flex"), ("flex-direction", "column")]]
-  (
-    List.map (\detail ->
-      let (details) = String.split ":" detail
-      in (
-        case details of
-          x::xs -> case xs of
-            y::ys -> div[] [text (x++"% sur "++y++" CHF")]
+  if String.contains ";" value then
+    div[style [("display", "flex"), ("flex-direction", "column")]]
+    (
+      List.map (\detail ->
+        let (details) = String.split ":" detail
+        in (
+          case details of
+            x::xs -> case xs of
+              y::ys -> div[] [text (x++"% sur "++y++" CHF")]
+              [] -> text ""
             [] -> text ""
-          [] -> text ""
-      )
-    ) (String.split ";" value)
-  )
+        )
+      ) (String.split ";" value)
+    )
+  else
+    text (value++"% sur l'ensemble de la facture")
 
 prettifyConditions : String -> Html a
 prettifyConditions value =
