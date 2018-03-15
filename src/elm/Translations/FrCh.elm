@@ -23,6 +23,13 @@ t resource =
     RVatDetails -> "Taux de la facture"
     RVatImportTax -> "TVA pure lors de l'importation"
     RConditions -> "Condition(s)"
+    RDiscount -> "d'escompte à"
+    RTotalBill -> "sur l'entier du montant"
+    RImport -> "de TVA lors de l'importation de marchandises"
+    RDays -> "jours"
+    ROn -> "sur"
+    RFrom -> "du"
+    RTo -> "au"
 
     RErrMultipleFilesDropped -> "Un seul fichier peut être traité à la fois"
     RErrNetworkError -> "La requête a échoué (voir log js pour plus de détails)"
