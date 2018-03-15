@@ -5,8 +5,8 @@ import Translations.Languages exposing (t, Language)
 import Translations.Resources exposing (..)
 
 import Html exposing (..)
-import Date exposing (..)
-import Date.Format exposing (..)
+--import Date exposing (..)
+--import Date.Format exposing (..)
 import Html.Attributes exposing (..)
 
 cellStyle : String -> String -> List (String, String)
@@ -26,43 +26,56 @@ cellStyle flexGrow fontWeight =
 --  case Date.fromString date of
 --    Ok value -> text (Date.Format.format "%d.%m.%Y" value)
 --    Err err -> text ""
-prettifyDate : String -> Html a
-prettifyDate date =
+prettifyDate : Language -> String -> Html a
+prettifyDate language date =
   if String.length date == 6 then
-    text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
+    case String.toInt date of
+      Err msg -> text ""
+      Ok val -> text ((String.slice 4 6 date)++"."++(String.slice 2 4 date)++"."++(String.slice 0 2 date))
   else
     text ""
 
 
-prettifyUid : String -> Html a
-prettifyUid date =
-  if String.length date == 9 then
-    text ("UID CHE-"++(String.slice 0 3 date)++"."++(String.slice 3 6 date)++"."++(String.slice 6 9 date))
+prettifyUid : Language -> String -> Html a
+prettifyUid language uid =
+  if String.length uid == 9 then
+    case String.toInt uid of
+      Err msg -> text ""
+      Ok val -> text ("UID CHE-"++(String.slice 0 3 uid)++"."++(String.slice 3 6 uid)++"."++(String.slice 6 9 uid))
   else
     text ""
 
 
-prettifyDefault : String -> Html a
-prettifyDefault value =
+prettifyDefault : Language -> String -> Html a
+prettifyDefault language value =
   text value
 
-prettifyDates : String -> Html a
-prettifyDates value =
+prettifyImportTax : Language -> String -> Html a
+prettifyImportTax language value =
+  if String.length value > 0 then
+    case String.toFloat value of
+      Err msg -> text ""
+      Ok val -> text (value++" "++(t language RImport))
+  else
+    text ""
+
+prettifyDates : Language -> String -> Html a
+prettifyDates language value =
   if String.length value == 6 then
-    prettifyDate value
+    prettifyDate language value
   else if String.length value == 12 then
     div[][
-      text "du ",
-      prettifyDate (String.slice 0 6 value),
-      text " au ",
-      prettifyDate (String.slice 6 12 value)
+      text ((t language RFrom)++" "),
+      prettifyDate language (String.slice 0 6 value),
+      text (" "++(t language RTo)++" "),
+      prettifyDate language (String.slice 6 12 value)
     ]
   else
     text ""
 
-prettifyDetails : String -> Html a
-prettifyDetails value =
-  if String.contains ";" value then
+prettifyDetails : Language -> String -> Html a
+prettifyDetails language value =
+  if String.contains ":" value then
     div[style [("display", "flex"), ("flex-direction", "column")]]
     (
       List.map (\detail ->
@@ -70,17 +83,24 @@ prettifyDetails value =
         in (
           case details of
             x::xs -> case xs of
-              y::ys -> div[] [text (x++"% sur "++y++" CHF")]
+              y::ys -> case String.toFloat x of
+                Err msg -> text ""
+                Ok val -> case String.toFloat y of
+                  Err msg -> text ""
+                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" CHF")]
               [] -> text ""
             [] -> text ""
         )
       ) (String.split ";" value)
     )
   else
-    text (value++"% sur l'ensemble de la facture")
+    case String.toFloat value of
+      Err msg -> text ""
+      Ok val -> text (value++"% "++(t language RTotalBill))
 
-prettifyConditions : String -> Html a
-prettifyConditions value =
+
+prettifyConditions : Language -> String -> Html a
+prettifyConditions language value =
   div[style [("display", "flex"), ("flex-direction", "column")]]
   (
     List.map (\detail ->
@@ -88,7 +108,11 @@ prettifyConditions value =
       in (
         case details of
           x::xs -> case xs of
-            y::ys -> div[] [text (x++"% d'escompte à "++y++" jours")]
+            y::ys -> case String.toFloat x of
+              Err msg -> text ""
+              Ok val -> case String.toInt y of
+                Err msg -> text ""
+                Ok val -> div[] [text (x++"% "++(t language RDiscount)++" "++y++" "++(t language RDays))]
             [] -> text ""
           [] -> text ""
       )
@@ -96,7 +120,7 @@ prettifyConditions value =
   )
 
 
-renderTableLine : Language -> String -> Resource -> String -> Bool -> (String -> Html a) -> Html a
+renderTableLine : Language -> String -> Resource -> String -> Bool -> (Language -> String -> Html a) -> Html a
 renderTableLine language tag title value dark prettifyFunc =
   div [style (
     List.append [
@@ -133,7 +157,7 @@ renderTableLine language tag title value dark prettifyFunc =
     ],
     div [style (cellStyle "2" "bold")]
     [
-      prettifyFunc value
+      prettifyFunc language value
     ]
   ]
 
@@ -160,7 +184,7 @@ renderTable language payload =
     renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyUid,
     renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDates,
     renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
-    renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyDefault,
+    renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyImportTax,
     renderTableLine language "/40/" RConditions payload.conditions False prettifyConditions
   ]
 
