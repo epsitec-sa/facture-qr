@@ -1,7 +1,7 @@
 {
   "name": "facture-qr",
   "description": "UI of swiss-qr-invoice validator",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "license": "MIT",
   "author": "Epsitec SA",
   "repository": {
