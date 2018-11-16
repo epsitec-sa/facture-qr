@@ -34,7 +34,7 @@ t resource =
     RErrMultipleFilesDropped -> "Es kann nur eine Datei auf einmal verarbeitet werden"
     RErrNetworkError -> "Die Anfrage ist fehlgeschlagen (siehe js logs für mehr Details)"
     RErrUnknownError -> "Ein unbekannter Fehler ist aufgetreten (siehe js logs für mehr Details)"
-    RErrInvalidEncoding -> "Der QR-Code muss mit dem Latin-1 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
+    RErrInvalidEncoding -> "Der QR-Code muss mit dem UTF-8 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
     RErrInvalidInvoiceImage -> "Die Bilddatei konnte nicht dekodiert werden (siehe js logs für mehr Details)"
     RErrGenerationError -> "Die Rechnungsbilddatei konnte nicht erzeugt werden (siehe js logs für mehr Details)"
     RErrValidationError -> "Die QR-Rechnung konnte nicht validiert werden (siehe js logs für mehr Details)"
