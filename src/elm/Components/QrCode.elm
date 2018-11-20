@@ -227,7 +227,7 @@ put route body =
   Http.request
     { method = "PUT"
     , headers = []
-    , url = "https://partout.cresus.ch/swiss-qr-invoice/v1/" ++ route
+    , url = "https://partout.cresus.ch/swiss-qr-invoice/v2/" ++ route
     , body = body
     , expect = Http.expectString
     , timeout = Nothing
