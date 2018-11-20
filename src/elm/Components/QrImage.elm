@@ -11,7 +11,7 @@ renderImage : String -> Html a
 renderImage image =
   div [style [
     ("display", "flex"),
-    ("flex-grow", "2"),
+    ("flex-grow", "3"),
     ("flex-basis", "0"),
     ("flex-shrink", "0")
     ]]
