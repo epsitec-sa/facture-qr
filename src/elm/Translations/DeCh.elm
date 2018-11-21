@@ -39,8 +39,8 @@ t resource =
     RErrGenerationError -> "Die Rechnungsbilddatei konnte nicht erzeugt werden (siehe js logs für mehr Details)"
     RErrValidationError -> "Die QR-Rechnung konnte nicht validiert werden (siehe js logs für mehr Details)"
 
-    RValErrDoesExist -> "**le champ ne doit pas être défini"
-    RValErrDoesNotExist -> "**das obligatorische Feld darf nicht leer sein"
+    RValErrDoesExist -> "die Zeile darf nicht existieren"
+    RValErrDoesNotExist -> "das Feld darf leer sein, muss aber existieren"
     RValErrIsEmpty -> "das obligatorische Feld darf nicht leer sein"
     RValErrMustBeEmpty -> "das Feld muss leer sein"
     RValErrMustBeEqualTo -> "es dürfen nur folgende Werte im Feld stehen:"
@@ -63,3 +63,4 @@ t resource =
     RValErrTagAlreadyExists -> "der Swico Tag existiert schon (ein Tag darf nur einmal erscheinen):"
     RValErrTagIsEmpty -> "der obligatorische Swico Tag darf nicht leer sein"
     RValErrSwiftFormat -> "das Feld respektiert nicht die Swift Kodierung"
+    RValErrZeroConditionMissing -> "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"

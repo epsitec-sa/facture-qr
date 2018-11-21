@@ -39,8 +39,8 @@ t resource =
     RErrGenerationError -> "Impossible de générer l'image de la facture (voir log js pour plus de détails)"
     RErrValidationError -> "Impossible de valider la facture QR (voir log js pour plus de détails)"
 
-    RValErrDoesExist -> "le champ ne doit pas être défini"
-    RValErrDoesNotExist -> "le champ est optionnel mais doit être défini"
+    RValErrDoesExist -> "la ligne ne doit pas exister"
+    RValErrDoesNotExist -> "le champ peut être vide mais doit exister"
     RValErrIsEmpty -> "le champ est obligatoire et ne peut pas être vide"
     RValErrMustBeEmpty -> "le champ doit être vide"
     RValErrMustBeEqualTo -> "le champ ne peut prendre que la(les) valeur(s) suivante(s) :"
@@ -63,3 +63,4 @@ t resource =
     RValErrTagAlreadyExists -> "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
     RValErrTagIsEmpty -> "la balise Swico est obligatoire et ne peut pas être vide"
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"
+    RValErrZeroConditionMissing -> "une condition d'escompte à 0% doit exister afin d'indiquer le delai de paiement"
