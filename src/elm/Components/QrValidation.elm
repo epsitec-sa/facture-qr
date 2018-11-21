@@ -76,6 +76,28 @@ computeLines raw validations =
     }
   ) (String.split "\n" raw)
 
+-- Computes lines that are not in the raw text, but for which errors have been generated
+-- (usually end of text errors)
+computeExtraLines : List Line -> List Backend.WebService.ValidationError -> List Line
+computeExtraLines lines validations =
+  List.map (\validation -> {
+      number = validation.line,
+      raw = "",
+      blocks = [{
+        start = 0,
+        end = 0,
+        error = True,
+        xmlField = validation.xmlField
+      }]
+    }
+  ) (List.filter (\validation ->
+      List.isEmpty (
+        List.filter (\line ->
+          validation.line <= line.number
+        ) lines
+      )
+    ) validations)
+
 
 parseIndexWithLeadingZero : Int -> String
 parseIndexWithLeadingZero index =
@@ -303,11 +325,14 @@ renderContent model language raw validations =
   (
     let
       lines = computeLines raw validations
-    in ([
-      renderRawInvoice model lines,
-      div [style[("width", "1.5em"), ("height", "100%")]][],
-      renderValidationErrors model language lines validations
-    ])
+    in (
+      let allLines = List.append lines (computeExtraLines lines validations)
+      in ([
+        renderRawInvoice model allLines,
+        div [style[("width", "1.5em"), ("height", "100%")]][],
+        renderValidationErrors model language allLines validations
+      ])
+    )
   )
 
 view : Model -> Language -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
