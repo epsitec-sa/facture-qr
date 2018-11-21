@@ -39,7 +39,8 @@ t resource =
     RErrGenerationError -> "Impossible de générer l'image de la facture (voir log js pour plus de détails)"
     RErrValidationError -> "Impossible de valider la facture QR (voir log js pour plus de détails)"
 
-    RValErrDoesNotExist -> "le champ est obligatoire et ne peut pas être vide"
+    RValErrDoesExist -> "le champ ne doit pas être défini"
+    RValErrDoesNotExist -> "le champ est optionnel mais doit être défini"
     RValErrIsEmpty -> "le champ est obligatoire et ne peut pas être vide"
     RValErrMustBeEmpty -> "le champ doit être vide"
     RValErrMustBeEqualTo -> "le champ ne peut prendre que la(les) valeur(s) suivante(s) :"

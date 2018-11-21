@@ -39,7 +39,8 @@ t resource =
     RErrGenerationError -> "Die Rechnungsbilddatei konnte nicht erzeugt werden (siehe js logs für mehr Details)"
     RErrValidationError -> "Die QR-Rechnung konnte nicht validiert werden (siehe js logs für mehr Details)"
 
-    RValErrDoesNotExist -> "das obligatorische Feld darf nicht leer sein"
+    RValErrDoesExist -> "**le champ ne doit pas être défini"
+    RValErrDoesNotExist -> "**das obligatorische Feld darf nicht leer sein"
     RValErrIsEmpty -> "das obligatorische Feld darf nicht leer sein"
     RValErrMustBeEmpty -> "das Feld muss leer sein"
     RValErrMustBeEqualTo -> "es dürfen nur folgende Werte im Feld stehen:"

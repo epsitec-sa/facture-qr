@@ -44,7 +44,7 @@ errorCodeString error language =
 
 
 type ValidationErrorCode =
-    DoesNotExist | IsEmpty | MustBeEmpty | MustBeEqualTo |
+    DoesExist | DoesNotExist | IsEmpty | MustBeEmpty | MustBeEqualTo |
     LengthDifferent | LengthExceeded | LengthNotReached |
     MustBeDifferentThan | DoesNotStartWith |
     Invalid | FormatIsDifferentThan |
@@ -59,6 +59,8 @@ validationErrorCodeDecoder =
     Json.Decode.string
         |> Json.Decode.andThen (\str ->
            case str of
+               "DoesExist" ->
+                    Json.Decode.succeed DoesExist
                "DoesNotExist" ->
                     Json.Decode.succeed DoesNotExist
                "IsEmpty" ->
@@ -112,6 +114,7 @@ validationErrorCodeDecoder =
 validationErrorCodeString : ValidationErrorCode -> Language -> String
 validationErrorCodeString error language =
   case error of
+     DoesExist -> t language RValErrDoesExist
      DoesNotExist -> t language RValErrDoesNotExist
      IsEmpty -> t language RValErrIsEmpty
      MustBeEmpty -> t language RValErrMustBeEmpty

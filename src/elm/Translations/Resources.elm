@@ -10,7 +10,7 @@ type Resource =
   RPrefix | RDocumentReference | RDocumentDate | RCustomerReference | RVatNumber | RVatDates |
   RVatDetails | RVatImportTax | RConditions | RDiscount | RTotalBill | RImport | RDays | ROn | RFrom | RTo |
 
-  RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
+  RValErrDoesExist | RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
   RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrQrReferenceInvalid |
   RValErrCreditorReferenceInvalid | RValErrNoReferenceInvalid | RValErrNoReferenceWithQrIban | RValErrValueExceeded | RValErrValueNotReached |
