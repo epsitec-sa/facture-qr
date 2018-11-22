@@ -1,67 +1,178 @@
-module Translations.DeCh exposing (..)
+module Translations.DeCh exposing (t)
+
 import Translations.Resources exposing (..)
 
 
 t : Resource -> String
 t resource =
-  case resource of
-    RTitle -> "QR-Rechnung Validator mit Swico Format"
-    RDropYourCode -> "Ziehen Sie die Datei hierhin"
-    RTabValidation -> "Validation"
-    RTabSwicoLine -> "Swico Zeile"
-    RTabImage -> "Erzeugtes Bild"
-    RWaiting -> "Einen Augenblick..."
-    RLine -> "Zeile"
-    RField -> "Feld"
+    case resource of
+        RTitle ->
+            "Validator für QR-Rechnung und strukturierte Rechnungsinformationen"
 
-    RPrefix -> "Präfix"
-    RDocumentReference -> "Rechnungsnummer"
-    RDocumentDate -> "Belegdatum"
-    RCustomerReference -> "Kundenreferenz"
-    RVatNumber -> "UID Nummer"
-    RVatDates -> "Datum der Leistung"
-    RVatDetails -> "Sätze für die Rechnung"
-    RVatImportTax -> "Reine MWST bei der Einfuhr"
-    RConditions -> "Liste des Konditionen"
-    RDiscount -> "Skonto auf"
-    RTotalBill -> "für den gesamten Betrag"
-    RImport -> " reine MWST bei einem Warenimport"
-    RDays -> "Tage"
-    ROn -> "auf"
-    RFrom -> "von"
-    RTo -> "bis zum"
+        RDropYourCode ->
+            "Ziehen Sie die Datei (Bild oder Text) hierhin"
 
-    RErrMultipleFilesDropped -> "Es kann nur eine Datei auf einmal verarbeitet werden"
-    RErrNetworkError -> "Die Anfrage ist fehlgeschlagen (siehe js logs für mehr Details)"
-    RErrUnknownError -> "Ein unbekannter Fehler ist aufgetreten (siehe js logs für mehr Details)"
-    RErrInvalidEncoding -> "Der QR-Code muss mit dem UTF-8 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
-    RErrInvalidInvoiceImage -> "Die Bilddatei konnte nicht dekodiert werden (siehe js logs für mehr Details)"
-    RErrGenerationError -> "Die Rechnungsbilddatei konnte nicht erzeugt werden (siehe js logs für mehr Details)"
-    RErrValidationError -> "Die QR-Rechnung konnte nicht validiert werden (siehe js logs für mehr Details)"
+        RTabValidation ->
+            "Dateninhalt"
 
-    RValErrDoesExist -> "die Zeile darf nicht existieren"
-    RValErrDoesNotExist -> "das Feld darf leer sein, muss aber existieren"
-    RValErrIsEmpty -> "das obligatorische Feld darf nicht leer sein"
-    RValErrMustBeEmpty -> "das Feld muss leer sein"
-    RValErrMustBeEqualTo -> "es dürfen nur folgende Werte im Feld stehen:"
-    RValErrLengthDifferent -> "das Feld muss genau folgende Länge haben:"
-    RValErrLengthExceeded -> "das Feld ist zu lang, die maximale zulässige Länge beträgt"
-    RValErrLengthNotReached -> "das Feld ist zu kurz, die minimale zulässige Länge beträgt"
-    RValErrMustBeDifferentThan -> "folgende Werte dürfen im Feld nicht enthalten sein:"
-    RValErrDoesNotStartWith -> "das Feld muss mit folgender Zeichenkette beginnen:"
-    RValErrInvalid -> "das Feld ist inkorrekt"
-    RValErrFormatIsDifferentThan -> "das Feld muss folgendes Format respektieren:"
-    RValErrQrReferenceInvalid -> "die QR Referenznummer (QRR) ist nicht korrekt"
-    RValErrCreditorReferenceInvalid -> "die Creditor Referenz (SCOR) ist nicht korrekt"
-    RValErrNoReferenceInvalid -> "für den Typ NON darf keine Referenz existieren"
-    RValErrNoReferenceWithQrIban -> "der Typ NON kann nicht für mit einem QR-Iban verwendet werden"
-    RValErrValueExceeded -> "der Wert darf nicht grösser sein als"
-    RValErrValueNotReached -> "der Wert darf nicht kleiner sein als"
-    RValErrInvalidTags -> "das Format des Swico Feldes ist inkorrekt"
-    RValErrUnknownTag -> "folgender Swico Tag ist inkorrekt:"
-    RValErrTagNotOrdered -> "der Swico Tag muss grösser als die vorhergehende sein (die Tags müssen in aufsteigender Reihenfolge erscheinen):"
-    RValErrTagAlreadyExists -> "der Swico Tag existiert schon (ein Tag darf nur einmal erscheinen):"
-    RValErrTagIsEmpty -> "der obligatorische Swico Tag darf nicht leer sein"
-    RValErrSwiftFormat -> "das Feld respektiert nicht die Swift Kodierung"
-    RValErrVatAmountMissmatch -> "var amount missmatch"
-    RValErrZeroConditionMissing -> "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
+        RTabSwicoLine ->
+            "Rechnungsinformationen"
+
+        RTabImage ->
+            "Zahlteil ansehen"
+
+        RWaiting ->
+            "Einen Augenblick..."
+
+        RLine ->
+            "Zeile"
+
+        RField ->
+            "Feld"
+
+        RPrefix ->
+            "Präfix"
+
+        RDocumentReference ->
+            "Rechnungsnummer"
+
+        RDocumentDate ->
+            "Belegdatum"
+
+        RCustomerReference ->
+            "Kundenreferenz"
+
+        RVatNumber ->
+            "UID Nummer"
+
+        RVatDates ->
+            "Datum der Leistung"
+
+        RVatDetails ->
+            "Sätze für die Rechnung"
+
+        RVatImportTax ->
+            "Reine MWST bei der Einfuhr"
+
+        RConditions ->
+            "Liste des Konditionen"
+
+        RDiscount ->
+            "Skonto auf"
+
+        RTotalBill ->
+            "für den gesamten Betrag"
+
+        RImport ->
+            " reine MWST bei einem Warenimport"
+
+        RDays ->
+            "Tage"
+
+        ROn ->
+            "auf"
+
+        RFrom ->
+            "von"
+
+        RTo ->
+            "bis zum"
+
+        RErrMultipleFilesDropped ->
+            "Es kann nur eine Datei auf einmal verarbeitet werden"
+
+        RErrNetworkError ->
+            "Die Anfrage ist fehlgeschlagen (siehe js logs für mehr Details)"
+
+        RErrUnknownError ->
+            "Ein unbekannter Fehler ist aufgetreten (siehe js logs für mehr Details)"
+
+        RErrInvalidEncoding ->
+            "Der QR-Code muss mit dem UTF-8 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
+
+        RErrInvalidInvoiceImage ->
+            "Die Bilddatei konnte nicht dekodiert werden (siehe js logs für mehr Details)"
+
+        RErrGenerationError ->
+            "Die Rechnungsbilddatei konnte nicht erzeugt werden (siehe js logs für mehr Details)"
+
+        RErrValidationError ->
+            "Die QR-Rechnung konnte nicht validiert werden (siehe js logs für mehr Details)"
+
+        RValErrDoesExist ->
+            "die Zeile darf nicht existieren"
+
+        RValErrDoesNotExist ->
+            "das Feld darf leer sein, muss aber existieren"
+
+        RValErrIsEmpty ->
+            "das obligatorische Feld darf nicht leer sein"
+
+        RValErrMustBeEmpty ->
+            "das Feld muss leer sein"
+
+        RValErrMustBeEqualTo ->
+            "es dürfen nur folgende Werte im Feld stehen:"
+
+        RValErrLengthDifferent ->
+            "das Feld muss genau folgende Länge haben:"
+
+        RValErrLengthExceeded ->
+            "das Feld ist zu lang, die maximale zulässige Länge beträgt"
+
+        RValErrLengthNotReached ->
+            "das Feld ist zu kurz, die minimale zulässige Länge beträgt"
+
+        RValErrMustBeDifferentThan ->
+            "folgende Werte dürfen im Feld nicht enthalten sein:"
+
+        RValErrDoesNotStartWith ->
+            "das Feld muss mit folgender Zeichenkette beginnen:"
+
+        RValErrInvalid ->
+            "das Feld ist inkorrekt"
+
+        RValErrFormatIsDifferentThan ->
+            "das Feld muss folgendes Format respektieren:"
+
+        RValErrQrReferenceInvalid ->
+            "die QR Referenznummer (QRR) ist nicht korrekt"
+
+        RValErrCreditorReferenceInvalid ->
+            "die Creditor Referenz (SCOR) ist nicht korrekt"
+
+        RValErrNoReferenceInvalid ->
+            "für den Typ NON darf keine Referenz existieren"
+
+        RValErrNoReferenceWithQrIban ->
+            "der Typ NON kann nicht für mit einem QR-Iban verwendet werden"
+
+        RValErrValueExceeded ->
+            "der Wert darf nicht grösser sein als"
+
+        RValErrValueNotReached ->
+            "der Wert darf nicht kleiner sein als"
+
+        RValErrInvalidTags ->
+            "das Format des Swico Feldes ist inkorrekt"
+
+        RValErrUnknownTag ->
+            "folgender Swico Tag ist inkorrekt:"
+
+        RValErrTagNotOrdered ->
+            "der Swico Tag muss grösser als die vorhergehende sein (die Tags müssen in aufsteigender Reihenfolge erscheinen):"
+
+        RValErrTagAlreadyExists ->
+            "der Swico Tag existiert schon (ein Tag darf nur einmal erscheinen):"
+
+        RValErrTagIsEmpty ->
+            "der obligatorische Swico Tag darf nicht leer sein"
+
+        RValErrSwiftFormat ->
+            "das Feld respektiert nicht die Swift Kodierung"
+
+        RValErrVatAmountMissmatch ->
+            "var amount missmatch"
+
+        RValErrZeroConditionMissing ->
+            "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
