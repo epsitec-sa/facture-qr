@@ -63,5 +63,5 @@ t resource =
     RValErrTagAlreadyExists -> "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
     RValErrTagIsEmpty -> "la balise Swico est obligatoire et ne peut pas être vide"
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"
-    RValErrVatAmountMissmatch -> "var amount missmatch"
+    RValErrVatAmountMissmatch -> "la somme des montants TVA n'est pas en accord avec le montant total de la facture ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Le total calculé est"
     RValErrZeroConditionMissing -> "une condition d'escompte à 0% doit exister afin d'indiquer le delai de paiement"
