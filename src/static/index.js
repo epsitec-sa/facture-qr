@@ -16,6 +16,33 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
   });
 });
 
+app.ports.getUrlParam.subscribe (function (paramName) {
+  try {
+    var url = new URL(window.location.href);
+    var c = null;
+
+    if (url && url.searchParams) {
+      c = url.searchParams.get(paramName);
+    } else {
+      var URLSearchParams = require('url-search-params');
+      c = new URLSearchParams(url).get(paramName);
+    }
+
+    app.ports.urlParamReceived.send ({
+      name: paramName,
+      value: c
+    });
+  } catch(err) {
+    console.log(err)
+
+    app.ports.urlParamReceived.send ({
+      name: paramName,
+      value: null
+    });
+  }
+});
+
+
 app.ports.title.subscribe (function (str) {
   document.title = str;
 });
