@@ -1,0 +1,6 @@
+{
+  "elm.compiler": ".\\node_modules\\.bin\\elm",
+  "elm.makeCommand": ".\\node_modules\\.bin\\elm-make",
+  "elm.analyseCommand": ".\\node_modules\\.bin\\elm-analyse",
+  "elm.formatCommand": ".\\node_modules\\.bin\\elm-format"
+}
