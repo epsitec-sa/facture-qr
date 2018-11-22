@@ -52,12 +52,28 @@ prettifyDefault language value =
 
 prettifyImportTax : Language -> String -> Html a
 prettifyImportTax language value =
-  if String.length value > 0 then
+  if String.contains ":" value then
+    div[style [("display", "flex"), ("flex-direction", "column")]]
+    (
+      List.map (\detail ->
+        let (details) = String.split ":" detail
+        in (
+          case details of
+            x::xs -> case xs of
+              y::ys -> case String.toFloat x of
+                Err msg -> text ""
+                Ok val -> case String.toFloat y of
+                  Err msg -> text ""
+                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" CHF")]
+              [] -> text ""
+            [] -> text ""
+        )
+      ) (String.split ";" value)
+    )
+  else
     case String.toFloat value of
       Err msg -> text ""
-      Ok val -> text (value++" "++(t language RImport))
-  else
-    text ""
+      Ok val -> text (value++"% "++(t language RImport))
 
 prettifyDates : Language -> String -> Html a
 prettifyDates language value =
