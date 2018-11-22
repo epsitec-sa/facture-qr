@@ -63,4 +63,5 @@ t resource =
     RValErrTagAlreadyExists -> "la balise Swico existe déjà (une balise ne peut apparaître qu'une seule fois) :"
     RValErrTagIsEmpty -> "la balise Swico est obligatoire et ne peut pas être vide"
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"
+    RValErrVatAmountMissmatch -> "var amount missmatch"
     RValErrZeroConditionMissing -> "une condition d'escompte à 0% doit exister afin d'indiquer le delai de paiement"

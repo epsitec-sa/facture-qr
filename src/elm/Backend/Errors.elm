@@ -51,7 +51,7 @@ type ValidationErrorCode =
     QrReferenceInvalid | CreditorReferenceInvalid | NoReferenceInvalid | NoReferenceWithQrIban |
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
-    SwiftFormat | ZeroConditionMissing
+    SwiftFormat | VatAmountMissmatch | ZeroConditionMissing
 
 
 validationErrorCodeDecoder : Decoder ValidationErrorCode
@@ -107,6 +107,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed TagIsEmpty
                "SwiftFormat" ->
                     Json.Decode.succeed SwiftFormat
+               "VatAmountMissmatch" ->
+                    Json.Decode.succeed VatAmountMissmatch
                "ZeroConditionMissing" ->
                     Json.Decode.succeed ZeroConditionMissing
                somethingElse ->
@@ -140,6 +142,7 @@ validationErrorCodeString error language =
      TagAlreadyExists -> t language RValErrTagAlreadyExists
      TagIsEmpty -> t language RValErrTagIsEmpty
      SwiftFormat -> t language RValErrSwiftFormat
+     VatAmountMissmatch -> t language RValErrVatAmountMissmatch
      ZeroConditionMissing -> t language RValErrZeroConditionMissing
 
 

@@ -63,4 +63,5 @@ t resource =
     RValErrTagAlreadyExists -> "der Swico Tag existiert schon (ein Tag darf nur einmal erscheinen):"
     RValErrTagIsEmpty -> "der obligatorische Swico Tag darf nicht leer sein"
     RValErrSwiftFormat -> "das Feld respektiert nicht die Swift Kodierung"
+    RValErrVatAmountMissmatch -> "var amount missmatch"
     RValErrZeroConditionMissing -> "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
