@@ -18,22 +18,40 @@ app.ports.binaryFileRead.subscribe (function (binaryFile) {
 
 app.ports.getUrlParam.subscribe (function (paramName) {
   try {
-    var url = new URL(window.location.href);
-    var c = null;
+    var urlStr = '';
+    if (window && window.location && window.location.href) {
+      urlStr = window.location.href;
+    } else if (document && document.location && document.location.href) {
+      urlStr = document.location.href;
+    }
 
-    if (url && url.searchParams) {
-      c = url.searchParams.get(paramName);
+    var url = new URL(urlStr);
+    var value = null;
+
+    if (!url) {
+      console.log('error: url is undefined');
+
+      app.ports.urlParamReceived.send ({
+        name: paramName,
+        value: null
+      });
+    }
+
+    if (url.searchParams) {
+      value = url.searchParams.get(paramName);
     } else {
       var URLSearchParams = require('url-search-params');
-      c = new URLSearchParams(url).get(paramName);
+      value = new URLSearchParams(url).get(paramName);
     }
+
 
     app.ports.urlParamReceived.send ({
       name: paramName,
-      value: c
+      value: value
     });
   } catch(err) {
-    console.log(err)
+    console.log('error: ' + err.message || err);
+    console.log(err.stack);
 
     app.ports.urlParamReceived.send ({
       name: paramName,
