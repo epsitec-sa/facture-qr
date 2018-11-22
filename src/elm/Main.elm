@@ -36,7 +36,7 @@ init = (
       qrCode = Components.QrCode.init,
       language = Translations.Languages.SwissFrench
     }
-    , Task.attempt (OnLocalStorageLanguage "epsitec-qr-validator-language") (LocalStorage.get "epsitec-qr-validator-language")
+    , (Ports.getUrlParam "lang")
   )
 
 
@@ -45,6 +45,7 @@ type Msg = QrCodeMessage Components.QrCode.Message
            | LanguageChanged Language
            | OnLocalStorageLanguage LocalStorage.Key (Result LocalStorage.Error (Maybe LocalStorage.Value))
            | OnVoidOp (Result LocalStorage.Error ())
+           | UrlParamReceived UrlParam
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -85,11 +86,22 @@ update msg model =
           Debug.log (localStorageErrorString err)
           (model, Cmd.none)
     OnVoidOp result ->
-        case result of
-            Ok _ -> (model, Cmd.none)
-            Err err ->
-              Debug.log (localStorageErrorString err)
-              (model, Cmd.none)
+      case result of
+        Ok _ -> (model, Cmd.none)
+        Err err ->
+          Debug.log (localStorageErrorString err)
+          (model, Cmd.none)
+    UrlParamReceived result ->
+      case result.name of
+        "lang" ->
+          case result.value of
+            Nothing -> (model, Task.attempt (OnLocalStorageLanguage "epsitec-qr-validator-language") (LocalStorage.get "epsitec-qr-validator-language"))
+            Just language ->
+              case language of
+                "fr" -> (model, send (LanguageChanged Translations.Languages.SwissFrench))
+                "de" -> (model, send (LanguageChanged Translations.Languages.SwissGerman))
+                a -> (model, Task.attempt (OnLocalStorageLanguage "epsitec-qr-validator-language") (LocalStorage.get "epsitec-qr-validator-language"))
+        a -> (model, Cmd.none)
 
 
 localStorageErrorString: LocalStorage.Error -> String
@@ -193,4 +205,5 @@ languageButton model language str =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Sub.map QrCodeMessage (Components.QrCode.subscriptions model.qrCode) ]
+        [ Sub.map QrCodeMessage (Components.QrCode.subscriptions model.qrCode),
+          urlParamReceived UrlParamReceived]
