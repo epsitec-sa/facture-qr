@@ -1,7 +1,7 @@
 module Backend.WebService exposing (..)
 import Translations.Languages exposing (Language)
 
-import Json.Decode exposing (int, string, float, list, Decoder, decodeString)
+import Json.Decode exposing (int, string, float, list, bool, Decoder, decodeString)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 import Backend.Errors exposing (..)
 import Debug
@@ -21,7 +21,8 @@ type alias ValidationError = {
   column : Int,
   length : Int,
   message : String,
-  additionalInfo : String
+  additionalInfo : String,
+  warning : Bool
 }
 
 type alias SwicoPayload = {
@@ -32,7 +33,7 @@ type alias SwicoPayload = {
   vatNumber : String,
   vatDates : String,
   vatDetails : String,
-  vatImportTax : String,
+  vatImportTaxes : String,
   conditions : String
 }
 
@@ -204,6 +205,7 @@ validationErrorDecoder =
     |> required "Length" int
     |> optional "Message" string ""
     |> optional "AdditionalInfo" string ""
+    |> optional "Warning" bool False
 
 
 decodeValidationErrors: String -> Result String (List ValidationError)
@@ -222,7 +224,7 @@ swicoPayloadDecoder =
     |> optional "VatNumber" string ""
     |> optional "VatDates" string ""
     |> optional "VatDetails" string ""
-    |> optional "VatImportTax" string ""
+    |> optional "VatImportTaxes" string ""
     |> optional "Conditions" string ""
 
 

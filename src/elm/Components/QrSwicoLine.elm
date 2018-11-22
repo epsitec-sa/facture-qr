@@ -184,7 +184,7 @@ renderTable language payload =
     renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyUid,
     renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDates,
     renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
-    renderTableLine language "/33/" RVatImportTax payload.vatImportTax True prettifyImportTax,
+    renderTableLine language "/33/" RVatImportTax payload.vatImportTaxes True prettifyImportTax,
     renderTableLine language "/40/" RConditions payload.conditions False prettifyConditions
   ]
 
