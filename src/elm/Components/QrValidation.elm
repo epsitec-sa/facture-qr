@@ -11,10 +11,12 @@ import Html.Events exposing (..)
 
 type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String
 
+type Rendering = Error | Warning | Default
+
 type alias LineBlock = {
   start : Int,
   end : Int,
-  error : Bool,
+  rendering : Rendering,
   xmlField : String
 }
 
@@ -42,7 +44,7 @@ computeLineBlocks validations offset lineLength =
     [] -> [{
         start = offset,
         end = lineLength,
-        error = False,
+        rendering = Default,
         xmlField = ""
       }]
     x::xs ->
@@ -50,12 +52,12 @@ computeLineBlocks validations offset lineLength =
         List.append [{
           start = offset,
           end = x.column - 1,
-          error = False,
+          rendering = Default,
           xmlField = ""
         }, {
           start = x.column - 1,
           end = x.column - 1 + x.length,
-          error = True,
+          rendering = if x.warning == True then Warning else Error,
           xmlField = x.xmlField
         }] (computeLineBlocks xs (x.column - 1 + x.length) lineLength)
       else
@@ -86,7 +88,7 @@ computeExtraLines lines validations =
       blocks = [{
         start = 0,
         end = 0,
-        error = True,
+        rendering = if validation.warning == True then Warning else Error,
         xmlField = validation.xmlField
       }]
     }
@@ -229,8 +231,8 @@ renderLineBlocks model line =
   span [] (
     List.map (\block ->
       span (
-        case block.error of
-          True -> [
+        case block.rendering of
+          Error -> [
             class "lineError",
             style [
               ("display", "inline-block"),
@@ -240,15 +242,34 @@ renderLineBlocks model line =
             onMouseEnter (LineBlockIn (block.xmlField, line.number)),
             onMouseLeave (FieldOut block.xmlField)
           ]
-          False -> [style [("display", "inline-block"), ("word-break", "break-all")]]
+          Warning -> [
+            class "lineError",
+            style [
+              ("display", "inline-block"),
+              ("word-break", "break-all"),
+              ("background-color", if (List.member block.xmlField model.hoveredValidations) then "orange" else "rgba(255, 165, 0, 0.2)" )
+            ],
+            onMouseEnter (LineBlockIn (block.xmlField, line.number)),
+            onMouseLeave (FieldOut block.xmlField)
+          ]
+          Default -> [style [("display", "inline-block"), ("word-break", "break-all")]]
       ) [
-        if block.error == True && block.start == block.end then
+        if block.rendering /= Default && block.start == block.end then
           i [class "far fa-exclamation-triangle", style [("font-size", "10px")]] []
         else
           text (String.slice block.start block.end line.raw)
       ]
     ) line.blocks
   )
+
+computeLineBackground: List LineBlock -> String
+computeLineBackground blocks =
+  if List.length (blocks) > 1
+    then
+      if List.isEmpty (List.filter (\block -> block.rendering == Error) blocks)
+        then "rgba(255, 165, 0, 0.2)"
+        else "rgba(255, 0, 0, 0.2)"
+    else "white"
 
 renderLine : Model -> Line -> Html Message
 renderLine model line =
@@ -258,7 +279,7 @@ renderLine model line =
       ("display", "flex"),
       ("align-items", "flex-start"),
       ("flex-shrink", "0"),
-      ("background-color", if List.length (line.blocks) > 1 then "rgba(255, 0, 0, 0.2)" else "white")
+      ("background-color", computeLineBackground line.blocks)
     ]
   ]
   [
