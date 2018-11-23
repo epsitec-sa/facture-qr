@@ -20,6 +20,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.9",
     "elm": "^0.18.0",
+    "elm-format": "^0.8.1",
     "elm-webpack-loader": "^4.3.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
