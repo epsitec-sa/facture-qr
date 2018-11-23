@@ -13,6 +13,8 @@ type Resource =
   RValErrDoesExist | RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
   RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrQrReferenceInvalid |
-  RValErrCreditorReferenceInvalid | RValErrNoReferenceInvalid | RValErrNoReferenceWithQrIban | RValErrValueExceeded | RValErrValueNotReached |
+  RValErrCreditorReferenceInvalid | RValErrNonReferenceInvalid |
+  RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban |
+  RValErrValueExceeded | RValErrValueNotReached |
   RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat |
   RValErrVatAmountMissmatch | RValErrZeroConditionMissing

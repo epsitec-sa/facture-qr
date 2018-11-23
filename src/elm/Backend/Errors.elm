@@ -48,7 +48,8 @@ type ValidationErrorCode =
     LengthDifferent | LengthExceeded | LengthNotReached |
     MustBeDifferentThan | DoesNotStartWith |
     Invalid | FormatIsDifferentThan |
-    QrReferenceInvalid | CreditorReferenceInvalid | NoReferenceInvalid | NoReferenceWithQrIban |
+    QrReferenceInvalid | CreditorReferenceInvalid | NonReferenceInvalid |
+    NonReferenceWithQrIban | CreditorReferenceWithQrIban |
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     SwiftFormat | VatAmountMissmatch | ZeroConditionMissing
@@ -87,10 +88,12 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed QrReferenceInvalid
                "CreditorReferenceInvalid" ->
                     Json.Decode.succeed CreditorReferenceInvalid
-               "NoReferenceInvalid" ->
-                    Json.Decode.succeed NoReferenceInvalid
-               "NoReferenceWithQrIban" ->
-                    Json.Decode.succeed NoReferenceWithQrIban
+               "NonReferenceInvalid" ->
+                    Json.Decode.succeed NonReferenceInvalid
+               "NonReferenceWithQrIban" ->
+                    Json.Decode.succeed NonReferenceWithQrIban
+               "CreditorReferenceWithQrIban" ->
+                    Json.Decode.succeed CreditorReferenceWithQrIban
                "ValueExceeded" ->
                     Json.Decode.succeed ValueExceeded
                "ValueNotReached" ->
@@ -132,8 +135,9 @@ validationErrorCodeString error language =
      FormatIsDifferentThan -> t language RValErrFormatIsDifferentThan
      QrReferenceInvalid -> t language RValErrQrReferenceInvalid
      CreditorReferenceInvalid -> t language RValErrCreditorReferenceInvalid
-     NoReferenceInvalid -> t language RValErrNoReferenceInvalid
-     NoReferenceWithQrIban -> t language RValErrNoReferenceWithQrIban
+     NonReferenceInvalid -> t language RValErrNonReferenceInvalid
+     NonReferenceWithQrIban -> t language RValErrNonReferenceWithQrIban
+     CreditorReferenceWithQrIban -> t language RValErrCreditorReferenceWithQrIban
      ValueExceeded -> t language RValErrValueExceeded
      ValueNotReached -> t language RValErrValueNotReached
      InvalidTags -> t language RValErrInvalidTags
