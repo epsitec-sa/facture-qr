@@ -150,6 +150,9 @@ t resource =
         RValErrCreditorReferenceWithQrIban ->
             "der Typ SCOR kann nicht für mit einem QR-Iban verwendet werden"
 
+        RValErrQrrReferenceWithStandardIban ->
+            "der Typ QRR kann nicht für mit einem Iban verwendet werden"
+
         RValErrValueExceeded ->
             "der Wert darf nicht grösser sein als"
 

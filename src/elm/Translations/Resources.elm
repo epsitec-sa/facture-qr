@@ -14,7 +14,7 @@ type Resource =
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
   RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrQrReferenceInvalid |
   RValErrCreditorReferenceInvalid | RValErrNonReferenceInvalid |
-  RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban |
+  RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban | RValErrQrrReferenceWithStandardIban |
   RValErrValueExceeded | RValErrValueNotReached |
   RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat |
   RValErrVatAmountMissmatch | RValErrZeroConditionMissing

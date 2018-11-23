@@ -49,7 +49,7 @@ type ValidationErrorCode =
     MustBeDifferentThan | DoesNotStartWith |
     Invalid | FormatIsDifferentThan |
     QrReferenceInvalid | CreditorReferenceInvalid | NonReferenceInvalid |
-    NonReferenceWithQrIban | CreditorReferenceWithQrIban |
+    NonReferenceWithQrIban | CreditorReferenceWithQrIban | QrrReferenceWithStandardIban |
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     SwiftFormat | VatAmountMissmatch | ZeroConditionMissing
@@ -94,6 +94,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed NonReferenceWithQrIban
                "CreditorReferenceWithQrIban" ->
                     Json.Decode.succeed CreditorReferenceWithQrIban
+               "QrrReferenceWithStandardIban" ->
+                    Json.Decode.succeed QrrReferenceWithStandardIban
                "ValueExceeded" ->
                     Json.Decode.succeed ValueExceeded
                "ValueNotReached" ->
@@ -138,6 +140,7 @@ validationErrorCodeString error language =
      NonReferenceInvalid -> t language RValErrNonReferenceInvalid
      NonReferenceWithQrIban -> t language RValErrNonReferenceWithQrIban
      CreditorReferenceWithQrIban -> t language RValErrCreditorReferenceWithQrIban
+     QrrReferenceWithStandardIban -> t language RValErrQrrReferenceWithStandardIban
      ValueExceeded -> t language RValErrValueExceeded
      ValueNotReached -> t language RValErrValueNotReached
      InvalidTags -> t language RValErrInvalidTags

@@ -56,6 +56,7 @@ t resource =
     RValErrNonReferenceInvalid -> "aucune réference ne doit être saisie pour le type NON"
     RValErrNonReferenceWithQrIban -> "le type NON n'est pas valable avec un QR-Iban"
     RValErrCreditorReferenceWithQrIban -> "le type SCOR n'est pas valable avec un QR-Iban"
+    RValErrQrrReferenceWithStandardIban -> "le type QRR n'est pas valable avec un Iban normal"
     RValErrValueExceeded -> "la valeur ne peut pas être plus grande que"
     RValErrValueNotReached -> "la valeur ne peut pas être plus petite que"
     RValErrInvalidTags -> "le champ Swico n'est pas formatté correctement"
