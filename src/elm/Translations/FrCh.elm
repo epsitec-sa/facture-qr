@@ -14,6 +14,7 @@ t resource =
     RLine -> "Ligne"
     RField -> "champ"
 
+    RRaw -> "Ligne brute :"
     RPrefix -> "Préfixe"
     RDocumentReference -> "Numéro de facture"
     RDocumentDate -> "Date de la facture"

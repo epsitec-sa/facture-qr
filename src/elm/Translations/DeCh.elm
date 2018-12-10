@@ -30,6 +30,9 @@ t resource =
         RField ->
             "Feld"
 
+        RRaw ->
+            "Rohzeile :"
+
         RPrefix ->
             "Präfix"
 

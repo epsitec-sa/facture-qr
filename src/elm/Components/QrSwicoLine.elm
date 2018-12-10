@@ -177,6 +177,24 @@ renderTableLine language tag title value dark prettifyFunc =
     ]
   ]
 
+renderRawLine : Language -> SwicoPayload -> Html a
+renderRawLine language payload =
+  div [style [
+    ("display", "flex"),
+    ("padding", "0.2em 0.2em 1.0em 0.2em")
+    ]]
+    [
+      div [style (cellStyle "0.6" "bold")]
+      [
+        text (t language RRaw)
+      ],
+      div [style (cellStyle "4.8" "normal")]
+      [
+        text (payload.raw)
+      ]
+    ]
+
+
 
 renderTable : Language -> SwicoPayload -> Html a
 renderTable language payload =
@@ -193,6 +211,7 @@ renderTable language payload =
     ("font-size", "12px")
     ]]
   [
+    renderRawLine language payload,
     renderTableLine language "S1" RPrefix payload.prefix False prettifyDefault,
     renderTableLine language "/10/" RDocumentReference payload.documentReference True prettifyDefault,
     renderTableLine language "/11/" RDocumentDate payload.documentDate False prettifyDate,
