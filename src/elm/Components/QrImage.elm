@@ -12,7 +12,7 @@ renderImage image =
     div
         [ style
             [ ( "display", "flex" )
-            , ( "flex-grow", "3" )
+            , ( "flex-grow", "1" )
             , ( "flex-basis", "0" )
             , ( "flex-shrink", "0" )
             ]
@@ -53,7 +53,6 @@ renderContent language img =
             ]
         ]
         [ renderImage img
-        , renderActions
         ]
 
 
