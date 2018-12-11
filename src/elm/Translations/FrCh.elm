@@ -20,7 +20,7 @@ t resource =
     RDocumentDate -> "Date de la facture"
     RCustomerReference -> "Référence du donneur d'ordre"
     RVatNumber -> "Numéro UID"
-    RVatDates -> "Date(s) de la préstation"
+    RVatDates -> "Date(s) de la prestation"
     RVatDetails -> "Taux de la facture"
     RVatImportTax -> "TVA pure lors de l'importation"
     RConditions -> "Condition(s)"

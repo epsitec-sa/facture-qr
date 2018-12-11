@@ -31,7 +31,7 @@ t resource =
             "Feld"
 
         RRaw ->
-            "Rohzeile :"
+            "Rohzeile:"
 
         RPrefix ->
             "Präfix"
