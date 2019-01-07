@@ -8,6 +8,7 @@ import Ports exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import String.Extra exposing (..)
 
 type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String
 
@@ -108,6 +109,9 @@ parseIndexWithLeadingZero index =
   else
     toString index
 
+normalizeValidationId : String -> Int -> String
+normalizeValidationId xmlField lineNumber =
+  "v_" ++ (replace "]" "_" (replace "[" "_" xmlField)) ++ "_" ++ (toString lineNumber)
 
 update : Message -> Model -> (Model, Cmd Message)
 update msg model =
@@ -118,7 +122,7 @@ update msg model =
           xmlField :: model.hoveredValidations
         else model.hoveredValidations
       },
-      scrollTo ("validations", "v_" ++ xmlField ++ "_" ++ (toString lineNumber)))
+      scrollTo ("validations", normalizeValidationId xmlField lineNumber))
     ValidationIn (xmlField, lineNumber) -> (
       {model | hoveredValidations =
         if not (List.member xmlField model.hoveredValidations) then
@@ -154,7 +158,7 @@ renderValidationErrors model language lines validations =
       List.concatMap (\line ->
         List.map (\block ->
           div [
-            id ("v_" ++ block.xmlField ++ "_" ++ (toString line.number)),
+            id (normalizeValidationId block.xmlField line.number),
             style [
               ("display", "flex"),
               ("flex-shrink", "0"),
