@@ -138,6 +138,9 @@ t resource =
         RValErrFormatIsDifferentThan ->
             "das Feld muss folgendes Format respektieren:"
 
+        RValErrInvalidEmail -> 
+            "**l'adresse email n'est pas valable"
+
         RValErrQrReferenceInvalid ->
             "die QR Referenznummer (QRR) ist nicht korrekt"
 
@@ -185,3 +188,6 @@ t resource =
 
         RValErrZeroConditionMissing ->
             "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
+
+        RValErrMissingEmailOrBillRecipient -> 
+            "**la ligne eBill doit contenir soit l'adresse email, soit le BillRecipientId"

@@ -47,11 +47,12 @@ type ValidationErrorCode =
     DoesExist | DoesNotExist | IsEmpty | MustBeEmpty | MustBeEqualTo |
     LengthDifferent | LengthExceeded | LengthNotReached |
     MustBeDifferentThan | DoesNotStartWith |
-    Invalid | FormatIsDifferentThan |
+    Invalid | FormatIsDifferentThan | InvalidEmail |
     QrReferenceInvalid | CreditorReferenceInvalid | NonReferenceInvalid |
     NonReferenceWithQrIban | CreditorReferenceWithQrIban | QrrReferenceWithStandardIban |
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
+    MissingEmailOrBillRecipient |
     SwiftFormat | VatAmountMissmatch | ZeroConditionMissing
 
 
@@ -84,6 +85,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed Invalid
                "FormatIsDifferentThan" ->
                     Json.Decode.succeed FormatIsDifferentThan
+               "InvalidEmail" ->
+                    Json.Decode.succeed InvalidEmail
                "QrReferenceInvalid" ->
                     Json.Decode.succeed QrReferenceInvalid
                "CreditorReferenceInvalid" ->
@@ -116,6 +119,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed VatAmountMissmatch
                "ZeroConditionMissing" ->
                     Json.Decode.succeed ZeroConditionMissing
+               "MissingEmailOrBillRecipient" ->
+                    Json.Decode.succeed MissingEmailOrBillRecipient
                somethingElse ->
                     Json.Decode.fail <| "Unknown validation error code: " ++ somethingElse
         )
@@ -135,6 +140,7 @@ validationErrorCodeString error language =
      DoesNotStartWith -> t language RValErrDoesNotStartWith
      Invalid -> t language RValErrInvalid
      FormatIsDifferentThan -> t language RValErrFormatIsDifferentThan
+     InvalidEmail -> t language RValErrInvalidEmail
      QrReferenceInvalid -> t language RValErrQrReferenceInvalid
      CreditorReferenceInvalid -> t language RValErrCreditorReferenceInvalid
      NonReferenceInvalid -> t language RValErrNonReferenceInvalid
@@ -151,6 +157,7 @@ validationErrorCodeString error language =
      SwiftFormat -> t language RValErrSwiftFormat
      VatAmountMissmatch -> t language RValErrVatAmountMissmatch
      ZeroConditionMissing -> t language RValErrZeroConditionMissing
+     MissingEmailOrBillRecipient -> t language RValErrMissingEmailOrBillRecipient
 
 
 

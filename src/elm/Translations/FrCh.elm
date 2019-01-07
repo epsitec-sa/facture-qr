@@ -52,6 +52,7 @@ t resource =
     RValErrDoesNotStartWith -> "le champ doit commencer par"
     RValErrInvalid -> "le champ n'est pas valable"
     RValErrFormatIsDifferentThan -> "le format du champ doit être"
+    RValErrInvalidEmail -> "l'adresse email n'est pas valable"
     RValErrQrReferenceInvalid -> "la référence QR (QRR) n'est pas valable"
     RValErrCreditorReferenceInvalid -> "la réference du créditeur (SCOR) n'est pas valable"
     RValErrNonReferenceInvalid -> "aucune réference ne doit être saisie pour le type NON"
@@ -68,3 +69,4 @@ t resource =
     RValErrSwiftFormat -> "le champ ne respecte pas l'encodage Swift"
     RValErrVatAmountMissmatch -> "la somme des montants TVA n'est pas en accord avec le montant total de la facture ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Le total calculé est"
     RValErrZeroConditionMissing -> "une condition d'escompte à 0% doit exister afin d'indiquer le delai de paiement"
+    RValErrMissingEmailOrBillRecipient -> "la ligne eBill doit contenir soit l'adresse email, soit le BillRecipientId"
