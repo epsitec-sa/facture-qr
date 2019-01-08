@@ -3,6 +3,7 @@ import Components.QrHelpers exposing (..)
 import Components.QrImage exposing (..)
 import Components.QrValidation exposing (..)
 import Components.QrSwicoLine exposing (..)
+import Components.QrAlternativeProcedures exposing (..)
 import Ports exposing (..)
 import Backend.WebService exposing (..)
 import Backend.Errors exposing (..)
@@ -320,7 +321,7 @@ renderTabs model language =
       SwicoLine ->
         Components.QrSwicoLine.view language model.webService.decoding model.webService.swicoLine
       AlternativeProcedures ->
-        Components.AlternativeProcedures.view language model.webService.decoding model.webService.alternativeProcedure1 model.webService.alternativeProcedure2
+        Components.QrAlternativeProcedures.view language model.webService.decoding model.webService.alternativeProcedure1 model.webService.alternativeProcedure2
       Image ->
         Components.QrImage.view language model.webService.decoding model.webService.generation
   ]
