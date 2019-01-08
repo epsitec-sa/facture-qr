@@ -10,8 +10,8 @@ type Resource =
   RRaw | RPrefix | RDocumentReference | RDocumentDate | RCustomerReference | RVatNumber | RVatDates |
   RVatDetails | RVatImportTax | RConditions | RDiscount | RTotalBill | RImport | RDays | ROn | RFrom | RTo |
 
-  RBusinessCaseDate | RDueDate | RReferenceNumber | RPayableAmountCanBeModified | RBillerID | REmailAddress | RBillRecipientID |
-  RReferencedBill | RYes | RNo |
+  RAlternativeProcedure | RBusinessCaseDate | RDueDate | RReferenceNumber | RPayableAmountCanBeModified | RBillerID | REmailAddress |
+  RBillRecipientID | RReferencedBill | RYes | RNo |
 
   RValErrDoesExist | RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |

@@ -33,6 +33,7 @@ t resource =
     RFrom -> "du"
     RTo -> "au"
 
+    RAlternativeProcedure -> "Procédure alternative"
     RBusinessCaseDate -> "Date de l'opération bancaire ou date de la facture"
     RDueDate -> "Date d'échéance"
     RReferenceNumber -> "Référence de facturation ou numéro de facture"

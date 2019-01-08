@@ -84,6 +84,9 @@ t resource =
         RTo ->
             "bis zum"
 
+        RAlternativeProcedure -> 
+            "**Procédure alternative"
+
         RBusinessCaseDate -> 
             "**Date de l'opération bancaire ou date de la facture"
 
