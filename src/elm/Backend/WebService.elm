@@ -44,7 +44,6 @@ type alias DefaultProcedure = {
 
 type alias EBillProcedure = {
   raw : String,
-  rawStructured : String,
   businessCaseDate : String,
   dueDate : String,
   referenceNumber : String,
@@ -324,7 +323,6 @@ eBillProcedureDecoder =
   map EBill <|
     (decode EBillProcedure
       |> optional "Raw" string ""
-      |> optional "RawStructured" string ""
       |> optional "BusinessCaseDate" string ""
       |> optional "DueDate" string ""
       |> optional "ReferenceNumber" string ""
