@@ -50,7 +50,8 @@ type alias EBillProcedure = {
   payableAmountCanBeModified : String,
   billerID : String,
   emailAddress : String,
-  billRecipientID : String
+  billRecipientID : String,
+  referencedBill: String
 }
 
 type AlternativeProcedurePayload
@@ -335,7 +336,8 @@ eBillProcedureDecoder =
       |> optional "PayableAmountCanBeModified" string "False"
       |> optional "BillerID" string ""
       |> optional "EmailAddress" string ""
-      |> optional "BillRecipientID" string "")
+      |> optional "BillRecipientID" string ""
+      |> optional "ReferencedBill" string "")
 
 
 debug : Error -> Cmd msg
