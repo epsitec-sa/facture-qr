@@ -84,6 +84,36 @@ t resource =
         RTo ->
             "bis zum"
 
+        RBusinessCaseDate -> 
+            "**Date de l'opération bancaire ou date de la facture"
+
+        RDueDate -> 
+            "**Date d'échéance"
+
+        RReferenceNumber -> 
+            "**Référence de facturation ou numéro de facture"
+
+        RPayableAmountCanBeModified -> 
+            "**Montant modifiable"
+
+        RBillerID -> 
+            "**Identification de l'émetteur de la facture"
+
+        REmailAddress -> 
+            "**Adresse e-mail du destinataire de la facture"
+
+        RBillRecipientID -> 
+            "**Identification alternative du destinataire de la facture"
+
+        RReferencedBill -> 
+            "**Identification de la facture originale"
+
+        RYes -> 
+            "Ja"
+
+        RNo -> 
+            "Nein"
+
         RErrMultipleFilesDropped ->
             "Es kann nur eine Datei auf einmal verarbeitet werden"
 
