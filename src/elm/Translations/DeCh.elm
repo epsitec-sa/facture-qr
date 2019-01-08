@@ -22,7 +22,7 @@ t resource =
             "Zahlteil ansehen"
 
         RTabAlternativeProcedures -> 
-            "**Procédures alternatives"
+            "Alternativen Verfahrens"
 
         RWaiting ->
             "Einen Augenblick..."
@@ -85,31 +85,31 @@ t resource =
             "bis zum"
 
         RAlternativeProcedure -> 
-            "**Procédure alternative"
+            "Alternativ Verfahr"
 
         RBusinessCaseDate -> 
-            "**Date de l'opération bancaire ou date de la facture"
+            "Geschäftsfalldatum bzw. Rechnungsdatum"
 
         RDueDate -> 
-            "**Date d'échéance"
+            "Fälligkeitsdatum"
 
         RReferenceNumber -> 
-            "**Référence de facturation ou numéro de facture"
+            "Rechnungsreferenz bzw. Rechnungsnummer"
 
         RPayableAmountCanBeModified -> 
-            "**Montant modifiable"
+            "Betrag verändert werden darf"
 
         RBillerID -> 
-            "**Identification de l'émetteur de la facture"
+            "Identifikation des Rechnungsstellers"
 
         REmailAddress -> 
-            "**Adresse e-mail du destinataire de la facture"
+            "E-Mail-Adresse des Rechnungsempfängers"
 
         RBillRecipientID -> 
-            "**Identification alternative du destinataire de la facture"
+            "Alternative Identifikation des Rechnungsempfängers"
 
         RReferencedBill -> 
-            "**Identification de la facture originale"
+            "Identifikation der Originalrechnung"
 
         RYes -> 
             "Ja"
