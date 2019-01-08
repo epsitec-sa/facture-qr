@@ -10,6 +10,7 @@ t resource =
     RTabValidation -> "Validation"
     RTabSwicoLine -> "Ligne Swico"
     RTabImage -> "Image générée"
+    RTabAlternativeProcedures -> "Procédures alternatives"
     RWaiting -> "En attente..."
     RLine -> "Ligne"
     RField -> "champ"

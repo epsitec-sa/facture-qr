@@ -2,7 +2,7 @@ module Translations.Resources exposing (..)
 
 
 type Resource =
-  RTitle | RDropYourCode | RTabValidation | RTabSwicoLine | RTabImage | RWaiting | RLine | RField |
+  RTitle | RDropYourCode | RTabValidation | RTabSwicoLine | RTabImage | RTabAlternativeProcedures | RWaiting | RLine | RField |
 
   RErrMultipleFilesDropped | RErrNetworkError | RErrUnknownError |
   RErrInvalidEncoding | RErrInvalidInvoiceImage | RErrGenerationError | RErrValidationError |

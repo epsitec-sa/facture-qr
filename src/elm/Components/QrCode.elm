@@ -19,7 +19,7 @@ import Http
 import Json.Encode
 import Debug
 
-type Tabs = Validation | Image | SwicoLine
+type Tabs = Validation | Image | SwicoLine | AlternativeProcedures
 
 
 type alias Model =
@@ -57,6 +57,8 @@ type Message
     | FileDecoded (Result Http.Error String)
     | InvoiceValidated (Result Http.Error String)
     | SwicoExtracted (Result Http.Error String)
+    | AlternativeProcedure1Extracted (Result Http.Error String)
+    | AlternativeProcedure2Extracted (Result Http.Error String)
     | InvoiceGenerated (Result Http.Error String)
     | TabsChanged Tabs
     | QrValidationMessage Components.QrValidation.Message
@@ -121,6 +123,8 @@ update message model =
                 Cmd.batch <| [
                   Http.send InvoiceValidated (put "validate" (Http.stringBody "text/plain" str)),
                   Http.send SwicoExtracted (put "extractSwico" (Http.stringBody "text/plain" str)),
+                  Http.send AlternativeProcedure1Extracted (put "extractAlternativeProcedure/1" (Http.stringBody "text/plain" str)),
+                  Http.send AlternativeProcedure2Extracted (put "extractAlternativeProcedure/2" (Http.stringBody "text/plain" str)),
                   sendGenerate (Just str) model.language
                 ]
               )
@@ -163,6 +167,41 @@ update message model =
         SwicoExtracted (Err err) ->
           Debug.log (httpErrorString err)
           ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
+
+        AlternativeProcedure1Extracted (Ok str) ->
+          case  Backend.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | webService = Backend.WebService.setAlternativeProcedureError 1 model.webService wsErr }, Backend.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              case Backend.WebService.decodeAlternativeProcedurePayload str of
+                Ok payload ->
+                  ( { model | webService = Backend.WebService.setAlternativeProcedurePayload 1 model.webService payload }, Cmd.none)
+                Err err ->
+                  Debug.log (err)
+                  ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
+        AlternativeProcedure1Extracted (Err err) ->
+          Debug.log (httpErrorString err)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
+
+        AlternativeProcedure2Extracted (Ok str) ->
+          case  Backend.WebService.decodeError str of
+            Ok wsErr ->
+              ( { model | webService = Backend.WebService.setAlternativeProcedureError 2 model.webService wsErr }, Backend.WebService.debug (wsErr))
+            Err msg -> -- It is not a webservice error, so it must be the expected result
+              case Backend.WebService.decodeAlternativeProcedurePayload str of
+                Ok payload ->
+                  ( { model | webService = Backend.WebService.setAlternativeProcedurePayload 2 model.webService payload }, Cmd.none)
+                Err err ->
+                  Debug.log (err)
+                  ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
+        AlternativeProcedure2Extracted (Err err) ->
+          Debug.log (httpErrorString err)
+          ({ model | webService = Backend.WebService.setNewError model.webService Backend.Errors.NetworkError }, Cmd.none)
+
 
         InvoiceGenerated (Ok str) ->
           case  Backend.WebService.decodeError str of
@@ -271,6 +310,7 @@ renderTabs model language =
     [
       renderTab model Validation (t language RTabValidation),
       renderTab model SwicoLine (t language RTabSwicoLine),
+      renderTab model AlternativeProcedures (t language RTabAlternativeProcedures),
       renderTab model Image (t language RTabImage),
       renderBackButton model
     ],
@@ -279,6 +319,8 @@ renderTabs model language =
         Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language model.webService.decoding model.webService.validation)
       SwicoLine ->
         Components.QrSwicoLine.view language model.webService.decoding model.webService.swicoLine
+      AlternativeProcedures ->
+        Components.AlternativeProcedures.view language model.webService.decoding model.webService.alternativeProcedure1 model.webService.alternativeProcedure2
       Image ->
         Components.QrImage.view language model.webService.decoding model.webService.generation
   ]

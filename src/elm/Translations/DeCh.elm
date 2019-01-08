@@ -21,6 +21,9 @@ t resource =
         RTabImage ->
             "Zahlteil ansehen"
 
+        RTabAlternativeProcedures -> 
+            "**Procédures alternatives"
+
         RWaiting ->
             "Einen Augenblick..."
 
