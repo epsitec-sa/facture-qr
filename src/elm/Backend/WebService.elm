@@ -1,8 +1,8 @@
 module Backend.WebService exposing (..)
 import Translations.Languages exposing (Language)
 
-import Json.Decode exposing (int, string, float, list, bool, Decoder, decodeString)
-import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
+import Json.Decode exposing (..)
+import Json.Decode.Pipeline exposing (..)
 import Backend.Errors exposing (..)
 import Debug
 
@@ -38,6 +38,26 @@ type alias SwicoPayload = {
   conditions : String
 }
 
+type alias DefaultProcedure = {
+  raw : String
+}
+
+type alias EBillProcedure = {
+  raw : String,
+  rawStructured : String,
+  businessCaseDate : String,
+  dueDate : String,
+  referenceNumber : String,
+  payableAmountCanBeModified : String,
+  billerID : String,
+  emailAddress : String,
+  billRecipientID : String
+}
+
+type AlternativeProcedurePayload
+  = Default DefaultProcedure
+  | EBill EBillProcedure
+
 
 type alias Decoding = {
   error: Maybe Error,
@@ -54,6 +74,11 @@ type alias SwicoLine = {
   payload: Maybe SwicoPayload
 }
 
+type alias AlternativeProcedure = {
+  error: Maybe Error,
+  payload: Maybe AlternativeProcedurePayload
+}
+
 type alias Generation = {
   error: Maybe Error,
   image: Maybe String
@@ -66,6 +91,8 @@ type alias Model = {
   decoding: Decoding,
   validation: Validation,
   swicoLine: SwicoLine,
+  alternativeProcedure1: AlternativeProcedure,
+  alternativeProcedure2: AlternativeProcedure,
   generation: Generation
 }
 
@@ -81,6 +108,14 @@ init = {
       validations = Nothing
     },
     swicoLine = {
+      error = Nothing,
+      payload = Nothing
+    },
+    alternativeProcedure1 = {
+      error = Nothing,
+      payload = Nothing
+    },
+    alternativeProcedure2 = {
       error = Nothing,
       payload = Nothing
     },
@@ -153,6 +188,33 @@ setSwicoPayload model payload =
 setSwicoLineError : Model -> Error -> Model
 setSwicoLineError model err =
   { model | swicoLine = setSwicoLineErr model.swicoLine err }
+
+
+
+setAlternativeProcedureErr : AlternativeProcedure -> Error -> AlternativeProcedure
+setAlternativeProcedureErr altProc err =
+  { altProc | error = Just (err) }
+
+setAlternativeProcedurePayloadValue : AlternativeProcedure -> AlternativeProcedurePayload -> AlternativeProcedure
+setAlternativeProcedurePayloadValue altProc payload =
+  { altProc | payload = Just (payload) }
+
+
+setAlternativeProcedure1Payload : Model -> AlternativeProcedurePayload -> Model
+setAlternativeProcedure1Payload model payload =
+  { model | alternativeProcedure1 = setAlternativeProcedurePayloadValue model.alternativeProcedure1 payload }
+
+setAlternativeProcedure1Error : Model -> Error -> Model
+setAlternativeProcedure1Error model err =
+  { model | alternativeProcedure1 = setAlternativeProcedureErr model.alternativeProcedure1 err }
+
+setAlternativeProcedure2Payload : Model -> AlternativeProcedurePayload -> Model
+setAlternativeProcedure2Payload model payload =
+  { model | alternativeProcedure2 = setAlternativeProcedurePayloadValue model.alternativeProcedure2 payload }
+
+setAlternativeProcedure2Error : Model -> Error -> Model
+setAlternativeProcedure2Error model err =
+  { model | alternativeProcedure2 = setAlternativeProcedureErr model.alternativeProcedure2 err }
 
 
 
@@ -234,6 +296,42 @@ decodeSwicoPayload: String -> Result String (SwicoPayload)
 decodeSwicoPayload str =
   decodeString (swicoPayloadDecoder) str
 
+
+decodeAlternativeProcedurePayload: String -> Result String (AlternativeProcedurePayload)
+decodeAlternativeProcedurePayload str =
+  decodeString (alternativeProcedurePayloadDecoder) str
+
+
+alternativeProcedurePayloadDecoder : Json.Decode.Decoder AlternativeProcedurePayload
+alternativeProcedurePayloadDecoder =
+  Json.Decode.field "type" Json.Decode.string
+    |> Json.Decode.andThen (\str ->
+      case str of
+        "default" -> defaultProcedureDecoder
+        "eBill" -> eBillProcedureDecoder
+        somethingElse ->
+          Json.Decode.fail <| "Unsupported procedure type: " ++ somethingElse)
+
+
+defaultProcedureDecoder : Json.Decode.Decoder AlternativeProcedurePayload
+defaultProcedureDecoder =
+  map Default <| 
+    (decode DefaultProcedure
+      |> optional "Raw" string "")
+
+eBillProcedureDecoder : Json.Decode.Decoder AlternativeProcedurePayload
+eBillProcedureDecoder =
+  map EBill <|
+    (decode EBillProcedure
+      |> optional "Raw" string ""
+      |> optional "RawStructured" string ""
+      |> optional "BusinessCaseDate" string ""
+      |> optional "DueDate" string ""
+      |> optional "ReferenceNumber" string ""
+      |> optional "PayableAmountCanBeModified" string "False"
+      |> optional "BillerID" string ""
+      |> optional "EmailAddress" string ""
+      |> optional "BillRecipientID" string "")
 
 
 debug : Error -> Cmd msg
