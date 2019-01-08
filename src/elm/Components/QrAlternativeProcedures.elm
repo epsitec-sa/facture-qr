@@ -48,11 +48,30 @@ renderTableLine language title value dark prettifyFunc =
     ]
   ]
 
+renderTitle : Language -> Int -> String -> Html a
+renderTitle language index procType =
+  div [style [
+    ("display", "flex"),
+    ("padding", "0.2em 0.2em 1.0em 0.2em")
+    ]]
+    [
+      div [
+        style [
+          ("font-size", "14px"),
+          ("font-weight", "bold"),
+          ("padding", "0 0.1em")
+        ]
+      ]
+      [
+        text ((t language RAlternativeProcedure)++" "++ toString index++ " ("++procType++")")
+      ]
+    ]
+
 renderRawLine : Language -> String -> Html a
 renderRawLine language raw =
   div [style [
     ("display", "flex"),
-    ("padding", "0.2em 0.2em 1.0em 0.2em")
+    ("padding", "0.2em 0.2em 0.5em 0.2em")
     ]]
     [
       div [style (cellStyle "0.6" "bold")]
@@ -67,8 +86,8 @@ renderRawLine language raw =
 
 
 
-renderEBillTable : Language -> EBillProcedure -> Html a
-renderEBillTable language payload =
+renderEBillTable : Language -> EBillProcedure -> Int -> Html a
+renderEBillTable language payload index =
   div [style [
     ("display", "flex"),
     ("flex-direction", "column"),
@@ -82,6 +101,7 @@ renderEBillTable language payload =
     ("font-size", "12px")
     ]]
   [
+    renderTitle language index "eBill",
     renderRawLine language payload.raw,
     renderTableLine language RBusinessCaseDate payload.businessCaseDate False prettifyDate,
     renderTableLine language RDueDate payload.dueDate True prettifyDate,
@@ -94,30 +114,43 @@ renderEBillTable language payload =
   ]
 
 
-renderContent : Language -> AlternativeProcedurePayload -> Html a
-renderContent language payload =
-  div [style [
-    ("display", "flex"),
-    ("flex-grow", "1"),
-    ("flex-basis", "0"),
-    ("align-items", "stretch"),
-    ("padding", "1.5em")]
-  ] [
-    case payload of
-      Default _ -> div [][]
-      EBill eBill -> renderEBillTable language eBill
-  ]
+renderProcedure : Language -> AlternativeProcedure -> Int -> Html a
+renderProcedure language procedure index =
+  case procedure.error of
+          Nothing ->
+            case procedure.payload of
+              Nothing -> renderSpinner language
+              Just payload -> 
+                div [style [
+                  ("display", "flex"),
+                  ("flex-shrink", "0"),
+                  ("align-items", "stretch"),
+                  ("padding", "1.5em 1.5em 0em 1.5em")]
+                ] [
+                  case payload of
+                    Default _ -> div [][]
+                    EBill eBill -> renderEBillTable language eBill index
+                ]
+          Just err ->
+              renderError err language
+  
 
 view : Language -> Backend.WebService.Decoding -> Backend.WebService.AlternativeProcedure -> Backend.WebService.AlternativeProcedure -> Html a
 view language decoding procedure1 procedure2 =
   case decoding.error of
     Nothing ->
-      case procedure1.error of
-        Nothing ->
-          case procedure1.payload of
-            Nothing -> renderSpinner language
-            Just payload -> renderContent language payload
-        Just err ->
-            renderError err language
+      div [style [
+        ("display", "flex"),
+        ("flex-direction", "column"),
+        ("flex-grow", "1"),
+        ("flex-basis", "0"),
+        ("align-items", "stretch"),
+        ("overflow-y", "auto"),
+        ("padding", "0em 0em 1.5em 0em")]
+      ] [
+        renderProcedure language procedure1 1,
+        renderProcedure language procedure2 2
+      ]
+      
     Just err ->
         renderError err language
