@@ -199,21 +199,27 @@ setAlternativeProcedurePayloadValue altProc payload =
   { altProc | payload = Just (payload) }
 
 
-setAlternativeProcedure1Payload : Model -> AlternativeProcedurePayload -> Model
-setAlternativeProcedure1Payload model payload =
-  { model | alternativeProcedure1 = setAlternativeProcedurePayloadValue model.alternativeProcedure1 payload }
+setAlternativeProcedurePayload : Int -> Model -> AlternativeProcedurePayload -> Model
+setAlternativeProcedurePayload index model payload =
+  case index of
+    1 ->
+      { model | alternativeProcedure1 = setAlternativeProcedurePayloadValue model.alternativeProcedure1 payload }
+    2 ->
+      { model | alternativeProcedure2 = setAlternativeProcedurePayloadValue model.alternativeProcedure2 payload }
+    somethingElse ->
+      { model | alternativeProcedure1 = setAlternativeProcedurePayloadValue model.alternativeProcedure1 payload }
+  
 
-setAlternativeProcedure1Error : Model -> Error -> Model
-setAlternativeProcedure1Error model err =
-  { model | alternativeProcedure1 = setAlternativeProcedureErr model.alternativeProcedure1 err }
+setAlternativeProcedureError : Int -> Model -> Error -> Model
+setAlternativeProcedureError index model err =
+  case index of
+    1 ->
+      { model | alternativeProcedure1 = setAlternativeProcedureErr model.alternativeProcedure1 err }
+    2 ->
+      { model | alternativeProcedure2 = setAlternativeProcedureErr model.alternativeProcedure2 err }
+    somethingElse ->
+      { model | alternativeProcedure1 = setAlternativeProcedureErr model.alternativeProcedure1 err }
 
-setAlternativeProcedure2Payload : Model -> AlternativeProcedurePayload -> Model
-setAlternativeProcedure2Payload model payload =
-  { model | alternativeProcedure2 = setAlternativeProcedurePayloadValue model.alternativeProcedure2 payload }
-
-setAlternativeProcedure2Error : Model -> Error -> Model
-setAlternativeProcedure2Error model err =
-  { model | alternativeProcedure2 = setAlternativeProcedureErr model.alternativeProcedure2 err }
 
 
 
@@ -303,7 +309,7 @@ decodeAlternativeProcedurePayload str =
 
 alternativeProcedurePayloadDecoder : Json.Decode.Decoder AlternativeProcedurePayload
 alternativeProcedurePayloadDecoder =
-  Json.Decode.field "type" Json.Decode.string
+  Json.Decode.field "Type" Json.Decode.string
     |> Json.Decode.andThen (\str ->
       case str of
         "default" -> defaultProcedureDecoder
