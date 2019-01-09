@@ -34,6 +34,7 @@ t resource =
     RTo -> "au"
 
     RAlternativeProcedure -> "Procédure alternative"
+    RTransactionType -> "Type de transaction"
     RBusinessCaseDate -> "Date de l'opération bancaire ou date de la facture"
     RDueDate -> "Date d'échéance"
     RReferenceNumber -> "Référence de facturation ou numéro de facture"
@@ -44,6 +45,8 @@ t resource =
     RReferencedBill -> "Identification de la facture originale"
     RYes -> "Oui"
     RNo -> "Non"
+    RBills -> "Facture ou facture rectificative"
+    RReminders -> "Rappel"
 
     RErrMultipleFilesDropped -> "Un seul fichier peut être traité à la fois"
     RErrNetworkError -> "La requête a échoué (voir log js pour plus de détails)"

@@ -22,7 +22,12 @@ cellStyle flexGrow fontWeight =
     ("padding", "0 0.1em")
   ]
 
-
+prettifyTransactionType : Language -> String -> Html a
+prettifyTransactionType language value =
+  case value of
+    "B" -> text (t language RBills)
+    "R" -> text (t language RReminders)
+    _ -> text ""
 
 renderTableLine : Language -> Resource -> String -> Bool -> (Language -> String -> Html a) -> Html a
 renderTableLine language title value dark prettifyFunc =
@@ -103,6 +108,7 @@ renderEBillTable language payload index =
   [
     renderTitle language index "eBill",
     renderRawLine language payload.raw,
+    renderTableLine language RTransactionType payload.transactionType True prettifyTransactionType,
     renderTableLine language RBusinessCaseDate payload.businessCaseDate False prettifyDate,
     renderTableLine language RDueDate payload.dueDate True prettifyDate,
     renderTableLine language RReferenceNumber payload.referenceNumber False prettifyDefault,
@@ -110,7 +116,7 @@ renderEBillTable language payload index =
     renderTableLine language RBillerID payload.billerID False prettifyDefault,
     renderTableLine language REmailAddress payload.emailAddress True prettifyDefault,
     renderTableLine language RBillRecipientID payload.billRecipientID False prettifyDefault,
-    renderTableLine language RReferencedBill payload.referencedBill False prettifyDefault
+    renderTableLine language RReferencedBill payload.referencedBill True prettifyDefault
   ]
 
 

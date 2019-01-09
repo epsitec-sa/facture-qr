@@ -87,6 +87,9 @@ t resource =
         RAlternativeProcedure -> 
             "Alternativ Verfahr"
 
+        RTransactionType -> 
+            "**Type de transaction"
+
         RBusinessCaseDate -> 
             "Geschäftsfalldatum bzw. Rechnungsdatum"
 
@@ -116,6 +119,12 @@ t resource =
 
         RNo -> 
             "Nein"
+
+        RBills -> 
+            "Factures et factures rectificatives"
+
+        RReminders -> 
+            "Rappels"
 
         RErrMultipleFilesDropped ->
             "Es kann nur eine Datei auf einmal verarbeitet werden"
