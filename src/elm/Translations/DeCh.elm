@@ -21,8 +21,8 @@ t resource =
         RTabImage ->
             "Zahlteil ansehen"
 
-        RTabAlternativeProcedures -> 
-            "Alternativen Verfahrens"
+        RTabAlternativeProcedures ->
+            "Alternative Verfahren"
 
         RWaiting ->
             "Einen Augenblick..."
@@ -84,47 +84,47 @@ t resource =
         RTo ->
             "bis zum"
 
-        RAlternativeProcedure -> 
-            "Alternativ Verfahr"
+        RAlternativeProcedure ->
+            "Alternatives Verfahren"
 
-        RTransactionType -> 
-            "**Type de transaction"
+        RTransactionType ->
+            "Transaktionstyp"
 
-        RBusinessCaseDate -> 
+        RBusinessCaseDate ->
             "Geschäftsfalldatum bzw. Rechnungsdatum"
 
-        RDueDate -> 
+        RDueDate ->
             "Fälligkeitsdatum"
 
-        RReferenceNumber -> 
+        RReferenceNumber ->
             "Rechnungsreferenz bzw. Rechnungsnummer"
 
-        RPayableAmountCanBeModified -> 
-            "Betrag verändert werden darf"
+        RPayableAmountCanBeModified ->
+            "Betrag darf verändert werden"
 
-        RBillerID -> 
+        RBillerID ->
             "Identifikation des Rechnungsstellers"
 
-        REmailAddress -> 
+        REmailAddress ->
             "E-Mail-Adresse des Rechnungsempfängers"
 
-        RBillRecipientID -> 
+        RBillRecipientID ->
             "Alternative Identifikation des Rechnungsempfängers"
 
-        RReferencedBill -> 
+        RReferencedBill ->
             "Identifikation der Originalrechnung"
 
-        RYes -> 
+        RYes ->
             "Ja"
 
-        RNo -> 
+        RNo ->
             "Nein"
 
-        RBills -> 
-            "Factures et factures rectificatives"
+        RBills ->
+            "Rechnung oder überrollende Rechnung"
 
-        RReminders -> 
-            "Rappels"
+        RReminders ->
+            "Mahnung"
 
         RErrMultipleFilesDropped ->
             "Es kann nur eine Datei auf einmal verarbeitet werden"
@@ -183,8 +183,8 @@ t resource =
         RValErrFormatIsDifferentThan ->
             "das Feld muss folgendes Format respektieren:"
 
-        RValErrInvalidEmail -> 
-            "**l'adresse email n'est pas valable"
+        RValErrInvalidEmail ->
+            "das E-Mail ist nicht korrekt"
 
         RValErrQrReferenceInvalid ->
             "die QR Referenznummer (QRR) ist nicht korrekt"
@@ -234,5 +234,5 @@ t resource =
         RValErrZeroConditionMissing ->
             "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
 
-        RValErrMissingEmailOrBillRecipient -> 
-            "**la ligne eBill doit contenir soit l'adresse email, soit le BillRecipientId"
+        RValErrMissingEmailOrBillRecipient ->
+            "die Zeile eBill muss entweder ein E-Mail oder ein BillRecipientId enthalten"
