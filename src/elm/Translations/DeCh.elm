@@ -229,7 +229,7 @@ t resource =
             "das Feld respektiert nicht die Swift Kodierung"
 
         RValErrVatAmountMissmatch ->
-            "var amount missmatch"
+            "die Summe der Mehrwertsteuerbeträge entspricht nicht dem Gesamtbetrag der Rechnung  ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Die berechnete Summe beträgt"
 
         RValErrZeroConditionMissing ->
             "eine Skontokondition mit 0% muss existieren, damit eine Zahlungsfrist angegeben werden kann"
