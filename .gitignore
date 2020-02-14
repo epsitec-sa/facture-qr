@@ -1,6 +1,6 @@
+dist/
 elm-stuff/
 node_modules/
+python2/
 tmp/
-dist/
 yarn.lock
-
