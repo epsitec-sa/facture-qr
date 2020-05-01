@@ -27,6 +27,7 @@ type alias ValidationError = {
 
 type alias SwicoPayload = {
   raw : String,
+  currency : String,
   prefix : String,
   documentReference : String,
   documentDate : String,
@@ -288,6 +289,7 @@ swicoPayloadDecoder : Json.Decode.Decoder SwicoPayload
 swicoPayloadDecoder =
   decode SwicoPayload
     |> optional "Raw" string ""
+    |> optional "Currency" string ""
     |> optional "Prefix" string ""
     |> optional "DocumentReference" string ""
     |> optional "DocumentDate" string ""

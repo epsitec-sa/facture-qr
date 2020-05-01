@@ -22,8 +22,8 @@ cellStyle flexGrow fontWeight =
     ("padding", "0 0.1em")
   ]
 
-prettifyImportTax : Language -> String -> Html a
-prettifyImportTax language value =
+prettifyImportTax : String -> Language -> String -> Html a
+prettifyImportTax currency language value =
   if String.contains ":" value then
     div[style [("display", "flex"), ("flex-direction", "column")]]
     (
@@ -36,7 +36,7 @@ prettifyImportTax language value =
                 Err msg -> text ""
                 Ok val -> case String.toFloat y of
                   Err msg -> text ""
-                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" CHF")]
+                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" "++currency)]
               [] -> text ""
             [] -> text ""
         )
@@ -61,8 +61,8 @@ prettifyDates language value =
   else
     text ""
 
-prettifyDetails : Language -> String -> Html a
-prettifyDetails language value =
+prettifyDetails : String -> Language -> String -> Html a
+prettifyDetails currency language value =
   if String.contains ":" value then
     div[style [("display", "flex"), ("flex-direction", "column")]]
     (
@@ -75,7 +75,7 @@ prettifyDetails language value =
                 Err msg -> text ""
                 Ok val -> case String.toFloat y of
                   Err msg -> text ""
-                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" CHF")]
+                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" "++currency)]
               [] -> text ""
             [] -> text ""
         )
@@ -190,8 +190,8 @@ renderTable language payload =
     renderTableLine language "/20/" RCustomerReference payload.customerReference True prettifyDefault,
     renderTableLine language "/30/" RVatNumber payload.vatNumber False prettifyUid,
     renderTableLine language "/31/" RVatDates payload.vatDates True prettifyDates,
-    renderTableLine language "/32/" RVatDetails payload.vatDetails False prettifyDetails,
-    renderTableLine language "/33/" RVatImportTax payload.vatImportTaxes True prettifyImportTax,
+    renderTableLine language "/32/" RVatDetails payload.vatDetails False (prettifyDetails payload.currency),
+    renderTableLine language "/33/" RVatImportTax payload.vatImportTaxes True (prettifyImportTax payload.currency),
     renderTableLine language "/40/" RConditions payload.conditions False prettifyConditions
   ]
 
