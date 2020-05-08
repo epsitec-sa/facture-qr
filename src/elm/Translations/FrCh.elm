@@ -30,6 +30,7 @@ t resource =
     RImport -> "de TVA lors de l'importation de marchandises"
     RDays -> "jours"
     ROn -> "sur"
+    RAtTax -> "au taux de"
     RFrom -> "du"
     RTo -> "au"
 

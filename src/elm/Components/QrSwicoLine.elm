@@ -36,7 +36,7 @@ prettifyImportTax currency language value =
                 Err msg -> text ""
                 Ok val -> case String.toFloat y of
                   Err msg -> text ""
-                  Ok val -> div[] [text (x++"% "++(t language ROn)++" "++y++" "++currency)]
+                  Ok val -> div[] [text (y++" "++currency++" "++(t language RAtTax)++" "++x++"%")]
               [] -> text ""
             [] -> text ""
         )

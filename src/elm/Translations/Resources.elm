@@ -8,7 +8,7 @@ type Resource =
   RErrInvalidEncoding | RErrInvalidInvoiceImage | RErrGenerationError | RErrValidationError |
 
   RRaw | RPrefix | RDocumentReference | RDocumentDate | RCustomerReference | RVatNumber | RVatDates |
-  RVatDetails | RVatImportTax | RConditions | RDiscount | RTotalBill | RImport | RDays | ROn | RFrom | RTo |
+  RVatDetails | RVatImportTax | RConditions | RDiscount | RTotalBill | RImport | RDays | ROn | RAtTax | RFrom | RTo |
 
   RAlternativeProcedure | RTransactionType | RBusinessCaseDate | RDueDate | RReferenceNumber | RPayableAmountCanBeModified | RBillerID |
   REmailAddress | RBillRecipientID | RReferencedBill | RYes | RNo | RBills  | RReminders |

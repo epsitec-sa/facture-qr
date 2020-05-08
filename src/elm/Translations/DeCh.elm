@@ -78,6 +78,9 @@ t resource =
         ROn ->
             "auf"
 
+        RAtTax ->
+            "mit der Rate von"
+
         RFrom ->
             "von"
 
