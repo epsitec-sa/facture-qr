@@ -19,6 +19,6 @@ type Resource =
   RValErrCreditorReferenceInvalid | RValErrNonReferenceInvalid |
   RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban | RValErrQrrReferenceWithStandardIban |
   RValErrValueExceeded | RValErrValueNotReached |
-  RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat |
+  RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat | RValErrInvalidEscapeSequence |
   RValErrVatAmountMissmatch | RValErrZeroConditionMissing |
   RValErrMissingEmailOrBillRecipient

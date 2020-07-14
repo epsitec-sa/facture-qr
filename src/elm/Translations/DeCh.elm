@@ -231,6 +231,9 @@ t resource =
         RValErrSwiftFormat ->
             "das Feld respektiert nicht die Swift Kodierung"
 
+        RValErrInvalidEscapeSequence ->
+            "**seules les séquences d'échappement '\\\\' et '\\/' sont admises**"
+
         RValErrVatAmountMissmatch ->
             "die Summe der Mehrwertsteuerbeträge entspricht nicht dem Gesamtbetrag der Rechnung  ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Die berechnete Summe beträgt"
 

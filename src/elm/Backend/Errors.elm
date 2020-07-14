@@ -53,7 +53,7 @@ type ValidationErrorCode =
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     MissingEmailOrBillRecipient |
-    SwiftFormat | VatAmountMissmatch | ZeroConditionMissing
+    SwiftFormat | InvalidEscapeSequence |VatAmountMissmatch | ZeroConditionMissing
 
 
 validationErrorCodeDecoder : Decoder ValidationErrorCode
@@ -115,6 +115,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed TagIsEmpty
                "SwiftFormat" ->
                     Json.Decode.succeed SwiftFormat
+               "InvalidEscapeSequence" ->
+                    Json.Decode.succeed InvalidEscapeSequence
                "VatAmountMissmatch" ->
                     Json.Decode.succeed VatAmountMissmatch
                "ZeroConditionMissing" ->
@@ -155,6 +157,7 @@ validationErrorCodeString error language =
      TagAlreadyExists -> t language RValErrTagAlreadyExists
      TagIsEmpty -> t language RValErrTagIsEmpty
      SwiftFormat -> t language RValErrSwiftFormat
+     InvalidEscapeSequence -> t language RValErrInvalidEscapeSequence
      VatAmountMissmatch -> t language RValErrVatAmountMissmatch
      ZeroConditionMissing -> t language RValErrZeroConditionMissing
      MissingEmailOrBillRecipient -> t language RValErrMissingEmailOrBillRecipient
