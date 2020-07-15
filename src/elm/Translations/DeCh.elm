@@ -189,6 +189,9 @@ t resource =
         RValErrInvalidEmail ->
             "das E-Mail ist nicht korrekt"
 
+        RValErrDateNotSequential ->
+        "**cette date est plus ancienne que la précédente**"
+
         RValErrQrReferenceInvalid ->
             "die QR Referenznummer (QRR) ist nicht korrekt"
 

@@ -47,7 +47,7 @@ type ValidationErrorCode =
     DoesExist | DoesNotExist | IsEmpty | MustBeEmpty | MustBeEqualTo |
     LengthDifferent | LengthExceeded | LengthNotReached |
     MustBeDifferentThan | DoesNotStartWith |
-    Invalid | FormatIsDifferentThan | InvalidEmail |
+    Invalid | FormatIsDifferentThan | InvalidEmail | DateNotSequential |
     QrReferenceInvalid | CreditorReferenceInvalid | NonReferenceInvalid |
     NonReferenceWithQrIban | CreditorReferenceWithQrIban | QrrReferenceWithStandardIban |
     ValueExceeded | ValueNotReached |
@@ -87,6 +87,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed FormatIsDifferentThan
                "InvalidEmail" ->
                     Json.Decode.succeed InvalidEmail
+               "DateNotSequential" ->
+                    Json.Decode.succeed DateNotSequential
                "QrReferenceInvalid" ->
                     Json.Decode.succeed QrReferenceInvalid
                "CreditorReferenceInvalid" ->
@@ -143,6 +145,7 @@ validationErrorCodeString error language =
      Invalid -> t language RValErrInvalid
      FormatIsDifferentThan -> t language RValErrFormatIsDifferentThan
      InvalidEmail -> t language RValErrInvalidEmail
+     DateNotSequential -> t language RValErrDateNotSequential
      QrReferenceInvalid -> t language RValErrQrReferenceInvalid
      CreditorReferenceInvalid -> t language RValErrCreditorReferenceInvalid
      NonReferenceInvalid -> t language RValErrNonReferenceInvalid

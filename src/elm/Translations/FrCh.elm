@@ -70,6 +70,7 @@ t resource =
     RValErrInvalid -> "le champ n'est pas valable"
     RValErrFormatIsDifferentThan -> "le format du champ doit être"
     RValErrInvalidEmail -> "l'adresse email n'est pas valable"
+    RValErrDateNotSequential -> "cette date est plus ancienne que la précédente"
     RValErrQrReferenceInvalid -> "la référence QR (QRR) n'est pas valable"
     RValErrCreditorReferenceInvalid -> "la réference du créditeur (SCOR) n'est pas valable"
     RValErrNonReferenceInvalid -> "aucune réference ne doit être saisie pour le type NON"

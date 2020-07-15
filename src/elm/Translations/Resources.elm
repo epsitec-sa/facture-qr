@@ -15,7 +15,7 @@ type Resource =
 
   RValErrDoesExist | RValErrDoesNotExist | RValErrIsEmpty | RValErrMustBeEmpty | RValErrMustBeEqualTo |
   RValErrLengthDifferent | RValErrLengthExceeded | RValErrLengthNotReached | RValErrMustBeDifferentThan |
-  RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrInvalidEmail | RValErrQrReferenceInvalid |
+  RValErrDoesNotStartWith | RValErrInvalid | RValErrFormatIsDifferentThan | RValErrInvalidEmail | RValErrQrReferenceInvalid | RValErrDateNotSequential |
   RValErrCreditorReferenceInvalid | RValErrNonReferenceInvalid |
   RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban | RValErrQrrReferenceWithStandardIban |
   RValErrValueExceeded | RValErrValueNotReached |
