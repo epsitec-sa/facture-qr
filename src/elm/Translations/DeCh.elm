@@ -138,9 +138,6 @@ t resource =
         RErrUnknownError ->
             "Ein unbekannter Fehler ist aufgetreten (siehe js logs für mehr Details)"
 
-        RErrInvalidEncoding ->
-            "Der QR-Code muss mit dem UTF-8 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
-
         RErrInvalidInvoiceImage ->
             "Die Bilddatei konnte nicht dekodiert werden (siehe js logs für mehr Details)"
 
@@ -236,6 +233,9 @@ t resource =
 
         RValErrInvalidEscapeSequence ->
             "es werden nur '\\\\' und '\\/' als Escapesequenzen angenommen"
+
+        RValErrInvalidEncoding ->
+            "Der QR-Code muss mit dem UTF-8 Zeichensatz kodiert sein aber es wurde folgender Zeichensatz entdeckt:"
 
         RValErrVatAmountMissmatch ->
             "die Summe der Mehrwertsteuerbeträge entspricht nicht dem Gesamtbetrag der Rechnung  ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Die berechnete Summe beträgt"

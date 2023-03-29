@@ -7,7 +7,7 @@ import Http
 
 type ErrorCode =
   MultipleFilesDropped | NetworkError | UnknownError |
-  InvalidEncoding | InvalidInvoiceImage | GenerationError | ValidationError
+  InvalidInvoiceImage | GenerationError | ValidationError
 
 
 errorCodeDecoder : Decoder ErrorCode
@@ -19,8 +19,6 @@ errorCodeDecoder =
                     Json.Decode.succeed MultipleFilesDropped
                "UnknownError" ->
                     Json.Decode.succeed UnknownError
-               "InvalidEncoding" ->
-                    Json.Decode.succeed InvalidEncoding
                "InvalidInvoiceImage" ->
                     Json.Decode.succeed InvalidInvoiceImage
                "GenerationError" ->
@@ -37,7 +35,6 @@ errorCodeString error language =
       MultipleFilesDropped -> t language RErrMultipleFilesDropped
       NetworkError -> t language RErrNetworkError
       UnknownError -> t language RErrUnknownError
-      InvalidEncoding -> t language RErrInvalidEncoding
       InvalidInvoiceImage -> t language RErrInvalidInvoiceImage
       GenerationError -> t language RErrGenerationError
       ValidationError -> t language RErrValidationError
@@ -53,7 +50,7 @@ type ValidationErrorCode =
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     MissingEmailOrBillRecipient |
-    SwiftFormat | InvalidEscapeSequence |VatAmountMissmatch | ZeroConditionMissing
+    SwiftFormat | InvalidEscapeSequence | InvalidEncoding | VatAmountMissmatch | ZeroConditionMissing
 
 
 validationErrorCodeDecoder : Decoder ValidationErrorCode
@@ -119,6 +116,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed SwiftFormat
                "InvalidEscapeSequence" ->
                     Json.Decode.succeed InvalidEscapeSequence
+               "InvalidEncoding" ->
+                    Json.Decode.succeed InvalidEncoding
                "VatAmountMissmatch" ->
                     Json.Decode.succeed VatAmountMissmatch
                "ZeroConditionMissing" ->
@@ -161,6 +160,7 @@ validationErrorCodeString error language =
      TagIsEmpty -> t language RValErrTagIsEmpty
      SwiftFormat -> t language RValErrSwiftFormat
      InvalidEscapeSequence -> t language RValErrInvalidEscapeSequence
+     InvalidEncoding -> t language RValErrInvalidEncoding
      VatAmountMissmatch -> t language RValErrVatAmountMissmatch
      ZeroConditionMissing -> t language RValErrZeroConditionMissing
      MissingEmailOrBillRecipient -> t language RValErrMissingEmailOrBillRecipient

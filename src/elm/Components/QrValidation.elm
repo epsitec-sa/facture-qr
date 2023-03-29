@@ -77,7 +77,9 @@ computeLines raw validations =
       raw = line,
       blocks = computeLineBlocks (cleanValidations (index + 1) validations) 0 (String.length line)
     }
-  ) (String.split "\n" raw)
+  ) (List.filter (\line ->
+      not (String.startsWith "[encoding:" line)
+    ) (String.split "\n" raw))
 
 -- Computes lines that are not in the raw text, but for which errors have been generated
 -- (usually end of text errors)

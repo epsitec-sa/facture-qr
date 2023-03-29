@@ -5,7 +5,7 @@ type Resource =
   RTitle | RDropYourCode | RTabValidation | RTabSwicoLine | RTabImage | RTabAlternativeProcedures | RWaiting | RLine | RField |
 
   RErrMultipleFilesDropped | RErrNetworkError | RErrUnknownError |
-  RErrInvalidEncoding | RErrInvalidInvoiceImage | RErrGenerationError | RErrValidationError |
+  RErrInvalidInvoiceImage | RErrGenerationError | RErrValidationError |
 
   RRaw | RPrefix | RDocumentReference | RDocumentDate | RCustomerReference | RVatNumber | RVatDates |
   RVatDetails | RVatImportTax | RConditions | RDiscount | RTotalBill | RImport | RDays | ROn | RAtTax | RFrom | RTo |
@@ -19,6 +19,7 @@ type Resource =
   RValErrCreditorReferenceInvalid | RValErrNonReferenceInvalid |
   RValErrNonReferenceWithQrIban | RValErrCreditorReferenceWithQrIban | RValErrQrrReferenceWithStandardIban |
   RValErrValueExceeded | RValErrValueNotReached |
-  RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | RValErrSwiftFormat | RValErrInvalidEscapeSequence |
+  RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | 
+  RValErrInvalidEncoding | RValErrSwiftFormat | RValErrInvalidEscapeSequence |
   RValErrVatAmountMissmatch | RValErrZeroConditionMissing |
   RValErrMissingEmailOrBillRecipient
