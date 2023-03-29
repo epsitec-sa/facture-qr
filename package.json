@@ -19,7 +19,7 @@
     "bootstrap-sass": "^3.4.1",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.9",
-    "elm": "^0.18.0",
+    "elm": "0.18.0",
     "elm-format": "^0.8.2",
     "elm-webpack-loader": "^4.3.0",
     "extract-text-webpack-plugin": "^2.1.0",
