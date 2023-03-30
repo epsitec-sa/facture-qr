@@ -220,7 +220,7 @@ renderFooter model =
         ]
         [ div [ class "row" ]
             [ div [ class "colonne w50" ]
-                [ p [] [ text "Copyright © 2018-2019 – Epsitec SA, Yverdon-les-Bains – Developed for Swico" ]
+                [ p [] [ text "Copyright © 2018-2023 – Epsitec SA, Yverdon-les-Bains – Developed for Swico by Jonny Quarta" ]
                 ]
             , div [ class "colonne w50 txt-right" ]
                 [ languageButton model Translations.Languages.SwissFrench "FR"
