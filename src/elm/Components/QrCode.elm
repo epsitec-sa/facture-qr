@@ -336,7 +336,7 @@ renderTabs model language showLineNumbers =
 renderTab : Model -> Tabs -> String -> Html Message
 renderTab model tab str =
   div [
-    class "qrTab",
+    class "button",
     style (
       if (model.tabs == tab) then
         List.append baseTabStyle
@@ -357,7 +357,7 @@ renderTab model tab str =
 renderBackButton : Model -> Html Message
 renderBackButton model =
   div [
-    class "qrTab",
+    class "button",
     style [
       ("display", "flex"),
       ("justify-content", "center"),

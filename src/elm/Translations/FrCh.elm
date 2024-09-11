@@ -14,6 +14,7 @@ t resource =
     RWaiting -> "En attente..."
     RLine -> "Ligne"
     RField -> "champ"
+    RDownloadRaw -> "Télécharger"
 
     RRaw -> "Ligne brute :"
     RPrefix -> "Préfixe"

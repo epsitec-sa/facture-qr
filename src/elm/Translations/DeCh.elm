@@ -33,6 +33,9 @@ t resource =
         RField ->
             "Feld"
 
+        RDownloadRaw -> 
+            "Herunterladen"
+
         RRaw ->
             "Rohzeile:"
 

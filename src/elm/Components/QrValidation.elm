@@ -10,7 +10,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import String.Extra exposing (..)
 
-type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String
+type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String | RawInvoiceDownloaded String
 
 type Rendering = Error | Warning | Default
 
@@ -135,6 +135,7 @@ update msg model =
     FieldOut xmlField -> (
       {model | hoveredValidations = List.filter (\field -> not (field == xmlField)) model.hoveredValidations},
       Cmd.none)
+    RawInvoiceDownloaded rawInvoice -> (model, Cmd.none)
 
 
 
@@ -311,8 +312,8 @@ renderLine model line showLineNumbers =
   ]
 
 
-renderRawInvoice : Model -> List Line -> Bool -> Html Message
-renderRawInvoice model lines showLineNumbers =
+renderRawInvoice : Model -> Language -> Bool -> String -> List Line -> Html Message
+renderRawInvoice model language showLineNumbers raw lines =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -340,7 +341,32 @@ renderRawInvoice model lines showLineNumbers =
     ]
     (
       List.map (\line -> (renderLine model line showLineNumbers) ) lines
-    )
+    ),
+    div [style [
+      ("display", "flex"),
+      ("flex-grow", "1"),
+      ("flex-shrink", "0"),
+      ("flex-basis", "0"),
+      ("justify-content", "flex-end")
+    ]][
+      div [
+        class "button",
+        style [
+          ("display", "flex"),
+          ("justify-content", "center"),
+          ("align-items", "center"),
+          ("cursor", "pointer"),
+          ("padding", "0.5em 1em 0.5em 1em"),
+          ("color", "#fff"),
+          ("border-radius", "10px"),
+          ("margin-top", "5px")
+        ],
+        onClick (RawInvoiceDownloaded raw)
+      ]
+      [
+        text (t language RDownloadRaw)
+      ]
+    ]
   ]
 
 renderContent : Model -> Language -> Bool -> String -> List Backend.WebService.ValidationError -> Html Message
@@ -359,7 +385,7 @@ renderContent model language showLineNumbers raw validations =
     in (
       let allLines = List.append lines (computeExtraLines lines validations)
       in ([
-        renderRawInvoice model allLines showLineNumbers,
+        renderRawInvoice model language showLineNumbers raw allLines,
         div [style[("width", "1.5em"), ("height", "100%")]][],
         renderValidationErrors model language allLines validations
       ])

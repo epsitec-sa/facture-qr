@@ -28,11 +28,11 @@ a:hover {
   opacity: 0.5;
 }
 
-.qrTab {
+.button {
   background-color: #226ca8;
 }
 
-.qrTab:hover {
+.button:hover {
   background-color: #cce8ff;
 }
 
