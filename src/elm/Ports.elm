@@ -24,6 +24,6 @@ port title : String -> Cmd msg
 
 port scrollTo : (String, String) -> Cmd msg
 
-port getUrlParam : String -> Cmd msg
+port getUrlParams : List String -> Cmd msg
 
 port urlParamReceived : (UrlParam -> msg) -> Sub msg

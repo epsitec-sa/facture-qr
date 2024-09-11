@@ -27,6 +27,7 @@ type alias Model =
     {
       webService : Backend.WebService.Model
     , language : Language
+    , showLineNumbers : Bool
     , qrValidation : Components.QrValidation.Model
     , dropZone : DropZone.Model
     , tabs : Tabs
@@ -39,6 +40,7 @@ init =
     {
     webService = Backend.WebService.init
     , language = Translations.Languages.SwissFrench
+    , showLineNumbers = True
     , qrValidation =  Components.QrValidation.init
     , dropZone = DropZone.init
     , tabs = Validation
@@ -64,6 +66,7 @@ type Message
     | TabsChanged Tabs
     | QrValidationMessage Components.QrValidation.Message
     | LanguageChanged Language
+    | LineNumbersShowed Bool
     | Back
 
 
@@ -227,6 +230,10 @@ update message model =
             ( { model | language = language, webService = Backend.WebService.setNoImage model.webService },
               sendGenerate model.webService.decoding.raw language
             )
+
+        LineNumbersShowed showLineNumbers -> 
+          ({model | showLineNumbers = showLineNumbers},Cmd.none)
+
         Back -> ({ model | files = init.files }, Cmd.none)
 
 
@@ -278,21 +285,21 @@ put route body =
 
 
 -- qrCode component
-view : Model -> Language -> Html Message
-view model language =
+view : Model -> Language -> Bool -> Html Message
+view model language showLineNumbers =
     (div (renderZoneAttributes model.dropZone) [
       case model.webService.error of
         Nothing ->
           if List.length model.files > 0 then
-            renderTabs model language
+            renderTabs model language showLineNumbers
           else
             renderEmptyDropZone language
         Just err ->
             renderError err language
     ])
 
-renderTabs : Model -> Language -> Html Message
-renderTabs model language =
+renderTabs : Model -> Language -> Bool -> Html Message
+renderTabs model language showLineNumbers =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -317,7 +324,7 @@ renderTabs model language =
     ],
     case model.tabs of
       Validation ->
-        Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language model.webService.decoding model.webService.validation)
+        Html.map QrValidationMessage (Components.QrValidation.view model.qrValidation language showLineNumbers model.webService.decoding model.webService.validation)
       SwicoLine ->
         Components.QrSwicoLine.view language model.webService.decoding model.webService.swicoLine
       AlternativeProcedures ->

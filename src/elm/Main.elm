@@ -35,6 +35,7 @@ main =
 type alias Model =
     { qrCode : Components.QrCode.Model
     , language : Language
+    , showLineNumbers : Bool
     }
 
 
@@ -42,8 +43,9 @@ init : ( Model, Cmd Msg )
 init =
     ( { qrCode = Components.QrCode.init
       , language = Translations.Languages.SwissFrench
+      , showLineNumbers = True
       }
-    , Ports.getUrlParam "lang"
+    , Ports.getUrlParams ["lang", "linenumbers"]
     )
 
 
@@ -54,6 +56,7 @@ init =
 type Msg
     = QrCodeMessage Components.QrCode.Message
     | LanguageChanged Language
+    | LineNumbersShowed Bool
     | OnLocalStorageLanguage LocalStorage.Key (Result LocalStorage.Error (Maybe LocalStorage.Value))
     | OnVoidOp (Result LocalStorage.Error ())
     | UrlParamReceived UrlParam
@@ -90,6 +93,13 @@ update msg model =
                     )
                 ]
             )
+
+        LineNumbersShowed showLineNumbers ->
+            let
+                ( updatedQrCodeModel, qrCodeCmd ) =
+                    Components.QrCode.update (Components.QrCode.LineNumbersShowed showLineNumbers) model.qrCode
+            in
+            ( { model | showLineNumbers = showLineNumbers, qrCode = updatedQrCodeModel }, Cmd.none )
 
         OnLocalStorageLanguage key result ->
             case result of
@@ -140,6 +150,19 @@ update msg model =
 
                                 a ->
                                     ( model, Task.attempt (OnLocalStorageLanguage "epsitec-qr-validator-language") (LocalStorage.get "epsitec-qr-validator-language") )
+
+                "linenumbers" ->
+                    case result.value of
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                        Just showLineNumbers ->
+                            case showLineNumbers of
+                                "false" ->
+                                    ( model, send (LineNumbersShowed False) )
+
+                                a ->
+                                    ( model, Cmd.none )
 
                 a ->
                     ( model, Cmd.none )
@@ -204,7 +227,7 @@ renderHeader model =
 renderContent : Model -> Html Msg
 renderContent model =
     div [ style [ ( "margin-top", "20px" ) ] ]
-        [ Html.map QrCodeMessage (Components.QrCode.view model.qrCode model.language)
+        [ Html.map QrCodeMessage (Components.QrCode.view model.qrCode model.language model.showLineNumbers)
         ]
 
 

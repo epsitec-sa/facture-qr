@@ -277,8 +277,8 @@ computeLineBackground blocks =
         else "rgba(255, 0, 0, 0.2)"
     else "white"
 
-renderLine : Model -> Line -> Html Message
-renderLine model line =
+renderLine : Model -> Line -> Bool -> Html Message
+renderLine model line showLineNumbers =
   div [
     id ("l_" ++ (toString line.number)),
     style [
@@ -294,7 +294,11 @@ renderLine model line =
         ("font-size", "8px"),
         ("padding-top", "2px")
       ]]
-      [text (parseIndexWithLeadingZero line.number)],
+      [
+        if showLineNumbers == True
+          then text (parseIndexWithLeadingZero line.number)
+          else text ""
+      ],
 
     span [
       style [
@@ -307,8 +311,8 @@ renderLine model line =
   ]
 
 
-renderRawInvoice : Model -> List Line -> Html Message
-renderRawInvoice model lines =
+renderRawInvoice : Model -> List Line -> Bool -> Html Message
+renderRawInvoice model lines showLineNumbers =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -335,12 +339,12 @@ renderRawInvoice model lines =
       ]
     ]
     (
-      List.map (\line -> (renderLine model line) ) lines
+      List.map (\line -> (renderLine model line showLineNumbers) ) lines
     )
   ]
 
-renderContent : Model -> Language -> String -> List Backend.WebService.ValidationError -> Html Message
-renderContent model language raw validations =
+renderContent : Model -> Language -> Bool -> String -> List Backend.WebService.ValidationError -> Html Message
+renderContent model language showLineNumbers raw validations =
   div [style [
     ("display", "flex"),
     ("flex-grow", "1"),
@@ -355,15 +359,15 @@ renderContent model language raw validations =
     in (
       let allLines = List.append lines (computeExtraLines lines validations)
       in ([
-        renderRawInvoice model allLines,
+        renderRawInvoice model allLines showLineNumbers,
         div [style[("width", "1.5em"), ("height", "100%")]][],
         renderValidationErrors model language allLines validations
       ])
     )
   )
 
-view : Model -> Language -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
-view model language decoding validation =
+view : Model -> Language -> Bool -> Backend.WebService.Decoding -> Backend.WebService.Validation -> Html Message
+view model language showLineNumbers decoding validation =
   case decoding.error of
     Nothing ->
       case validation.error of
@@ -373,7 +377,7 @@ view model language decoding validation =
             Just validations ->
               case decoding.raw of
                 Nothing -> div [] []
-                Just raw -> renderContent model language raw validations
+                Just raw -> renderContent model language showLineNumbers raw validations
         Just err ->
             renderError err language
     Just err ->
