@@ -135,9 +135,9 @@ update msg model =
     FieldOut xmlField -> (
       {model | hoveredValidations = List.filter (\field -> not (field == xmlField)) model.hoveredValidations},
       Cmd.none)
-    RawInvoiceDownloaded rawInvoice -> (model, Cmd.none)
-
-
+    RawInvoiceDownloaded rawInvoice -> (
+      model, 
+      downloadFile (rawInvoice, "text/plain;charset=utf-8;", "qr-bill.txt"))
 
 
 
@@ -312,13 +312,15 @@ renderLine model line showLineNumbers =
   ]
 
 
-renderRawInvoice : Model -> Language -> Bool -> String -> List Line -> Html Message
-renderRawInvoice model language showLineNumbers raw lines =
+renderRawInvoice : Model -> Language -> Bool -> List Line -> String -> Html Message
+renderRawInvoice model language showLineNumbers lines raw  =
   div [style [
     ("display", "flex"),
+    ("flex-direction", "column"),
     ("flex-grow", "1"),
     ("flex-shrink", "0"),
-    ("flex-basis", "0")
+    ("flex-basis", "0"),
+    ("align-items", "stretch")
   ]]
   [
     div [
@@ -344,9 +346,6 @@ renderRawInvoice model language showLineNumbers raw lines =
     ),
     div [style [
       ("display", "flex"),
-      ("flex-grow", "1"),
-      ("flex-shrink", "0"),
-      ("flex-basis", "0"),
       ("justify-content", "flex-end")
     ]][
       div [
@@ -385,7 +384,7 @@ renderContent model language showLineNumbers raw validations =
     in (
       let allLines = List.append lines (computeExtraLines lines validations)
       in ([
-        renderRawInvoice model language showLineNumbers raw allLines,
+        renderRawInvoice model language showLineNumbers allLines (String.join "\n" (List.map (\line -> line.raw ) lines)),
         div [style[("width", "1.5em"), ("height", "100%")]][],
         renderValidationErrors model language allLines validations
       ])

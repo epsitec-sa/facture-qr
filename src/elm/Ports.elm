@@ -27,3 +27,5 @@ port scrollTo : (String, String) -> Cmd msg
 port getUrlParams : List String -> Cmd msg
 
 port urlParamReceived : (UrlParam -> msg) -> Sub msg
+
+port downloadFile : (String, String, String) -> Cmd msg
