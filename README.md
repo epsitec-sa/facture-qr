@@ -56,3 +56,14 @@ npm run build
 
 - Files are saved into the `/dist` folder
 - To check it, open `dist/index.html`
+
+### Current state of build
+
+Currently, the repo is in a non buildable state.   
+As elm has changed during the last years and the repo has not been 
+adapted yet, trying to simply build the package will result in errors.   
+   
+However, you can get the old elm binaries from [here](https://owncloud.epsitec.ch/owncloud/index.php/s/NXCorYWqxNJkFLp/download/node_modules_facture_qr.zip).   
+The zip contains the current *node_modules* folder. You can either copy 
+and use it as is, or use only the elm packages (elm, elm-webpack-loader, 
+node-elm-compiler, find-elm-dependencies, etc...).
