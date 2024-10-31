@@ -36,6 +36,9 @@ t resource =
         RDownloadRaw -> 
             "Herunterladen"
 
+        RCopyClipboard -> 
+            "Kopieren"
+
         RRaw ->
             "Rohzeile:"
 

@@ -106,3 +106,7 @@ app.ports.downloadFile.subscribe(function (args) {
 
   a.click(); // Start downloading
 });
+
+app.ports.copyToClipboard.subscribe(function (content) {
+  navigator.clipboard.writeText(content);
+});

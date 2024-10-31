@@ -73,7 +73,12 @@ type Message
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
-        TabsChanged tabs -> ( { model | tabs = tabs }, Cmd.none)
+        TabsChanged tabs -> 
+          let
+            ( updatedQrValidationModel, qrValidationCmd ) =
+              Components.QrValidation.update ResetCliboardCopy model.qrValidation
+          in
+            ( { model | tabs = tabs, qrValidation = updatedQrValidationModel }, Cmd.map QrValidationMessage qrValidationCmd )
 
         DnD (Drop files) ->
             -- this happens when the user dropped something into the dropzone
@@ -102,7 +107,16 @@ update message model =
             ( { model | dropZone = DropZone.update a model.dropZone }, Cmd.none)
 
         FileReadSucceeded file ->
-          ( model, binaryFileRead file)
+          let
+            ( updatedQrValidationModel, qrValidationCmd ) =
+              Components.QrValidation.update ResetCliboardCopy model.qrValidation
+          in
+            ( { model | qrValidation = updatedQrValidationModel }, 
+            Cmd.batch <| [
+                  Cmd.map QrValidationMessage qrValidationCmd,
+                  binaryFileRead file
+                ]
+             )
 
         FileReadFailed err ->
             Debug.log (FileReader.prettyPrint err)
@@ -227,9 +241,15 @@ update message model =
             ( { model | qrValidation = updatedQrValidationModel }, Cmd.map QrValidationMessage qrValidationCmd )
 
         LanguageChanged language ->
-            ( { model | language = language, webService = Backend.WebService.setNoImage model.webService },
-              sendGenerate model.webService.decoding.raw language
-            )
+          let
+            ( updatedQrValidationModel, qrValidationCmd ) =
+              Components.QrValidation.update ResetCliboardCopy model.qrValidation
+          in
+            ( { model | language = language, webService = Backend.WebService.setNoImage model.webService, qrValidation = updatedQrValidationModel }, 
+               Cmd.batch <| [
+                Cmd.map QrValidationMessage qrValidationCmd,
+                sendGenerate model.webService.decoding.raw language
+              ])
 
         LineNumbersShowed showLineNumbers -> 
           ({model | showLineNumbers = showLineNumbers},Cmd.none)

@@ -10,7 +10,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import String.Extra exposing (..)
 
-type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String | RawInvoiceDownloaded String
+type Message = LineBlockIn (String, Int) | ValidationIn (String, Int) | FieldOut String | RawInvoiceDownloaded String | RawInvoiceToCliboardCopied String | ResetCliboardCopy
 
 type Rendering = Error | Warning | Default
 
@@ -27,15 +27,17 @@ type alias Line = {
   blocks : List LineBlock
 }
 
-type alias Model = {
-  hoveredValidations : List String
-}
+type alias Model = 
+  {
+    hoveredValidations : List String
+  , copiedToClipboard : Bool
+  }
 
 init : Model
 init = {
     hoveredValidations = []
+  , copiedToClipboard = False
   }
-
 
 
 -- From each validation error, generate a chunk of correct text and another with error text
@@ -127,9 +129,9 @@ update msg model =
       scrollTo ("validations", normalizeValidationId xmlField lineNumber))
     ValidationIn (xmlField, lineNumber) -> (
       {model | hoveredValidations =
-        if not (List.member xmlField model.hoveredValidations) then
-          xmlField :: model.hoveredValidations
-        else model.hoveredValidations
+          if not (List.member xmlField model.hoveredValidations) then
+            xmlField :: model.hoveredValidations
+          else model.hoveredValidations
       },
       scrollTo ("lines", "l_" ++ (toString lineNumber)))
     FieldOut xmlField -> (
@@ -138,6 +140,13 @@ update msg model =
     RawInvoiceDownloaded rawInvoice -> (
       model, 
       downloadFile (rawInvoice, "text/plain;charset=utf-8;", "qr-bill.txt"))
+    RawInvoiceToCliboardCopied rawInvoice -> (
+      {model | copiedToClipboard = True},
+      copyToClipboard rawInvoice)
+    ResetCliboardCopy -> (
+      {model | copiedToClipboard = False},
+      Cmd.none
+    )
 
 
 
@@ -344,10 +353,15 @@ renderRawInvoice model language showLineNumbers lines raw  =
     (
       List.map (\line -> (renderLine model line showLineNumbers) ) lines
     ),
-    div [style [
-      ("display", "flex"),
-      ("justify-content", "flex-end")
-    ]][
+    div [
+      style [
+        ("display", "flex"),
+        ("justify-content", "flex-end"),
+        ("margin-top", "5px"),
+        ("gap", "10px")
+      ]
+    ]
+    [
       div [
         class "button",
         style [
@@ -357,8 +371,25 @@ renderRawInvoice model language showLineNumbers lines raw  =
           ("cursor", "pointer"),
           ("padding", "0.5em 1em 0.5em 1em"),
           ("color", "#fff"),
-          ("border-radius", "10px"),
-          ("margin-top", "5px")
+          ("border-radius", "10px")
+        ],
+        onClick (RawInvoiceToCliboardCopied raw)
+      ]
+      [
+        if (model.copiedToClipboard) 
+        then img [src "./static/img/light-green-check.svg", style [("width", "14.5px")]] []
+        else text (t language RCopyClipboard)
+      ],
+      div [
+        class "button",
+        style [
+          ("display", "flex"),
+          ("justify-content", "center"),
+          ("align-items", "center"),
+          ("cursor", "pointer"),
+          ("padding", "0.5em 1em 0.5em 1em"),
+          ("color", "#fff"),
+          ("border-radius", "10px")
         ],
         onClick (RawInvoiceDownloaded raw)
       ]

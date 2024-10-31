@@ -15,6 +15,7 @@ t resource =
     RLine -> "Ligne"
     RField -> "champ"
     RDownloadRaw -> "Télécharger"
+    RCopyClipboard -> "Copier"
 
     RRaw -> "Ligne brute :"
     RPrefix -> "Préfixe"
