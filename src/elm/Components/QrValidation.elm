@@ -373,6 +373,7 @@ renderRawInvoice model language showLineNumbers lines raw  =
           ("color", "#fff"),
           ("border-radius", "10px")
         ],
+        Html.Attributes.title (t language RCopyClipboardTooltip),
         onClick (RawInvoiceToCliboardCopied raw)
       ]
       [

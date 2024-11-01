@@ -39,6 +39,8 @@ t resource =
         RCopyClipboard -> 
             "Kopieren"
 
+        RCopyClipboardTooltip -> "Die Rechnung in die Zwischenablage kopieren"
+
         RRaw ->
             "Rohzeile:"
 
