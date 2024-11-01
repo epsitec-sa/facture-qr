@@ -401,13 +401,8 @@ renderRawInvoice model language showLineNumbers lines raw  =
 
 renderContent : Model -> Language -> Bool -> String -> List Backend.WebService.ValidationError -> Html Message
 renderContent model language showLineNumbers raw validations =
-  div [style [
-    ("display", "flex"),
-    ("flex-grow", "1"),
-    ("flex-basis", "0"),
-    ("flex-shrink", "0"),
-    ("padding", "1.5em"),
-    ("min-height", "0px")]
+  div [
+    id "validation"
   ]
   (
     let
@@ -416,7 +411,6 @@ renderContent model language showLineNumbers raw validations =
       let allLines = List.append lines (computeExtraLines lines validations)
       in ([
         renderRawInvoice model language showLineNumbers allLines (String.join "\n" (List.map (\line -> line.raw ) lines)),
-        div [style[("width", "1.5em"), ("height", "100%")]][],
         renderValidationErrors model language allLines validations
       ])
     )

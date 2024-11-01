@@ -196,16 +196,7 @@ send msg =
 view : Model -> Html Msg
 view model =
     div
-        [ id "container"
-        , style
-            [ ( "background", "#fafafa" )
-            , ( "max-width", "960px" )
-            , ( "padding", "20px 40px 20px 40px" )
-            , ( "border", "1px solid #eee" )
-            , ( "box-shadow", "0px 0px 10px rgba(0, 0, 0, 0.10)" )
-            , ( "border-radius", "3px" )
-            ]
-        ]
+        [ id "container" ]
         [ renderHeader model
         , renderContent model
         , renderFooter model
