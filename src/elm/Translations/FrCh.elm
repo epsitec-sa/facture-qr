@@ -16,7 +16,7 @@ t resource =
     RField -> "champ"
     RDownloadRaw -> "Télécharger"
     RCopyClipboard -> "Copier"
-    RCopyClipboardTooltip -> "Copier le contenu de la facture dans le presse-papier"
+    RCopyClipboardTooltip -> "Copier dans le presse-papier"
 
     RRaw -> "Ligne brute :"
     RPrefix -> "Préfixe"
