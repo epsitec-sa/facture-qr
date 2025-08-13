@@ -23,4 +23,4 @@ type Resource =
   RValErrInvalidTags | RValErrUnknownTag | RValErrTagNotOrdered | RValErrTagAlreadyExists | RValErrTagIsEmpty | 
   RValErrInvalidEncoding | RValErrSwiftFormat | RValErrInvalidEscapeSequence |
   RValErrVatAmountMissmatch | RValErrZeroConditionMissing |
-  RValErrMissingEmailOrBillRecipient
+  RValErrMissingEmailOrBillRecipient | RValErrDeprecatedUnstructuredAddress

@@ -253,3 +253,6 @@ t resource =
 
         RValErrMissingEmailOrBillRecipient ->
             "die Zeile eBill muss entweder ein E-Mail oder ein BillRecipientId enthalten"
+
+        RValErrDeprecatedUnstructuredAddress -> 
+            "Ab dem 21.11.2025 sind unstrukturierte Adressen nicht mehr erlaubt. Bitte verwenden Sie stattdessen eine strukturierte Adresse."

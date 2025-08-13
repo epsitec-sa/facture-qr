@@ -92,3 +92,4 @@ t resource =
     RValErrVatAmountMissmatch -> "la somme des montants TVA n'est pas en accord avec le montant total de la facture ((VatDtlsPrcntg1*VatDtlsAmt1 + VatDtlsAmt1) + (VatDtlsPrcntg2*VatDtlsAmt2 + VatDtlsAmt2) +.... + VatTaxAmt1 + VatTaxAmt2 + ...). Le total calculé est"
     RValErrZeroConditionMissing -> "une condition d'escompte à 0% doit exister afin d'indiquer le delai de paiement"
     RValErrMissingEmailOrBillRecipient -> "la ligne eBill doit contenir soit l'adresse email, soit le BillRecipientId"
+    RValErrDeprecatedUnstructuredAddress -> "À partir du 21.11.2025, les adresses non structurées ne sont plus authorisées. Veuillez utiliser une adresse structurée à la place."

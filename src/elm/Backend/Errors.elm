@@ -50,7 +50,8 @@ type ValidationErrorCode =
     ValueExceeded | ValueNotReached |
     InvalidTags | UnknownTag | TagNotOrdered | TagAlreadyExists | TagIsEmpty |
     MissingEmailOrBillRecipient |
-    SwiftFormat | InvalidEscapeSequence | InvalidEncoding | VatAmountMissmatch | ZeroConditionMissing
+    SwiftFormat | InvalidEscapeSequence | InvalidEncoding | VatAmountMissmatch | ZeroConditionMissing | 
+    DeprecatedUnstructuredAddress
 
 
 validationErrorCodeDecoder : Decoder ValidationErrorCode
@@ -124,6 +125,8 @@ validationErrorCodeDecoder =
                     Json.Decode.succeed ZeroConditionMissing
                "MissingEmailOrBillRecipient" ->
                     Json.Decode.succeed MissingEmailOrBillRecipient
+               "DeprecatedUnstructuredAddress" ->
+                    Json.Decode.succeed DeprecatedUnstructuredAddress
                somethingElse ->
                     Json.Decode.fail <| "Unknown validation error code: " ++ somethingElse
         )
@@ -164,6 +167,7 @@ validationErrorCodeString error language =
      VatAmountMissmatch -> t language RValErrVatAmountMissmatch
      ZeroConditionMissing -> t language RValErrZeroConditionMissing
      MissingEmailOrBillRecipient -> t language RValErrMissingEmailOrBillRecipient
+     DeprecatedUnstructuredAddress -> t language RValErrDeprecatedUnstructuredAddress
 
 
 
